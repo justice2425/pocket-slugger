@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-gttWCX1uffVkDEe1ll8OHyQBJCJbwFs3qt3naprwUDY='; style-src 'sha256-0b9sT2Tqhhw52edzmdy9NO8MV6i51MHIniq4Pi66bzQ='; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Jtm3EAoEMlhXO24ZPmZyRh9eZf/qInuEyVKwe/yEz5w='; style-src 'sha256-AwbWXOAw9t5kz0O/pVKo4kQKLgBLLJlSlBjBcLqlYjw='; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>Pocket Slugger</title>
 <meta name="description" content="A small, ad-free baseball game that works offline.">
@@ -108,6 +108,48 @@ table.line td:first-child { text-align:left; font-weight:800; }
 .tans.wrong { background:#dc2626; box-shadow:0 5px 0 #8b1414; }
 .tans:disabled { opacity:1; }
 .tfeedback { font-size:17px; line-height:1.4; min-height:1em; }
+select { font:inherit; font-size:17px; padding:9px 12px; border-radius:12px; border:2px solid #d1d5db; width:100%; background:#fff; color:var(--ink); }
+.grid3 { display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; }
+.grid3 .btn { font-size:17px; padding:10px 8px; }
+.btn.purple { background:#7c3aed; box-shadow:0 5px 0 #4c1d95; }
+.btn.teal { background:#0d9488; box-shadow:0 5px 0 #115e59; }
+.btn.teal2 { background:#0891b2; box-shadow:0 5px 0 #155e75; }
+.btn.gold { background:#d97706; box-shadow:0 5px 0 #92400e; }
+#cageBar { position:absolute; left:max(14px, env(safe-area-inset-left)); bottom:max(14px, env(safe-area-inset-bottom)); display:flex; gap:8px; pointer-events:auto; flex-wrap:wrap; align-items:center; max-width:70vw; }
+#cageBar select { width:auto; min-height:44px; }
+.toast { position:fixed; left:50%; top:max(14px, env(safe-area-inset-top)); transform:translate(-50%, -140%); background:#111827; color:#fff; border:3px solid #facc15; border-radius:18px;
+  padding:12px 20px; z-index:50; box-shadow:0 10px 30px rgba(0,0,0,.5); transition:transform .35s ease; text-align:center; max-width:90vw; pointer-events:none; }
+.toast.show { transform:translate(-50%, 0); }
+.toast b { font-size:20px; color:#facc15; display:block; } .toast div { font-size:15px; opacity:.9; }
+.batpick { display:flex; flex-wrap:wrap; gap:8px; }
+.derbyrow { display:flex; justify-content:space-between; font-size:20px; padding:8px 4px; border-bottom:1px dashed #e5e7eb; }
+.newbest { text-align:center; font-weight:900; font-size:22px; color:#b45309; }
+.standings td, .standings th { font-size:16px; }
+.standings tr.me td { background:#fef9c3; font-weight:800; }
+.standings tr.cutline td { border-bottom:3px solid #7c3aed; }
+.tchip { display:inline-flex; align-items:center; gap:6px; font-weight:800; }
+.tchip i { width:14px; height:14px; border-radius:4px; display:inline-block; }
+.nextgame { border:3px solid #7c3aed; border-radius:18px; padding:12px 14px; display:flex; flex-direction:column; gap:6px; background:#f5f3ff; }
+.ngl { font-weight:900; color:#6d28d9; font-size:18px; } .ngteams { font-size:20px; }
+.result { font-size:16px; } .result.me { font-weight:900; }
+.bracket { border:2px solid #e5e7eb; border-radius:14px; padding:10px; }
+.brow { display:flex; justify-content:space-between; padding:4px 0; font-size:16px; } .brow .bl { font-weight:800; color:#6b7280; } .brow.final { font-weight:900; }
+.champ { text-align:center; border-radius:18px; padding:14px; background:#f1f5f9; display:flex; flex-direction:column; gap:8px; align-items:center; font-size:20px; font-weight:800; }
+.champ.won { background:linear-gradient(135deg,#fde68a,#facc15); } .champ .big { font-size:64px; }
+.note { background:#ecfeff; border-radius:12px; padding:8px 12px; font-weight:700; }
+.trophies { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:10px; }
+.trophy { background:linear-gradient(135deg,#fef3c7,#fde68a); border-radius:16px; padding:10px; text-align:center; } .trophy .big { font-size:48px; }
+.badges { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:10px; }
+.bdg { border:2px solid #e5e7eb; border-radius:14px; padding:10px; text-align:center; background:#f8fafc; filter:grayscale(1); opacity:.75; }
+.bdg.got { filter:none; opacity:1; background:#fffbeb; border-color:#facc15; }
+.bdg .bi { font-size:34px; } .bdg b { display:block; font-size:15px; } .bdg .muted { font-size:12px; }
+.preview { border-radius:14px; display:block; }
+.previewwrap { display:flex; justify-content:center; }
+.numin { width:84px !important; text-align:center; }
+.unidetails { border:2px solid #e5e7eb; border-radius:16px; padding:8px 12px; background:#fff; }
+.unidetails summary { font-weight:900; font-size:18px; cursor:pointer; padding:4px 0; }
+.player .row canvas.preview { border-radius:8px; }
+.grid3 .pill { display:block; margin:3px auto 0; width:fit-content; font-size:13px; padding:1px 8px; }
 </style>
 </head>
 <body>
@@ -230,6 +272,38 @@ const stadiumById = id => STADIUMS.find(s => s.id === id) || STADIUMS[0];
 function fenceAt(st, a) { const t = Math.min(1, Math.abs(a) / 45); const side = a < 0 ? st.L : st.R; return st.C + (side - st.C) * Math.pow(t, 1.6); }
 function wallAt(st, a) { return st.bigLeft && a <= st.bigLeft.to ? st.bigLeft.h : st.wall; }
 
+// ================= Looks & uniforms =================
+const HAIR_STYLES = ['short', 'curly', 'long', 'pony', 'buzz'];
+const HAIR_STYLE_LABEL = { short: 'Short', curly: 'Curly', long: 'Long', pony: 'Ponytail', buzz: 'Buzz cut' };
+const ACCS = ['none', 'glasses', 'eyeblack', 'band'];
+const ACC_LABEL = { none: 'None', glasses: 'Glasses', eyeblack: 'Eye black', band: 'Wristbands' };
+const LOGOS = ['circle', 'star', 'diamond', 'shield', 'bolt'];
+const LOGO_LABEL = { circle: '⚪ Circle', star: '⭐ Star', diamond: '🔷 Diamond', shield: '🛡️ Shield', bolt: '⚡ Bolt' };
+const PANTS = { white: '#f3f4f6', gray: '#a3a9b3', dark: '#1f2937' };
+const UNI_STYLES = ['solid', 'pinstripe', 'twotone'];
+const UNI_STYLE_LABEL = { solid: 'Solid', pinstripe: 'Pinstripes', twotone: 'Two-tone sleeves' };
+const SECONDARY = ['#ffffff', '#111827', '#facc15', '#9ca3af', '#d7263d', '#1b4fd8', '#0f9d58', '#f28c28', '#7b2cbf', '#00a6a6', '#e83f8b', '#8d6e63'];
+const DEFAULT_NUMS = [8, 3, 4, 5, 2, 7, 21, 9, 10, 17];
+const initialOf = name => ((String(name).match(/[A-Za-z0-9]/) || ['A'])[0]).toUpperCase();
+function makeLook(name, num) {
+  const r = hashStr(name);
+  return { skin: r % SKIN.length, hair: (r >> 3) % HAIR.length, style: HAIR_STYLES[(r >> 6) % HAIR_STYLES.length], num, acc: ['none', 'none', 'none', 'none', 'glasses', 'eyeblack', 'band'][(r >> 9) % 7] };
+}
+function makeUni(name, color) {
+  return { secondary: pick(SECONDARY.filter(c => c.toLowerCase() !== String(color).toLowerCase())), pants: pick(['white', 'white', 'gray', 'dark']), style: pick(UNI_STYLES), logo: pick(LOGOS), letter: initialOf(name) };
+}
+const intIn = (v, a, b, d) => { v = Math.round(Number(v)); return Number.isFinite(v) ? clamp(v, a, b) : d; };
+function cleanLook(l, name, num) {
+  const d = makeLook(name, num);
+  if (!l || typeof l !== 'object') return d;
+  return { skin: intIn(l.skin, 0, SKIN.length - 1, d.skin), hair: intIn(l.hair, 0, HAIR.length - 1, d.hair), style: HAIR_STYLES.includes(l.style) ? l.style : d.style, num: intIn(l.num, 0, 99, num), acc: ACCS.includes(l.acc) ? l.acc : 'none' };
+}
+function cleanUni(u, name) {
+  const d = { secondary: '#111827', pants: 'white', style: 'solid', logo: 'circle', letter: initialOf(name) };
+  if (!u || typeof u !== 'object') return d;
+  return { secondary: cleanColor(u.secondary, d.secondary), pants: PANTS[u.pants] ? u.pants : 'white', style: UNI_STYLES.includes(u.style) ? u.style : 'solid', logo: LOGOS.includes(u.logo) ? u.logo : 'circle', letter: typeof u.letter === 'string' && /^[A-Za-z0-9]$/.test(u.letter) ? u.letter.toUpperCase() : d.letter };
+}
+
 // ================= Save data =================
 const SAVE_KEY = 'pocketSlugger.v1';
 function uniqueName(used) { for (let i = 0; i < 60; i++) { const n = pick(FIRST) + ' ' + pick(LAST); if (!used.has(n)) { used.add(n); return n; } } return 'Player ' + (used.size + 1); }
@@ -238,15 +312,19 @@ function randomRepertoire(n) { return ['FB'].concat(shuffle(PITCH_ORDER.filter(p
 function makeTeam(base, spread, meta, nPitches) {
   const used = new Set();
   const st = () => clamp(Math.round(base + rnd(-spread, spread)), 1, 10);
-  const batters = POS.map(pos => ({ name: uniqueName(used), pos, bats: Math.random() < 0.72 ? 'R' : 'L', pow: st(), con: st(), spd: st(), fld: st() }));
-  const pitcher = { name: uniqueName(used), throws: Math.random() < 0.75 ? 'R' : 'L', vel: st(), ctl: st(), brk: st(), pitches: randomRepertoire(nPitches || 4) };
-  return { name: meta.name, abbr: makeAbbr(meta.name), color: meta.color, batters, pitcher };
+  const nums = shuffle(Array.from({ length: 99 }, (_, i) => i + 1)).slice(0, 10);
+  const batters = POS.map((pos, i) => { const name = uniqueName(used); return { name, pos, bats: Math.random() < 0.72 ? 'R' : 'L', pow: st(), con: st(), spd: st(), fld: st(), look: makeLook(name, nums[i]) }; });
+  const pname = uniqueName(used);
+  const pitcher = { name: pname, throws: Math.random() < 0.75 ? 'R' : 'L', vel: st(), ctl: st(), brk: st(), pitches: randomRepertoire(nPitches || 4), look: makeLook(pname, nums[9]) };
+  return { name: meta.name, abbr: makeAbbr(meta.name), color: meta.color, batters, pitcher, uni: makeUni(meta.name, meta.color) };
 }
 function defaultSave() {
   const team = makeTeam(4, 1.5, { name: 'Backyard Bombers', color: '#d7263d' });
   team.pitcher.pitches = ['FB', 'CB', 'SL', 'CH'];
-  return { v: 2, team, coins: 150, record: { w: 0, l: 0, t: 0 }, settings: { help: 'rookie', sound: true, voice: true, trivia: 'half' },
-    p2: { name: 'Player 2 Pirates', color: '#1b4fd8' }, lastStadium: 'random', triviaRight: 0, triviaSeen: [] };
+  team.uni = { secondary: '#111827', pants: 'white', style: 'solid', logo: 'circle', letter: 'B' };
+  return { v: 3, team, coins: 150, record: { w: 0, l: 0, t: 0 }, settings: { help: 'rookie', sound: true, crowd: true, voice: 'calls', voiceName: '', trivia: 'half' },
+    p2: { name: 'Player 2 Pirates', color: '#1b4fd8' }, lastStadium: 'random', triviaRight: 0, triviaSeen: [],
+    derbyBest: { hr: 0, long: 0 }, badges: {}, trophies: [], season: null, seasonsPlayed: 0, homePark: 'backyard' };
 }
 const cleanStr = (s, def, max) => (typeof s === 'string' && s.trim()) ? s.replace(/[\u0000-\u001f\u007f]/g, '').trim().slice(0, max || 18) : def;
 const cleanStat = v => { v = Math.round(Number(v)); return Number.isFinite(v) ? clamp(v, 1, 10) : 3; };
@@ -256,28 +334,48 @@ function cleanPitches(arr) {
   if (Array.isArray(arr)) for (const p of arr) if (PITCHES[p] && !out.includes(p) && out.length < MAX_PITCHES) out.push(p);
   return out.length > 1 ? out : ['FB', 'CB', 'SL', 'CH'];
 }
-function sanitizeSave(o) {
-  if (!o || typeof o !== 'object' || !o.team || typeof o.team !== 'object') return null;
-  const d = defaultSave(), t = o.team;
-  const team = { name: cleanStr(t.name, d.team.name, 22), color: cleanColor(t.color, d.team.color), batters: [], pitcher: null };
+// Cleans a whole team (used for your team and for saved season teams), so a damaged save can't break the game.
+function cleanTeam(t, fallback) {
+  if (!t || typeof t !== 'object') return null;
+  const d = fallback || makeTeam(4, 1.5, { name: 'Team', color: '#475569' });
+  const team = { name: cleanStr(t.name, d.name, 22), color: cleanColor(t.color, d.color), batters: [], pitcher: null };
   team.abbr = makeAbbr(team.name);
   for (let i = 0; i < 9; i++) {
-    const b = (Array.isArray(t.batters) && t.batters[i] && typeof t.batters[i] === 'object') ? t.batters[i] : d.team.batters[i];
-    team.batters.push({ name: cleanStr(b.name, d.team.batters[i].name), pos: POS[i], bats: b.bats === 'L' ? 'L' : 'R', pow: cleanStat(b.pow), con: cleanStat(b.con), spd: cleanStat(b.spd), fld: cleanStat(b.fld) });
+    const b = (Array.isArray(t.batters) && t.batters[i] && typeof t.batters[i] === 'object') ? t.batters[i] : d.batters[i];
+    const name = cleanStr(b.name, d.batters[i].name);
+    team.batters.push({ name, pos: POS[i], bats: b.bats === 'L' ? 'L' : 'R', pow: cleanStat(b.pow), con: cleanStat(b.con), spd: cleanStat(b.spd), fld: cleanStat(b.fld), look: cleanLook(b.look, name, DEFAULT_NUMS[i]) });
   }
-  const p = (t.pitcher && typeof t.pitcher === 'object') ? t.pitcher : d.team.pitcher;
-  team.pitcher = { name: cleanStr(p.name, d.team.pitcher.name), throws: p.throws === 'L' ? 'L' : 'R', vel: cleanStat(p.vel), ctl: cleanStat(p.ctl), brk: cleanStat(p.brk), pitches: cleanPitches(p.pitches) };
+  const p = (t.pitcher && typeof t.pitcher === 'object') ? t.pitcher : d.pitcher;
+  const pname = cleanStr(p.name, d.pitcher.name);
+  team.pitcher = { name: pname, throws: p.throws === 'L' ? 'L' : 'R', vel: cleanStat(p.vel), ctl: cleanStat(p.ctl), brk: cleanStat(p.brk), pitches: cleanPitches(p.pitches), look: cleanLook(p.look, pname, DEFAULT_NUMS[9]) };
+  team.uni = cleanUni(t.uni, team.name);
+  return team;
+}
+function sanitizeSave(o) {
+  if (!o || typeof o !== 'object' || !o.team || typeof o.team !== 'object') return null;
+  const d = defaultSave();
+  const team = cleanTeam(o.team, d.team);
   const r = (o.record && typeof o.record === 'object') ? o.record : {};
   const ci = v => clamp(Math.floor(Number(v)) || 0, 0, 999999);
   const s = (o.settings && typeof o.settings === 'object') ? o.settings : {};
   const p2 = (o.p2 && typeof o.p2 === 'object') ? o.p2 : {};
   const seen = Array.isArray(o.triviaSeen) ? o.triviaSeen.filter(n => Number.isInteger(n) && n >= 0 && n < 500).slice(-400) : [];
+  const badges = {};
+  if (o.badges && typeof o.badges === 'object') for (const [k, v] of Object.entries(o.badges)) if (/^[a-z0-9_]{1,30}$/.test(k) && typeof v === 'string') badges[k] = v.slice(0, 20);
+  const trophies = Array.isArray(o.trophies) ? o.trophies.filter(x => x && typeof x === 'object').slice(-100).map(x => ({ n: ci(x.n), team: cleanStr(x.team, 'My Team', 22), date: cleanStr(x.date, '', 20), record: cleanStr(x.record, '', 12) })) : [];
+  const db = (o.derbyBest && typeof o.derbyBest === 'object') ? o.derbyBest : {};
+  let season = null;
+  try { season = o.season ? cleanSeason(o.season) : null; } catch (e) { season = null; }
   return {
-    v: 2, team, coins: ci(o.coins), record: { w: ci(r.w), l: ci(r.l), t: ci(r.t) },
-    settings: { help: s.help === 'pro' ? 'pro' : 'rookie', sound: s.sound !== false, voice: s.voice !== false, trivia: ['half', 'inning', 'off'].includes(s.trivia) ? s.trivia : 'half' },
+    v: 3, team, coins: ci(o.coins), record: { w: ci(r.w), l: ci(r.l), t: ci(r.t) },
+    settings: { help: s.help === 'pro' ? 'pro' : 'rookie', sound: s.sound !== false, crowd: s.crowd !== false,
+      voice: s.voice === false || s.voice === 'off' ? 'off' : s.voice === 'all' ? 'all' : 'calls', voiceName: typeof s.voiceName === 'string' ? s.voiceName.slice(0, 100) : '',
+      trivia: ['half', 'inning', 'off'].includes(s.trivia) ? s.trivia : 'half' },
     p2: { name: cleanStr(p2.name, d.p2.name, 22), color: cleanColor(p2.color, d.p2.color) },
     lastStadium: (o.lastStadium === 'random' || STADIUMS.some(x => x.id === o.lastStadium)) ? o.lastStadium : 'random',
-    triviaRight: ci(o.triviaRight), triviaSeen: seen
+    triviaRight: ci(o.triviaRight), triviaSeen: seen,
+    derbyBest: { hr: clamp(ci(db.hr), 0, 99), long: clamp(ci(db.long), 0, 999) }, badges, trophies, season, seasonsPlayed: ci(o.seasonsPlayed),
+    homePark: STADIUMS.some(x => x.id === o.homePark) ? o.homePark : 'backyard'
   };
 }
 let testMode = /[?&]test\b/.test(location.search);
@@ -290,14 +388,13 @@ function exportCode() { return 'PS1-' + btoa(unescape(encodeURIComponent(JSON.st
 function importCode(code) {
   try {
     code = String(code).replace(/\s+/g, '');
-    if (!code.startsWith('PS1-') || code.length > 40000) return false;
+    if (!code.startsWith('PS1-') || code.length > 200000) return false;
     const s = sanitizeSave(JSON.parse(decodeURIComponent(escape(atob(code.slice(4))))));
     if (!s) return false;
     save = s; persist(); return true;
   } catch (e) { return false; }
 }
-let save = loadSave();
-persist();
+let save = null; // loaded in the init file, after every part of the game is defined
 const kidMode = () => save.settings.help !== 'pro';
 
 // ================= Between-inning cards: facts, rules, tips and trivia =================
@@ -396,121 +493,219 @@ function nextTrivia() {
 }
 
 // ================= Sound (all generated in code — no audio files, no downloads) =================
+// Version 2: softer, more natural sounds. Pink noise (warmer than white noise) for crowds and hits,
+// no raw square/sawtooth beeps, and a gentle limiter so layered sounds never distort.
 const NOTE = (() => { const m = { C: 0, 'C#': 1, D: 2, 'D#': 3, E: 4, F: 5, 'F#': 6, G: 7, 'G#': 8, A: 9, 'A#': 10, B: 11 }; return n => { const o = Number(n.slice(-1)), k = m[n.slice(0, -1)]; return 440 * Math.pow(2, (k + (o - 4) * 12 - 9) / 12); }; })();
 const Sound = {
-  ctx: null, master: null, crowdGain: null, crowdOn: false, noiseBuf: null,
-  unlock() {
-    if (!this.ctx) {
-      try {
-        const AC = window.AudioContext || window.webkitAudioContext;
-        if (AC) {
-          this.ctx = new AC(); this.master = this.ctx.createGain(); this.master.gain.value = 0.9; this.master.connect(this.ctx.destination);
-          const len = this.ctx.sampleRate * 2; this.noiseBuf = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
-          const d = this.noiseBuf.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-        }
-      } catch (e) { /* no audio */ }
+  ctx: null, master: null, crowdOn: false, crowdGain: null, crowdNodes: [], white: null, pink: null,
+  setup(ctx) {
+    this.ctx = ctx;
+    const comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -16; comp.knee.value = 14; comp.ratio.value = 4; comp.attack.value = 0.004; comp.release.value = 0.25;
+    this.master = ctx.createGain(); this.master.gain.value = 1.3;
+    this.master.connect(comp); comp.connect(ctx.destination);
+    const len = Math.floor(ctx.sampleRate * 3);
+    this.white = ctx.createBuffer(1, len, ctx.sampleRate); this.pink = ctx.createBuffer(1, len, ctx.sampleRate);
+    const w = this.white.getChannelData(0), p = this.pink.getChannelData(0);
+    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+    for (let i = 0; i < len; i++) {
+      const x = Math.random() * 2 - 1; w[i] = x;
+      b0 = 0.99886 * b0 + x * 0.0555179; b1 = 0.99332 * b1 + x * 0.0750759; b2 = 0.969 * b2 + x * 0.153852;
+      b3 = 0.8665 * b3 + x * 0.3104856; b4 = 0.55 * b4 + x * 0.5329522; b5 = -0.7616 * b5 - x * 0.016898;
+      p[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + x * 0.5362) * 0.11; b6 = x * 0.115926;
     }
-    if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+  },
+  unlock() {
+    if (!this.ctx) { try { const AC = window.AudioContext || window.webkitAudioContext; if (AC) this.setup(new AC()); } catch (e) { /* no audio */ } }
+    if (this.ctx && this.ctx.state === 'suspended' && this.ctx.resume) this.ctx.resume();
+    Voice.prime();
   },
   ok() { return !!this.ctx && save.settings.sound && (!testMode || /[?&]sound\b/.test(location.search)); },
-  tone(freq, dur, type, vol, slideTo, when) {
-    if (!this.ok()) return;
-    const c = this.ctx, t = c.currentTime + (when || 0), o = c.createOscillator(), g = c.createGain();
-    o.type = type || 'sine'; o.frequency.setValueAtTime(freq, t);
-    if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
-    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol || 0.12, t + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    o.connect(g); g.connect(this.master); o.start(t); o.stop(t + dur + 0.05);
+  // ---- building blocks ----
+  src(pink, t, dur) { const s = this.ctx.createBufferSource(); s.buffer = pink ? this.pink : this.white; s.loop = true; s.start(t, Math.random() * 2); if (dur) s.stop(t + dur + 0.05); return s; },
+  env(t, attack, peak, dur, curve) {
+    const g = this.ctx.createGain(); g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(peak, t + attack);
+    if (curve === 'hold') { g.gain.setValueAtTime(peak, t + Math.max(attack, dur * 0.55)); g.gain.linearRampToValueAtTime(0.0001, t + dur); }
+    else g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    return g;
   },
-  noise(dur, vol, freq, q, attack, when, sweepTo, type) {
+  hit(o) { // filtered noise burst
+    if (!this.ok()) return;
+    const c = this.ctx, t = c.currentTime + (o.when || 0), dur = o.dur || 0.1;
+    const s = this.src(o.pink !== false, t, dur), f = c.createBiquadFilter();
+    f.type = o.type || 'bandpass'; f.frequency.setValueAtTime(o.freq || 1000, t); f.Q.value = o.q || 1;
+    if (o.sweep) f.frequency.exponentialRampToValueAtTime(o.sweep, t + dur);
+    const g = this.env(t, o.attack || 0.003, o.vol || 0.3, dur, o.curve);
+    s.connect(f); f.connect(g); g.connect(this.master);
+  },
+  tone(o) { // sine-based tones with optional overtones
+    if (!this.ok()) return;
+    const c = this.ctx, t = c.currentTime + (o.when || 0), dur = o.dur || 0.2;
+    const g = this.env(t, o.attack || 0.005, o.vol || 0.1, dur, o.curve); g.connect(this.master);
+    for (const [m, v] of (o.partials || [[1, 1]])) {
+      const osc = c.createOscillator(), og = c.createGain(); osc.type = 'sine';
+      osc.frequency.setValueAtTime(o.freq * m, t);
+      if (o.slide) osc.frequency.exponentialRampToValueAtTime(o.slide * m, t + dur);
+      og.gain.value = v; osc.connect(og); og.connect(g); osc.start(t); osc.stop(t + dur + 0.05);
+    }
+  },
+  // A crowd "swell": warm noise shaped like many voices, with a little flutter.
+  swell(dur, vol, freq, sweep, when, q) {
     if (!this.ok()) return;
     const c = this.ctx, t = c.currentTime + (when || 0);
-    const src = c.createBufferSource(); src.buffer = this.noiseBuf; src.loop = true;
-    const f = c.createBiquadFilter(); f.type = type || 'bandpass'; f.frequency.setValueAtTime(freq || 1000, t); f.Q.value = q || 1;
-    if (sweepTo) f.frequency.exponentialRampToValueAtTime(sweepTo, t + dur);
-    const g = c.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol || 0.2, t + (attack || 0.005)); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    src.connect(f); f.connect(g); g.connect(this.master); src.start(t, Math.random()); src.stop(t + dur + 0.05);
+    const s = this.src(true, t, dur), f = c.createBiquadFilter(), lp = c.createBiquadFilter();
+    f.type = 'bandpass'; f.frequency.setValueAtTime(freq, t); f.Q.value = q || 0.7; if (sweep) f.frequency.exponentialRampToValueAtTime(sweep, t + dur);
+    lp.type = 'lowpass'; lp.frequency.value = 3000;
+    const g = this.env(t, Math.min(0.35, dur * 0.25), vol, dur, 'hold');
+    const fl = c.createGain(); fl.gain.value = 1;
+    const lfo = c.createOscillator(), lg = c.createGain(); lfo.frequency.value = 6 + Math.random() * 3; lg.gain.value = 0.18; lfo.connect(lg); lg.connect(fl.gain); lfo.start(t); lfo.stop(t + dur + 0.05);
+    s.connect(f); f.connect(lp); lp.connect(fl); fl.connect(g); g.connect(this.master);
   },
-  // An organ-like note: a few harmonics with a gentle wobble.
+  // A ballpark organ note: drawbar-style overtones, soft key click, gentle tremolo. Exactly in tune.
   organ(freq, dur, vol, when) {
     if (!this.ok()) return;
     const c = this.ctx, t = c.currentTime + (when || 0);
-    const g = c.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol || 0.08, t + 0.02); g.gain.setValueAtTime(vol || 0.08, t + Math.max(0.03, dur - 0.06)); g.gain.linearRampToValueAtTime(0.0001, t + dur);
-    const lfo = c.createOscillator(), lg = c.createGain(); lfo.frequency.value = 6; lg.gain.value = freq * 0.004; lfo.connect(lg);
-    [[1, 1], [2, 0.5], [3, 0.22], [4, 0.12]].forEach(([m, v]) => {
-      const o = c.createOscillator(), og = c.createGain(); o.type = 'sine'; o.frequency.value = freq * m; lg.connect(o.frequency);
-      og.gain.value = v; o.connect(og); og.connect(g); o.start(t); o.stop(t + dur + 0.05);
-    });
-    lfo.start(t); lfo.stop(t + dur + 0.05); g.connect(this.master);
+    const g = c.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.012);
+    g.gain.setValueAtTime(vol, t + Math.max(0.02, dur - 0.07)); g.gain.linearRampToValueAtTime(0.0001, t + dur);
+    const trem = c.createGain(); trem.gain.value = 1;
+    const lfo = c.createOscillator(), lg = c.createGain(); lfo.frequency.value = 5.6; lg.gain.value = 0.1; lfo.connect(lg); lg.connect(trem.gain); lfo.start(t); lfo.stop(t + dur + 0.05);
+    for (const [m, v] of [[0.5, 0.22], [1, 1], [2, 0.5], [3, 0.24], [4, 0.14], [6, 0.06]]) {
+      const o = c.createOscillator(), og = c.createGain(); o.type = 'sine'; o.frequency.value = freq * m; og.gain.value = v / 2.2;
+      o.connect(og); og.connect(trem); o.start(t); o.stop(t + dur + 0.05);
+    }
+    trem.connect(g); g.connect(this.master);
+    this.hit({ type: 'bandpass', freq: 2200, q: 1, dur: 0.01, vol: vol * 0.12, when });
   },
-  melody(seq, beat, vol) { let t = 0; for (const [n, b] of seq) { if (n) this.organ(NOTE(n), b * beat * 0.95, vol, t); t += b * beat; } return t; },
-  // ---- crowd ambience (a soft, continuous murmur that swells with excitement) ----
+  melody(seq, beat, vol) { let t = 0; for (const [n, b] of seq) { if (n) this.organ(NOTE(n), b * beat * 0.97, vol, t); t += b * beat; } return t; },
+  // ---- crowd ambience: three soft murmur bands that slowly drift, like a real crowd ----
   startCrowd() {
-    if (!this.ok() || this.crowdOn) return;
-    const c = this.ctx;
-    const src = c.createBufferSource(); src.buffer = this.noiseBuf; src.loop = true;
-    const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 700; f.Q.value = 0.6;
-    const f2 = c.createBiquadFilter(); f2.type = 'lowpass'; f2.frequency.value = 2200;
+    if (!this.ok() || this.crowdOn || !save.settings.crowd) return;
+    const c = this.ctx, t = c.currentTime;
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1900;
     this.crowdGain = c.createGain(); this.crowdGain.gain.value = 0.0001;
-    src.connect(f); f.connect(f2); f2.connect(this.crowdGain); this.crowdGain.connect(this.master); src.start();
-    this.crowdSrc = src; this.crowdOn = true;
+    lp.connect(this.crowdGain); this.crowdGain.connect(this.master);
+    this.crowdNodes = [];
+    [[300, 0.9, 0.11], [620, 1.0, 0.17], [1150, 0.6, 0.29]].forEach(([fq, v, rate]) => {
+      const s = this.src(true, t), f = c.createBiquadFilter(), g = c.createGain();
+      f.type = 'bandpass'; f.frequency.value = fq; f.Q.value = 0.9; g.gain.value = v;
+      const lfo = c.createOscillator(), lg = c.createGain(); lfo.frequency.value = rate; lg.gain.value = v * 0.35; lfo.connect(lg); lg.connect(g.gain); lfo.start(t);
+      s.connect(f); f.connect(g); g.connect(lp); this.crowdNodes.push(s, lfo);
+    });
+    this.crowdOn = true;
   },
-  setCrowd(level) { if (this.crowdOn && this.crowdGain) { const t = this.ctx.currentTime; this.crowdGain.gain.setTargetAtTime(save.settings.sound ? 0.025 + level * 0.11 : 0.0001, t, 0.25); } },
-  stopCrowd() { if (this.crowdOn) { try { this.crowdSrc.stop(); } catch (e) { /* ignore */ } this.crowdOn = false; } },
+  setCrowd(level) {
+    if (!this.crowdOn || !this.crowdGain) return;
+    const on = save.settings.sound && save.settings.crowd;
+    this.crowdGain.gain.setTargetAtTime(on ? 0.05 + level * 0.13 : 0.0001, this.ctx.currentTime, 0.35);
+  },
+  stopCrowd() { if (this.crowdOn) { for (const n of this.crowdNodes) { try { n.stop(); } catch (e) { /* ignore */ } } this.crowdNodes = []; this.crowdOn = false; } },
   // ---- effects ----
   crack(q) {
-    if (q > 0.55) { this.noise(0.08, 0.7, 2800, 0.9); this.tone(1100, 0.07, 'square', 0.07, 350); this.tone(180, 0.1, 'sine', 0.2); }
-    else { this.noise(0.07, 0.45, 900, 1.2); this.tone(260, 0.08, 'triangle', 0.12, 140); }
+    if (q > 0.55) { // a solid "crack": sharp wood click + resonant ring + a little body
+      this.hit({ type: 'bandpass', freq: 2600, q: 1.2, dur: 0.012, vol: 0.7, pink: false });
+      this.hit({ type: 'bandpass', freq: 2100, q: 7, dur: 0.1, vol: 0.75, pink: false });
+      this.hit({ type: 'bandpass', freq: 1100, q: 3, dur: 0.07, vol: 0.4 });
+      this.tone({ freq: 1650, dur: 0.07, vol: 0.06 });
+      this.tone({ freq: 150, slide: 90, dur: 0.1, vol: 0.4 });
+    } else { // a duller "tock" off the end of the bat
+      this.hit({ type: 'bandpass', freq: 850, q: 2.5, dur: 0.08, vol: 0.8 });
+      this.tone({ freq: 120, slide: 85, dur: 0.08, vol: 0.4 });
+    }
   },
-  bunt() { this.noise(0.05, 0.35, 1300, 2); this.tone(500, 0.05, 'triangle', 0.08, 300); },
-  pop() { this.noise(0.06, 0.35, 600, 1); this.tone(140, 0.08, 'sine', 0.22); },
-  whiff() { this.noise(0.16, 0.1, 450, 0.6, 0.05, 0, 1600); },
-  whoosh() { this.noise(0.25, 0.05, 300, 0.7, 0.12, 0, 900); },
-  bounce() { this.tone(170, 0.06, 'sine', 0.12, 110); },
-  slide() { this.noise(0.35, 0.22, 500, 0.5, 0.02, 0, 180, 'lowpass'); },
-  thud() { this.noise(0.12, 0.3, 300, 0.7); this.tone(90, 0.12, 'sine', 0.2); },
-  cheer(big) { this.noise(big ? 2.6 : 1.4, big ? 0.24 : 0.15, 1300, 0.35, big ? 0.25 : 0.2); this.noise(big ? 2.2 : 1.1, big ? 0.12 : 0.08, 2600, 0.5, 0.3); if (big) this.noise(1.6, 0.08, 3800, 2, 0.4, 0.3); },
-  ooh() { this.noise(1.1, 0.12, 500, 3, 0.2, 0, 900); },
-  groan() { this.noise(1.2, 0.12, 700, 2.5, 0.15, 0, 260); },
-  click() { this.tone(700, 0.04, 'triangle', 0.06); },
-  good() { this.tone(660, 0.08, 'triangle', 0.09); this.tone(990, 0.12, 'triangle', 0.09, null, 0.08); },
-  bad() { this.tone(240, 0.22, 'sawtooth', 0.05, 120); },
-  coin() { this.tone(988, 0.06, 'square', 0.05); this.tone(1319, 0.12, 'square', 0.05, null, 0.06); },
-  firework() { const w = rnd(0, 0.3); this.tone(rnd(900, 1300), 0.5, 'sine', 0.03, 300, w); this.noise(0.5, 0.25, 900, 0.5, 0.005, w + 0.5, 200, 'lowpass'); },
-  // A traditional ballpark "Charge!" bugle call.
-  charge() { this.melody([['G4', 1], ['C5', 1], ['E5', 1], ['G5', 2], ['E5', 1], ['G5', 4]], 0.11, 0.07); },
-  jingle() { this.melody([['C5', 1], ['E5', 1], ['G5', 1], ['C6', 3]], 0.13, 0.06); },
-  // The opening of "Take Me Out to the Ball Game" (1908, public domain), on the ballpark organ.
+  bunt() { this.hit({ type: 'bandpass', freq: 1400, q: 4, dur: 0.05, vol: 0.9, pink: false }); this.tone({ freq: 330, slide: 260, dur: 0.06, vol: 0.12 }); },
+  pop() { this.hit({ type: 'lowpass', freq: 1400, dur: 0.06, vol: 0.55 }); this.tone({ freq: 100, slide: 70, dur: 0.1, vol: 0.4 }); },
+  whiff() { this.hit({ type: 'bandpass', freq: 380, sweep: 1300, q: 0.8, dur: 0.22, vol: 0.4, attack: 0.08 }); },
+  bounce() { this.tone({ freq: 160, slide: 100, dur: 0.08, vol: 0.3 }); this.hit({ type: 'lowpass', freq: 600, dur: 0.05, vol: 0.3 }); },
+  slide() { this.hit({ type: 'lowpass', freq: 1000, sweep: 260, dur: 0.42, vol: 0.38, attack: 0.03 }); },
+  thud() { this.tone({ freq: 82, slide: 60, dur: 0.16, vol: 0.4 }); this.hit({ type: 'lowpass', freq: 500, dur: 0.14, vol: 0.4 }); },
+  click() { this.tone({ freq: 1400, dur: 0.035, vol: 0.09 }); },
+  chime(f, when, vol) { this.tone({ freq: f, dur: 0.35, vol: vol || 0.07, when, partials: [[1, 1], [2, 0.28], [3, 0.08]] }); },
+  good() { this.chime(784, 0); this.chime(1175, 0.09); },
+  bad() { this.tone({ freq: 233, slide: 175, dur: 0.3, vol: 0.2, partials: [[1, 1], [2, 0.25]] }); },
+  coin() { this.chime(1047, 0, 0.06); this.chime(1568, 0.08, 0.06); },
+  firework() {
+    const w = Math.random() * 0.3;
+    this.tone({ freq: 1500, slide: 600, dur: 0.6, vol: 0.025, when: w });
+    this.hit({ type: 'lowpass', freq: 380, dur: 1.0, vol: 0.55, when: w + 0.6 });
+    for (let i = 0; i < 6; i++) this.hit({ type: 'highpass', freq: 3000, dur: 0.02, vol: 0.06, when: w + 0.75 + i * 0.07 + Math.random() * 0.05, pink: false });
+  },
+  cheer(big) {
+    this.swell(big ? 3 : 1.6, big ? 0.55 : 0.36, 950, null, 0, 0.6);
+    this.swell(big ? 2.6 : 1.3, big ? 0.2 : 0.12, 2000, null, 0.08, 0.8);
+    if (big) { this.tone({ freq: 2100, slide: 2500, dur: 0.35, vol: 0.02, when: 0.4 }); this.tone({ freq: 2400, slide: 1900, dur: 0.4, vol: 0.02, when: 0.9 }); }
+  },
+  ooh() { this.swell(1.1, 0.5, 360, 640, 0, 2.2); this.swell(1.0, 0.16, 900, 1150, 0.05, 2.5); },
+  groan() { this.swell(1.2, 0.45, 620, 300, 0, 2.2); },
+  // A traditional ballpark "Charge!" bugle call, played on the organ.
+  charge() { this.melody([['G4', 1], ['C5', 1], ['E5', 1], ['G5', 2], ['E5', 1], ['G5', 4]], 0.12, 0.1); },
+  jingle() { this.melody([['C5', 1], ['E5', 1], ['G5', 1], ['C6', 3]], 0.14, 0.07); },
+  // The opening of "Take Me Out to the Ball Game" (1908, public domain).
   takeMeOut() {
     return this.melody([['C4', 2], ['C5', 1], ['A4', 1], ['G4', 1], ['E4', 1], ['G4', 3], ['D4', 3],
-      ['C4', 2], ['C5', 1], ['A4', 1], ['G4', 1], ['E4', 1], ['G4', 5]], 0.36, 0.085);
+      ['C4', 2], ['C5', 1], ['A4', 1], ['G4', 1], ['E4', 1], ['G4', 5]], 0.4, 0.11);
   }
 };
 
-// ================= Voices (uses the device's own built-in voices only — never an online voice) =================
+// ================= Voices =================
+// Uses ONLY voices built into the device (never an online voice), skips Apple's joke/novelty voices,
+// speaks at a natural pitch and speed, and doesn't chop words off mid-sentence.
+const NOVELTY_VOICES = /\b(Fred|Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Junior|Ralph|Kathy|Princess|Deranged|Hysterical|Eddy|Flo|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley)\b/i;
+const NICE_VOICES = /Ava|Noelle|Matilda|Jamie|Isha|Samantha|Alex|Daniel|Karen|Moira|Tessa|Ava|Allison|Evan|Nathan|Zoe|Tom|Susan|Serena|Rishi|Aaron|Nicky|Joelle|Arthur|Martha|Catherine|Gordon|Fiona|Lee|Aria|Guy|Jenny|Zira|David|Mark/i;
 const Voice = {
-  voice: null,
+  voices: [], voice: null, prio: -1, timer: null, primed: false,
+  list() {
+    try { return window.speechSynthesis.getVoices().filter(v => v.localService && /^en([-_]|$)/i.test(v.lang) && !NOVELTY_VOICES.test(v.name)); }
+    catch (e) { return []; }
+  },
+  score(v) {
+    let s = 0;
+    if (/premium/i.test(v.name)) s += 6; else if (/enhanced|neural|natural/i.test(v.name)) s += 4;
+    if (NICE_VOICES.test(v.name)) s += 2;
+    if (/en[-_]US/i.test(v.lang)) s += 1;
+    if (v.default) s += 0.5;
+    return s;
+  },
+  choose() {
+    this.voices = this.list().sort((a, b) => this.score(b) - this.score(a));
+    const want = save.settings.voiceName;
+    this.voice = this.voices.find(v => v.name === want) || this.voices[0] || null;
+  },
   init() {
     if (!('speechSynthesis' in window)) return;
-    const choose = () => {
-      try {
-        const vs = window.speechSynthesis.getVoices().filter(v => v.localService && /^en/i.test(v.lang));
-        this.voice = vs.find(v => /Daniel|Fred|Alex|Tom|Aaron|Arthur|Gordon/i.test(v.name)) || vs.find(v => /en-US/i.test(v.lang)) || vs[0] || null;
-      } catch (e) { this.voice = null; }
-    };
-    choose();
-    try { window.speechSynthesis.addEventListener('voiceschanged', choose); } catch (e) { /* older browsers */ }
+    this.choose();
+    try { window.speechSynthesis.addEventListener('voiceschanged', () => this.choose()); } catch (e) { /* older browsers */ }
   },
-  say(text, pitch, rate) {
-    if (!save.settings.voice || testMode || !this.voice) return;
-    try {
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.voice = this.voice; u.lang = this.voice.lang; u.rate = rate || 1.05; u.pitch = pitch || 1; u.volume = 0.9;
-      window.speechSynthesis.speak(u);
-    } catch (e) { /* ignore */ }
+  // iPad/iPhone only allow speech that starts from a tap, so we "wake up" speech once on the first tap.
+  prime() {
+    if (this.primed || !('speechSynthesis' in window) || testMode) return;
+    this.primed = true;
+    try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; window.speechSynthesis.speak(u); } catch (e) { /* ignore */ }
+    if (!this.voice) this.choose();
+  },
+  // prio 0 = announcer chatter, 1 = umpire's key calls, 2 = huge moments. Lower-priority lines never interrupt higher ones.
+  say(text, prio, force) {
+    const mode = save.settings.voice;
+    if (!('speechSynthesis' in window) || mode === 'off' || (testMode && !force)) return;
+    if (!this.voice) this.choose();
+    if (!this.voice) return;
+    if ((prio || 0) === 0 && mode !== 'all' && !force) return;
+    const s = window.speechSynthesis, busy = s.speaking || s.pending;
+    if (busy && prio < this.prio) return;
+    clearTimeout(this.timer);
+    this.prio = prio;
+    const speakNow = () => {
+      try {
+        const u = new SpeechSynthesisUtterance(text);
+        u.voice = this.voice; u.lang = this.voice.lang; u.rate = 1; u.pitch = 1; u.volume = 1;
+        u.onend = u.onerror = () => { this.prio = -1; };
+        s.speak(u);
+      } catch (e) { this.prio = -1; }
+    };
+    // after cutting off an earlier line, wait a moment: this avoids Safari's clipped / stuttering words
+    if (busy) { s.cancel(); this.timer = setTimeout(speakNow, 140); } else speakNow();
   }
 };
-Voice.init();
 
 // ================= Game state =================
 let G = null;
@@ -542,8 +737,9 @@ function newGame(opts) {
   mine.abbr = makeAbbr(mine.name); mine.human = true; mine.isP1 = true; mine.bonus = 0;
   let other;
   if (opts.mode === 'cpu') {
-    const meta = pick(CPU_TEAMS.filter(t => t.color.toLowerCase() !== mine.color.toLowerCase()));
-    other = makeTeam(DIFF[opts.diff].base, 1.5, meta, 3 + Math.floor(Math.random() * 3)); other.human = false; other.bonus = DIFF[opts.diff].bonus;
+    if (opts.season && save.season && save.season.teams[opts.season.opp]) other = JSON.parse(JSON.stringify(save.season.teams[opts.season.opp].roster));
+    else other = makeTeam(DIFF[opts.diff].base, 1.5, pick(CPU_TEAMS.filter(t => t.color.toLowerCase() !== mine.color.toLowerCase())), 3 + Math.floor(Math.random() * 3));
+    other.human = false; other.bonus = DIFF[opts.diff].bonus;
   } else { other = mirrorTeam(mine, save.p2); other.human = true; other.bonus = 0; }
   if (opts.auto) { mine.human = false; other.human = false; }
   const teams = opts.userHome ? [other, mine] : [mine, other];
@@ -553,7 +749,7 @@ function newGame(opts) {
     idx: [0, 0], stats: [{ h: 0, hr: 0, k: 0, bb: 0 }, { h: 0, hr: 0, k: 0, bb: 0 }], phase: 'none', timer: 0, banner: null,
     pitch: null, swing: null, botSwing: null, play: null, scene: null, cursor: { x: 0, y: 2.55 }, view: 'pitch', steal: null,
     pitchType: 'FB', aimTarget: null, aimT: 0, feedback: null, paused: false, clock: 0, approach: 'swing', pickoffs: 0,
-    crowd: { excite: 0.3, wave: -1, stand: 0 }, lastPitch: null, fx: [], stretchDone: false
+    crowd: { excite: 0.3, wave: -1, stand: 0 }, lastPitch: null, fx: [], stretchDone: false, mode: 'game', track: {}, kHalf: 0, perfectStreak: 0, meter: null, walkoff: false
   };
 }
 
@@ -566,7 +762,7 @@ function crowdReact(amount, kind) {
   else if (kind === 'groan') Sound.groan();
   if (kind === 'wave') { G.crowd.wave = 0; Sound.cheer(true); }
 }
-const umpire = text => Voice.say(text, 0.75, 1.1);
+const umpire = (text, prio) => Voice.say(text, prio == null ? 1 : prio);
 
 // ---------- flow ----------
 function banner(text, sub, dur, next, color) {
@@ -574,22 +770,23 @@ function banner(text, sub, dur, next, color) {
 }
 function startGame(opts) {
   G = newGame(opts);
-  if (!opts.auto) { save.lastStadium = opts.stadium || 'random'; persist(); }
+  if (!opts.auto && !opts.season) { save.lastStadium = opts.stadium || 'random'; persist(); }
   hideScreen(); hud(true);
   Sound.startCrowd();
-  Voice.say('Play ball!', 0.8, 1);
+  Voice.say('Play ball!', 1);
   banner('PLAY BALL!', `${G.teams[0].name} at ${G.teams[1].name} · ${G.stadium.emoji} ${G.stadium.name}`, 2.2, startAtBat, '#ffd166');
 }
 function startAtBat() {
   G.balls = 0; G.strikes = 0; G.approach = 'swing'; G.pickoffs = 0;
   const b = curBatter();
-  if (!G.opts.auto) setTimeout(() => { if (G && G.phase !== 'over') Voice.say(`Now batting, ${b.name}`, 1, 1.12); }, 250);
+  if (!G.opts.auto) setTimeout(() => { if (G && G.phase !== 'over') Voice.say(`Now batting, ${b.name}.`, 0); }, 250);
   if (offTeam().human && (G.bases[1] || G.bases[2]) && Math.random() < 0.6) { Sound.charge(); G.crowd.excite = Math.max(G.crowd.excite, 0.7); }
   nextPitch();
 }
 function nextPitch() {
   G.swing = null; G.pitch = null; G.botSwing = null; G.view = 'pitch'; G.steal = null; G.feedback = null; G.scene = null; G.play = null;
   G.cpuStealIntent = null;
+  if (G.mode !== 'game') { practiceNextPitch(); return; }
   if (!offTeam().human) {
     G.approach = cpuApproach();
     const from = stealableFrom();
@@ -620,6 +817,7 @@ function beginWindup() {
   G.phase = 'windup';
   const humanBat = offTeam().human;
   G.windDur = humanBat ? (defTeam().human ? 1.3 : 2.0) : 1.0;
+  if (G.mode !== 'game') G.windDur = 1.25;
   G.timer = G.windDur; G.swing = null; G.botSwing = null;
   G.cursor = { x: 0, y: 2.55 };
 }
@@ -633,7 +831,6 @@ function release() {
     const e = gauss() * G.opts.simHuman;
     G.botSwing = sw ? { bot: false, e, ts: pc.T + e, cx: pc.actual.x + gauss() * 0.15, cy: pc.actual.y + gauss() * 0.15 } : null;
   }
-  Sound.whoosh();
 }
 
 // ---------- pitching ----------
@@ -750,6 +947,9 @@ function doSwing(sw) {
     if (ae >= Wn) text = e < 0 ? 'Way early!' : 'Way late!';
     else if (!contact && pro && lq < 0.3) text = 'Missed the spot';
     G.feedback = { text, t: 0, good: ae < Wn * 0.22 && contact };
+    G.meter = { e, W: Wn, t: 0 };
+    if (ae < Wn * 0.22 && contact) { G.perfectStreak++; if (G.perfectStreak >= 5) earnBadge('perfect5'); if (G.cage) { G.cage.perfect++; G.cage.streak++; G.cage.best = Math.max(G.cage.best, G.cage.streak); } }
+    else { G.perfectStreak = 0; if (G.cage) G.cage.streak = 0; }
   }
   if (!bunt) Sound.whiff();
   if (contact) {
@@ -759,8 +959,9 @@ function doSwing(sw) {
       bb = { ev: popUp ? 40 : 18 + rnd(0, 16) + 6 * q, la: popUp ? 50 : rnd(-18, 4), spray: clamp((e / Wn) * 35 * (b.bats === 'R' ? 1 : -1) + gauss() * 15, -80, 80), bunt: true };
       if (Math.random() < 0.14 * (1 - tq)) bb.spray = (Math.random() < 0.5 ? -1 : 1) * rnd(50, 75);
     } else {
-      const ev = 55 + 52 * q * (0.55 + 0.045 * pow) + gauss() * 4 - (fly ? 2 : 0);
-      const la = clamp(12 + (q - 0.5) * 22 - dy * 55 + gauss() * 13 + (fly ? 15 : 0), -25, 70);
+      const derby = G.mode === 'derby'; // in the Derby, batters swing for the fences
+      const ev = 55 + 52 * q * (0.55 + 0.045 * pow) + gauss() * 4 - (fly ? 2 : 0) + (derby ? 16 * q : 0);
+      const la = clamp(12 + (q - 0.5) * 22 - dy * 55 + gauss() * (derby ? 8 : 13) + (fly ? 15 : 0) + (derby ? 11 * q : 0), -25, 70);
       const spray = clamp((e / Wn) * 62 * (b.bats === 'R' ? 1 : -1) + gauss() * 11, -85, 85);
       bb = { ev, la, spray, q };
     }
@@ -784,23 +985,24 @@ function updateFlight(dt) {
   if (pc.t >= pc.T + 0.25) finishPitchNoContact();
 }
 function finishPitchNoContact() {
+  if (G.mode !== 'game') { practiceNoContact(); return; }
   const pc = G.pitch, swung = !!G.swing;
   rememberPitch();
   let text, sub = '', color = '#fff', paDone = false, dur = 0.9;
   if (swung || pc.inZone) {
     G.strikes++;
     if (G.strikes >= 3) {
-      G.outs++; G.stats[1 - G.half].k++; text = swung ? 'STRIKEOUT!' : 'STRIKE THREE!'; color = '#ff8a8a'; paDone = true; dur = 1.4;
-      umpire(swung ? 'Strike three!' : 'Strike three! You’re out!');
+      G.outs++; G.stats[1 - G.half].k++; if (isMine(defTeam())) { G.kHalf++; if (G.kHalf >= 3 && G.outs >= 3) earnBadge('k_side'); } text = swung ? 'STRIKEOUT!' : 'STRIKE THREE!'; color = '#ff8a8a'; paDone = true; dur = 1.4;
+      umpire('Strike three!');
       crowdReact(0.35, defTeam() === G.teams[1] ? 'cheer' : 'groan');
-    } else { text = swung ? 'SWING AND A MISS' : 'STRIKE!'; umpire('Strike!'); }
+    } else { text = swung ? 'SWING AND A MISS' : 'STRIKE!'; umpire('Strike!', 0); }
   } else {
     G.balls++;
     if (G.balls >= 4) {
       text = 'WALK'; paDone = true; G.steal = null; dur = 1.3; G.stats[G.half].bb++;
       const runs = walkAdvance(); if (runs) { addRuns(runs); sub = 'A run scores!'; }
       umpire('Ball four.');
-    } else { text = 'BALL'; umpire('Ball.'); }
+    } else { text = 'BALL'; umpire('Ball.', 0); }
   }
   tally(text);
   const after = extra => banner(text, [sub, extra].filter(Boolean).join(' · '), extra ? Math.max(dur, 1.4) : dur, () => {
@@ -826,20 +1028,20 @@ function endPA() { G.idx[G.half] = (G.idx[G.half] + 1) % 9; afterPlay(); }
 function afterPlay() {
   const N = G.opts.innings;
   if (G.half === 1 && G.inning >= N && G.score[1] > G.score[0]) {
-    crowdReact(1, 'wave');
+    crowdReact(1, 'wave'); G.walkoff = true;
     return banner('WALK-OFF WIN!', `${G.teams[1].name} win it!`, 2.6, gameOver, '#ffd166');
   }
   if (G.outs >= 3) endHalf(); else startAtBat();
 }
 function endHalf() {
-  G.bases = [null, null, null]; G.outs = 0; G.balls = 0; G.strikes = 0; G.steal = null;
+  G.bases = [null, null, null]; G.outs = 0; G.balls = 0; G.strikes = 0; G.steal = null; G.kHalf = 0;
   const N = G.opts.innings;
   if (G.half === 0) {
     if (G.inning >= N && G.score[1] > G.score[0]) return gameOver();
     G.half = 1;
   } else {
     if (G.inning >= N && G.score[0] !== G.score[1]) return gameOver();
-    if (G.inning >= N + 3) return gameOver();
+    if (G.inning >= N + (G.opts.noTie ? 12 : 3)) return gameOver();
     G.half = 0; G.inning++;
   }
   G.line[G.half][G.inning - 1] = G.line[G.half][G.inning - 1] || 0;
@@ -889,10 +1091,10 @@ function startPlay(gen, onDone, setup) {
   G.fpos = Object.assign({}, FIELD_POS, (setup && setup.fpos) || {});
   for (const pos of Object.keys(FIELD_POS)) {
     const pl = pos === 'P' ? dt.pitcher : dt.batters.find(b => b.pos === pos);
-    S.actors['F_' + pos] = { x: G.fpos[pos].x, y: G.fpos[pos].y, kind: 'fielder', color: dt.color, skin: skinOf(pl) };
+    S.actors['F_' + pos] = { x: G.fpos[pos].x, y: G.fpos[pos].y, kind: 'fielder', color: dt.color, skin: skinOf(pl), look: pl.look, uni: dt.uni };
   }
-  S.actors.R0 = { x: -2.5, y: 0, kind: 'runner', color: ot.color, skin: skinOf(curBatter()), batter: true };
-  G.bases.forEach((r, i) => { if (r) S.actors['R' + (i + 1)] = { x: BASES[i + 1].x, y: BASES[i + 1].y, kind: 'runner', color: ot.color, skin: skinOf(r) }; });
+  S.actors.R0 = { x: -2.5, y: 0, kind: 'runner', color: ot.color, skin: skinOf(curBatter()), look: curBatter().look, uni: ot.uni, batter: true };
+  G.bases.forEach((r, i) => { if (r) S.actors['R' + (i + 1)] = { x: BASES[i + 1].x, y: BASES[i + 1].y, kind: 'runner', color: ot.color, skin: skinOf(r), look: r.look, uni: ot.uni }; });
   const b0 = (setup && setup.ball) || { x: 0, y: 1, h: 3 };
   S.actors.ball = { x: b0.x, y: b0.y, h: b0.h, kind: 'ball' };
   G.scene = S; G.trail = [];
@@ -900,6 +1102,7 @@ function startPlay(gen, onDone, setup) {
   advancePlay();
 }
 function startInPlay(bb) {
+  if (G.mode !== 'game') { startPlay(derbyGen(bb), practiceAfterBall); return; }
   const setup = bb.bunt ? { fpos: { '1B': { x: 42, y: 50 }, '3B': { x: -42, y: 50 }, P: { x: 0, y: 54 } } } : null;
   startPlay(inPlayGen(bb), finishPlay, setup);
 }
@@ -1075,6 +1278,7 @@ function* inPlayGen(bb) {
       const rest = T - elapsed;
       if (Math.random() < pOut) {
         const word = best.m > 0 ? 'NICE CATCH!' : 'DIVING CATCH!';
+        if (best.m <= 0 && isMine(def)) earnBadge('diving');
         const tws = [ballTo(L, 0, rest, peak * (1 - ua) * (1 - ua), 2), moveTo(fid, L, 0, rest - 0.02)];
         const ev = [{ t: rest, sound: 'pop', text: word, at: L, color: '#ffd166', call: 'Out!', crowd: ['cheer', 0.6], dust: L }];
         if (best.m <= 0) ev.push({ t: Math.max(0, rest - 0.35), dive: fid });
@@ -1209,6 +1413,7 @@ function* groundPlay(fd, bunt) {
       dp = Math.random() < p;
     }
   }
+  if (dp && isMine(def)) earnBadge('dp');
   // Stage B: the throw(s)
   const tws2 = [], ev2 = [];
   const bp = BASES[ch.base % 4], tOff = fd.t;
@@ -1388,6 +1593,7 @@ function* tagUps(L, f, outText, fid) {
   let pSafe = clamp(0.5 + target.delta * 1.4, 0.06, 0.95);
   if (def.human) { const s = yield promptTiming(fid, target.to === 4 ? 'THROW HOME!' : 'THROW TO 3RD!'); pSafe = clamp(pSafe + 0.35 - 0.7 * s, 0.05, 0.95); }
   const safe = Math.random() < pSafe;
+  if (!safe && isMine(def)) earnBadge('dp');
   const durR = 1.6, durB = safe ? durR + 0.2 : durR - 0.28, bp = BASES[target.to % 4], tCall = Math.max(durR, durB) + 0.03;
   const tws = [ballTo(bp, 0.15, 0.15 + durB, 10, 4, 6), moveTo(coverFor(target.to), bp, 0, 0.6)];
   const ev = callEvents(tCall, safe, bp, target.id); ev.push({ t: durR - 0.35, slide: target.id });
@@ -1414,6 +1620,8 @@ function* stealGen(from) {
   yield anim([moveTo(id, lerpPt(base, next, 0.5), 0, 0.4), ballTo({ x: 0, y: -3 }, 0, 0.1, 0, 4, 4)], 0.4, []);
   if (def.human) { const s = yield promptTiming('F_C', 'THROW HIM OUT!'); p = clamp(p + 0.3 - 0.6 * s, 0.05, 0.95); }
   const safe = Math.random() < p;
+  if (safe && isMine(off)) earnBadge('steal');
+  if (!safe && isMine(def)) earnBadge('cannon');
   const cover = from === 1 ? (Math.random() < 0.5 ? 'F_SS' : 'F_2B') : 'F_3B';
   const durR = 1.0, durB = safe ? durR + 0.12 : durR - 0.15, tCall = Math.max(durR, durB) + 0.03;
   const tws = [moveTo(id, next, 0, durR), moveTo(cover, next, 0, 0.6), ballTo(next, 0.05, durB, 4, 2.5, 5)];
@@ -1436,7 +1644,7 @@ function* pickoffGen(from) {
   const ev = callEvents(tCall, !out, base, id); ev.push({ t: 0.3, dive: id });
   yield anim(tws, tCall + 0.6, ev, [0.45, 0.9]);
   let held = false;
-  if (out) { G.bases[from - 1] = null; G.outs++; }
+  if (out) { G.bases[from - 1] = null; G.outs++; if (isMine(def)) earnBadge('pickoff'); }
   else if (intent && Math.random() < 0.6) held = true;
   return { text: out ? 'PICKED OFF!' : 'Safe — back to the bag', sub: held ? 'The runner is staying close now.' : '', held, out };
 }
@@ -1461,17 +1669,22 @@ function finishPlay(res) {
       return banner('STRIKEOUT!', 'A foul bunt with two strikes is strike three!', 2, endPA, '#ff8a8a');
     }
     if (G.strikes < 2) G.strikes++;
-    umpire('Foul ball!');
+    umpire('Foul ball.', 0);
     return banner('FOUL BALL', '', 0.9, nextPitch, '#ffd166');
   }
   G.outs += res.outs || 0;
   G.bases = G.outs >= 3 ? [null, null, null] : res.bases;
   if (res.runs) addRuns(res.runs);
   if (res.hit) { G.stats[G.half].h++; if (res.hit === 4) G.stats[G.half].hr++; }
+  if (res.hit && isMine(offTeam())) {
+    const T = G.track; T['h' + res.hit] = (T['h' + res.hit] || 0) + 1; earnBadge('first_hit');
+    if (res.hit === 4) { earnBadge('first_hr'); if (res.runs === 4) earnBadge('grand_slam'); if (T.h4 >= 3) earnBadge('three_hr'); }
+    if (T.h1 && T.h2 && T.h3 && T.h4) earnBadge('cycle');
+  }
   let sub = res.sub || '';
   if (res.runs) sub = (sub ? sub + ' · ' : '') + (res.runs === 1 ? '1 run scores!' : res.runs + ' runs score!');
-  if (res.hit === 4) Voice.say(res.text === 'GRAND SLAM!' ? 'Grand slam!' : 'Home run!', 1, 1);
-  else if (res.hit >= 2) Voice.say(res.text.replace('!', '') + '!', 1, 1.05);
+  if (res.hit === 4) Voice.say(res.text === 'GRAND SLAM!' ? 'Grand slam!' : 'Home run!', 2);
+  else if (res.hit >= 2) Voice.say(res.text.charAt(0) + res.text.slice(1).toLowerCase(), 0);
   banner(res.text || 'OUT', sub, res.hit === 4 ? 2.6 : 1.7, endPA, res.color);
 }
 
@@ -1500,6 +1713,8 @@ function gameOver() {
     persist();
     if (total) Sound.coin();
   }
+  if (won) { if (G.walkoff && me === 1) earnBadge('walkoff'); if (G.opts.mode === 'cpu' && theirScore === 0 && G.opts.innings >= 3) earnBadge('shutout'); if (G.opts.mode === 'cpu' && G.opts.diff === 'hard') earnBadge('giant'); }
+  if (G.opts.season) seasonRecord();
   if (won || G.opts.mode !== 'cpu') Sound.cheer(true);
   showGameOver(won, tie, rewards);
 }
@@ -1508,7 +1723,8 @@ function gameOver() {
 const W = 1000, H = 700;
 const FONT = 'ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
 const canvas = document.getElementById('game');
-const ctx = canvas.getContext('2d');
+let ctx = canvas.getContext('2d');
+function withCanvas(c, fn) { const old = ctx; ctx = c.getContext('2d'); try { fn(); } finally { ctx = old; } }
 let scale = 1, offX = 0, offY = 0, dpr = 1;
 function resize() {
   dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -1532,33 +1748,67 @@ function txt(s, x, y, size, color, align, strokeW) {
   ctx.fillStyle = color || '#fff'; ctx.fillText(s, x, y);
 }
 function shade(hex, f) { const n = parseInt(hex.slice(1), 16); let r = n >> 16, g = (n >> 8) & 255, b = n & 255; const m = c => clamp(Math.round(f < 0 ? c * (1 + f) : c + (255 - c) * f), 0, 255); return `rgb(${m(r)},${m(g)},${m(b)})`; }
-const skinOf = p => SKIN[hashStr(p && p.name ? p.name : 'x') % SKIN.length];
+const skinOf = p => (p && p.look) ? SKIN[p.look.skin] : SKIN[hashStr(p && p.name ? p.name : 'x') % SKIN.length];
 const clockNow = () => (G ? G.clock : performance.now() / 1000);
 
 // A friendly cartoon kid. (x,y) = feet. ~70 units tall at s=1.
+// Team logo: a simple shape with the team's letter (all original shapes).
+function logoPath(shape, x, y, r) {
+  ctx.beginPath();
+  if (shape === 'star') { for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, rr2 = i % 2 ? r * 0.48 : r; ctx.lineTo(x + Math.cos(a) * rr2, y + Math.sin(a) * rr2); } }
+  else if (shape === 'diamond') { ctx.moveTo(x, y - r); ctx.lineTo(x + r, y); ctx.lineTo(x, y + r); ctx.lineTo(x - r, y); }
+  else if (shape === 'shield') { ctx.moveTo(x - r * 0.85, y - r * 0.8); ctx.lineTo(x + r * 0.85, y - r * 0.8); ctx.lineTo(x + r * 0.85, y); ctx.quadraticCurveTo(x + r * 0.7, y + r * 0.7, x, y + r); ctx.quadraticCurveTo(x - r * 0.7, y + r * 0.7, x - r * 0.85, y); }
+  else if (shape === 'bolt') { ctx.moveTo(x + r * 0.2, y - r); ctx.lineTo(x - r * 0.7, y + r * 0.15); ctx.lineTo(x - r * 0.05, y + r * 0.15); ctx.lineTo(x - r * 0.3, y + r); ctx.lineTo(x + r * 0.75, y - r * 0.2); ctx.lineTo(x + r * 0.05, y - r * 0.2); }
+  else ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.closePath();
+}
+function drawLogo(uni, x, y, r, base) {
+  ctx.fillStyle = uni.secondary; logoPath(uni.logo, x, y, r); ctx.fill();
+  ctx.lineWidth = Math.max(0.6, r * 0.12); ctx.strokeStyle = base || '#fff'; ctx.stroke();
+  if (uni.logo !== 'bolt' && r >= 3) { ctx.fillStyle = base || '#fff'; ctx.font = '900 ' + (r * 1.15) + 'px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(uni.letter, x, y + r * 0.08); }
+}
+const hexA = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
+const kidOpts = (pl, team, extra) => Object.assign({ jersey: team.color, cap: team.color, skin: skinOf(pl), look: pl && pl.look, uni: team.uni }, extra || {});
+
+// A friendly cartoon kid. (x,y) = feet. ~70 units tall at s=1.
 function drawKid(x, y, s, o) {
+  const look = o.look || {}, uni = o.uni || null, sec = uni ? uni.secondary : '#ffffff';
+  const hairC = HAIR[look.hair != null ? look.hair : 0];
   ctx.save(); ctx.translate(x, y);
   ctx.fillStyle = 'rgba(0,0,0,.22)'; ell(0, 0, 15 * s, 5 * s);
   if (o.lie) { ctx.rotate(o.lie); }
   ctx.scale(o.mirror ? -s : s, s);
   const run = o.run ? Math.sin(o.run) * 5 : 0;
-  ctx.fillStyle = o.pants || '#f3f4f6'; rr(-9, -20 - Math.max(0, run), 7, 19, 3); rr(2, -20 - Math.max(0, -run), 7, 19, 3);
+  ctx.fillStyle = uni ? PANTS[uni.pants] : (o.pants || '#f3f4f6'); rr(-9, -20 - Math.max(0, run), 7, 19, 3); rr(2, -20 - Math.max(0, -run), 7, 19, 3);
   ctx.fillStyle = '#1f2937'; ell(-5.5, -1.5 - Math.max(0, run), 5.5, 3); ell(5.5, -1.5 - Math.max(0, -run), 5.5, 3);
   ctx.fillStyle = o.jersey; rr(-12, -42, 24, 25, 8);
-  ctx.strokeStyle = o.jersey; ctx.lineWidth = 6; ctx.lineCap = 'round';
+  if (uni && uni.style === 'pinstripe') { ctx.save(); rrPath(-12, -42, 24, 25, 8); ctx.clip(); ctx.strokeStyle = hexA(sec, 0.5); ctx.lineWidth = 1; for (let px = -10; px < 12; px += 4) line(px, -42, px, -17); ctx.restore(); }
+  if (uni) { ctx.fillStyle = sec; ctx.fillRect(-12, -21, 24, 3); }
+  if (uni && !o.back && s > 0.18) { ctx.save(); if (o.mirror) ctx.scale(-1, 1); ctx.fillStyle = sec; ctx.font = '900 10px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(look.num != null ? String(look.num) : uni.letter, 0, -30); ctx.restore(); }
+  const sleeve = uni && uni.style === 'twotone' ? sec : o.jersey;
+  ctx.strokeStyle = sleeve; ctx.lineWidth = 6; ctx.lineCap = 'round';
   const la = o.armL != null ? o.armL : 112, lx = -11 + 14 * Math.cos(rad(la)), ly = -37 + 14 * Math.sin(rad(la));
   const ra = o.armR != null ? o.armR : 68, rx = 11 + 14 * Math.cos(rad(ra)), ry = -37 + 14 * Math.sin(rad(ra));
   line(-11, -37, lx, ly); line(11, -37, rx, ry);
   ctx.fillStyle = o.skin; circle(lx, ly, 3.2); circle(rx, ry, 3.2);
+  if (look.acc === 'band') { ctx.strokeStyle = sec; ctx.lineWidth = 2.2; line(lerp(-11, lx, 0.72) - 2, lerp(-37, ly, 0.72), lerp(-11, lx, 0.72) + 2, lerp(-37, ly, 0.72)); }
   if (o.ballInHand) { ctx.fillStyle = '#fff'; circle(lx, ly - 1, 3); }
   if (o.glove) { ctx.fillStyle = '#8b5a2b'; circle(rx + 0.5, ry - 1, 5.5); ctx.fillStyle = '#6b4220'; circle(rx + 0.5, ry - 1, 2.5); }
+  if (look.style === 'long') { ctx.fillStyle = hairC; rr(-15.5, -60, 31, 23, 7); }
+  if (look.style === 'pony') { ctx.fillStyle = hairC; ell(o.back ? 0 : 15, o.back ? -44 : -49, 4.5, 8); }
   ctx.fillStyle = o.skin; circle(0, -55, 14);
-  if (!o.back) {
+  if (look.style === 'curly') { ctx.fillStyle = hairC; for (const [cx, cy] of [[-13, -55], [13, -55], [-12, -49], [12, -49]]) circle(cx, cy, 4.2); }
+  if (look.style === 'short' || look.style === 'buzz') { ctx.fillStyle = hairC; rr(-14, -58, 3.5, 7, 1.5); rr(10.5, -58, 3.5, 7, 1.5); }
+  if (o.back) { ctx.fillStyle = hairC; ell(0, -51, 12, 6); }
+  else {
     ctx.fillStyle = '#1f2937'; circle(-5, -53, 1.9); circle(5, -53, 1.9);
     ctx.strokeStyle = '#1f2937'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(0, -49, 4, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke();
+    if (look.acc === 'glasses') { ctx.strokeStyle = '#111827'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(-5, -53, 3.4, 0, Math.PI * 2); ctx.stroke(); ctx.beginPath(); ctx.arc(5, -53, 3.4, 0, Math.PI * 2); ctx.stroke(); line(-1.6, -53, 1.6, -53); }
+    if (look.acc === 'eyeblack') { ctx.fillStyle = '#111827'; ctx.fillRect(-7.5, -50.5, 5, 1.6); ctx.fillRect(2.5, -50.5, 5, 1.6); }
   }
   ctx.fillStyle = o.cap; ctx.beginPath(); ctx.arc(0, -57, 14.6, Math.PI, 0); ctx.closePath(); ctx.fill();
   if (!o.back) ell(0, -57, 17, 3.6); else rr(-14.6, -58, 29.2, 4, 2);
+  if (uni && !o.back && !o.helmet && s > 0.18) { ctx.save(); if (o.mirror) ctx.scale(-1, 1); drawLogo(uni, 0, -64, 4.2, o.cap); ctx.restore(); }
   if (o.helmet) { ctx.fillStyle = o.cap; ell(o.back ? 0 : 9, -51, 5, 6); }
   ctx.restore();
 }
@@ -1689,15 +1939,21 @@ function batEnd(prog, hx, hy, L) {
   return { x: hx + L * Math.cos(p) * (1 - 0.3 * u), y: hy + L * 0.25 * Math.sin(p) - L * 0.6 * u };
 }
 function drawBatter(sx, sy, s, team, player, prog, mirror, bunt) {
+  const look = player.look || {}, uni = team.uni || { secondary: '#ffffff', style: 'solid', pants: 'white' }, sec = uni.secondary;
+  const hairC = HAIR[look.hair != null ? look.hair : hashStr(player.name) % 5];
   ctx.save(); ctx.translate(sx, sy); ctx.scale(mirror ? -s : s, s);
   const skin = skinOf(player);
   ctx.fillStyle = 'rgba(0,0,0,.25)'; ell(0, 0, 19, 5);
-  ctx.fillStyle = '#f3f4f6'; rr(-13, -21, 8, 20, 3); rr(5, -21, 8, 20, 3);
+  ctx.fillStyle = PANTS[uni.pants] || '#f3f4f6'; rr(-13, -21, 8, 20, 3); rr(5, -21, 8, 20, 3);
   ctx.fillStyle = '#1f2937'; ell(-9, -1.5, 6, 3); ell(9, -1.5, 6, 3);
   ctx.fillStyle = team.color; rr(-13, -44, 26, 26, 9);
-  ctx.fillStyle = 'rgba(255,255,255,.85)'; rr(-6, -38, 12, 3, 1.5);
+  if (uni.style === 'pinstripe') { ctx.save(); rrPath(-13, -44, 26, 26, 9); ctx.clip(); ctx.strokeStyle = hexA(sec, 0.5); ctx.lineWidth = 1; for (let px = -11; px < 13; px += 4) line(px, -44, px, -18); ctx.restore(); }
+  ctx.fillStyle = sec; ctx.fillRect(-13, -22, 26, 3);
+  if (look.style === 'long') { ctx.fillStyle = hairC; rr(-11, -52, 22, 13, 5); }
   ctx.fillStyle = skin; circle(0, -56, 13); rr(-4, -46, 8, 5, 2);
-  ctx.fillStyle = HAIR[hashStr(player.name) % 5]; ell(0, -51, 12.5, 7.5);
+  ctx.fillStyle = hairC; ell(0, -51, 12.5, 7.5);
+  if (look.style === 'curly') for (const cx of [-12, 12]) circle(cx, -50, 4.5);
+  if (look.style === 'pony') { ctx.fillStyle = hairC; ell(0, -42, 4.5, 9); }
   ctx.fillStyle = team.color; ctx.beginPath(); ctx.arc(0, -57, 14.8, Math.PI * 0.92, Math.PI * 2.08); ctx.closePath(); ctx.fill();
   ell(10.5, -52, 5, 6.5);
   ctx.fillStyle = 'rgba(255,255,255,.25)'; ell(-5, -64, 5, 2.5);
@@ -1708,8 +1964,16 @@ function drawBatter(sx, sy, s, team, player, prog, mirror, bunt) {
     hx = 9 + 8 * Math.sin(Math.PI * clamp(sw / 0.6, 0, 1)); hy = -40 + 4 * sw;
     end = bunt ? { x: hx + 34, y: hy - 3 - sw * 4 } : batEnd(prog, hx, hy, 36);
   }
-  ctx.strokeStyle = team.color; ctx.lineWidth = 6; ctx.lineCap = 'round';
+  // name + number on the back (drawn before the arms so the bat stays in front)
+  ctx.save(); if (mirror) ctx.scale(-1, 1);
+  ctx.fillStyle = sec; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  const nm = String(player.name).split(' ').pop().toUpperCase().slice(0, 10);
+  ctx.font = '900 ' + (nm.length > 7 ? 4.6 : 5.6) + 'px ' + FONT; ctx.fillText(nm, 0, -38.5);
+  ctx.font = '900 12px ' + FONT; ctx.fillText(String(look.num != null ? look.num : ''), 0, -29);
+  ctx.restore();
+  ctx.strokeStyle = uni.style === 'twotone' ? sec : team.color; ctx.lineWidth = 6; ctx.lineCap = 'round';
   line(-9, -40, hx, hy); line(10, -39, hx, hy);
+  if (look.acc === 'band') { ctx.strokeStyle = sec; ctx.lineWidth = 2.5; line(hx - 4, hy + 1, hx - 1, hy - 2); }
   ctx.strokeStyle = '#c98b4a'; ctx.lineWidth = 2.2; line(hx, hy, end.x, end.y);
   ctx.lineWidth = 3.6; line(lerp(hx, end.x, 0.45), lerp(hy, end.y, 0.45), end.x, end.y);
   ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = 0.8; line(lerp(hx, end.x, 0.45), lerp(hy, end.y, 0.45), end.x, end.y);
@@ -1779,7 +2043,7 @@ function drawPitchView() {
     let fp = FIELD_POS[pos];
     if (bunting && G.phase === 'flight' && (pos === '1B' || pos === '3B')) fp = { x: fp.x * 0.75, y: lerp(fp.y, 55, clamp(G.pitch.t / G.pitch.T, 0, 1)) };
     const s = proj(fp.x, 0, fp.y), pl = def.batters.find(b => b.pos === pos);
-    drawKid(s.x, s.y, s.k * 5 / 70, { jersey: def.color, cap: def.color, skin: skinOf(pl), glove: true });
+    drawKid(s.x, s.y, s.k * 5 / 70, kidOpts(pl, def, { glove: true }));
   }
   // runners leading off
   G.bases.forEach((r, i) => {
@@ -1787,7 +2051,7 @@ function drawPitchView() {
     const b = BASES[i + 1], nb = BASES[(i + 2) % 4], going = G.runnerGoing && G.phase === 'flight' && G.steal && G.steal.from === i + 1;
     const lead = going ? clamp(0.1 + G.runnerGoing.t * 0.25, 0, 0.6) : 0.08;
     const p = lerpPt(b, nb, lead), s = proj(p.x, 0, p.y);
-    drawKid(s.x, s.y, s.k * 5 / 70, { jersey: off.color, cap: off.color, skin: skinOf(r), helmet: true, run: going ? G.clock * 18 : 0 });
+    drawKid(s.x, s.y, s.k * 5 / 70, kidOpts(r, off, { helmet: true, run: going ? G.clock * 18 : 0 }));
   });
   const pc = G.pitch, pit = def.pitcher;
   const ps = proj(0, 0.8, 60.5);
@@ -1796,7 +2060,7 @@ function drawPitchView() {
     const w = 1 - G.timer / G.windDur, u = clamp((w - (1 - 0.8 / G.windDur)) / (0.8 / G.windDur), 0, 1);
     armL = u < 0.5 ? lerp(112, 200, u / 0.5) : lerp(200, 280, (u - 0.5) / 0.5);
   } else if (G.phase === 'flight' || (pc && pc.released)) { armL = 60; ballInHand = false; }
-  drawKid(ps.x, ps.y, ps.k * 5.6 / 70, { jersey: def.color, cap: def.color, skin: skinOf(pit), glove: true, armL, ballInHand, mirror: pit.throws === 'L' });
+  drawKid(ps.x, ps.y, ps.k * 5.6 / 70, kidOpts(pit, def, { glove: true, armL, ballInHand, mirror: pit.throws === 'L' }));
   if (G.phase === 'flight' && pc.t < 0.12) { ctx.fillStyle = `rgba(255,255,255,${0.6 - pc.t * 5})`; circle(proj(pc.hand * -1.7, 5.6, 54).x, proj(pc.hand * -1.7, 5.6, 54).y, 12); }
   const z1 = proj(-0.71, 3.5, 0), z2 = proj(0.71, 1.6, 0);
   ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fillRect(z1.x, z1.y, z2.x - z1.x, z2.y - z1.y);
@@ -1990,7 +2254,7 @@ function drawFieldView(titleMode) {
     let lie = 0;
     if (a.diveT != null && a.diveT < 0.9) lie = (a.face || 1) * -1.35 * clamp(a.diveT * 5, 0, 1) * (a.diveT > 0.6 ? (0.9 - a.diveT) / 0.3 : 1);
     if (a.slideT != null && a.slideT < 0.8) lie = (a.face || 1) * 1.2 * clamp(a.slideT * 5, 0, 1) * (a.slideT > 0.55 ? (0.8 - a.slideT) / 0.25 : 1);
-    drawKid(s.x, s.y, sc, { jersey: a.color, cap: a.color, skin: a.skin, glove: a.kind === 'fielder', helmet: a.kind === 'runner', run: a.moving ? clock * 18 : 0, lie });
+    drawKid(s.x, s.y, sc, { jersey: a.color, cap: a.color, skin: a.skin, look: a.look, uni: a.uni, glove: a.kind === 'fielder', helmet: a.kind === 'runner', run: a.moving ? clock * 18 : 0, lie });
     const pr = G.play && G.play.prompt;
     if (pr && pr.kind === 'timing' && pr.target === it.id) drawPromptRing(s.x, s.y - 34 * sc, pr);
   }
@@ -2058,6 +2322,17 @@ function drawFx() {
 
 // ================= HUD =================
 function drawHUD() {
+  if (G.mode !== 'game') drawPracticeHUD(); else drawScoreboard();
+  if (G.view === 'pitch' && G.phase !== 'over') {
+    const b = curBatter(), off = offTeam(), p = defTeam().pitcher;
+    const bx0 = W - 84 - 380;
+    ctx.fillStyle = 'rgba(15,23,42,.8)'; rr(bx0, 14, 380, 50, 14);
+    txt(`🏏 ${b.name} (${b.pos})`, bx0 + 14, 30, 17, '#fff', 'left', 0);
+    txt(`POW ${eff(off, b.pow)} · CON ${eff(off, b.con)} · SPD ${eff(off, b.spd)}`, bx0 + 14, 51, 14, '#cbd5e1', 'left', 0);
+    txt(`⚾ ${p.name}`, bx0 + 366, 51, 14, '#cbd5e1', 'right', 0);
+  }
+}
+function drawScoreboard() {
   const x = 14, y = 14;
   ctx.fillStyle = 'rgba(15,23,42,.85)'; rr(x, y, 300, 100, 16);
   for (let i = 0; i < 2; i++) {
@@ -2075,15 +2350,8 @@ function drawHUD() {
   });
   const bx = x + 258, by = y + 52, d = 15;
   [[bx + d, by], [bx, by - d], [bx - d, by]].forEach((p, i) => { ctx.save(); ctx.translate(p[0], p[1]); ctx.rotate(Math.PI / 4); ctx.fillStyle = G.bases[i] ? '#ffd166' : 'rgba(255,255,255,.25)'; ctx.fillRect(-7, -7, 14, 14); ctx.restore(); });
-  if (G.view === 'pitch' && G.phase !== 'over') {
-    const b = curBatter(), off = offTeam(), p = defTeam().pitcher;
-    const bx0 = W - 84 - 380;
-    ctx.fillStyle = 'rgba(15,23,42,.8)'; rr(bx0, 14, 380, 50, 14);
-    txt(`🏏 ${b.name} (${b.pos})`, bx0 + 14, 30, 17, '#fff', 'left', 0);
-    txt(`POW ${eff(off, b.pow)} · CON ${eff(off, b.con)} · SPD ${eff(off, b.spd)}`, bx0 + 14, 51, 14, '#cbd5e1', 'left', 0);
-    txt(`⚾ ${p.name}`, bx0 + 366, 51, 14, '#cbd5e1', 'right', 0);
-  }
 }
+
 function drawBanner() {
   const b = G.banner; if (!b) return;
   const s = Math.min(1, 0.6 + b.t * 3);
@@ -2109,6 +2377,7 @@ function render() {
   else {
     if (G.view === 'field') drawFieldView(false); else drawPitchView();
     drawHUD();
+    drawTimingMeter();
     if (G.phase === 'stretch') drawStretch();
     drawBanner();
   }
@@ -2124,6 +2393,7 @@ function update(dt) {
   if (G.feedback) G.feedback.t += dt;
   if (G.pitchFeedback) G.pitchFeedback.t += dt;
   if (G.lastPitch) G.lastPitch.t += dt;
+  if (G.meter) G.meter.t += dt;
   if (G.swing) G.swing.anim += dt;
   if (G.scene) for (const t of G.scene.texts) t.t += dt;
   const c = G.crowd;
@@ -2217,19 +2487,21 @@ const pitchBar = h('div', { id: 'pitchBar', class: 'hidden' });
 const stealBtn = h('button', { id: 'stealBtn', class: 'btn green hidden', onclick: () => { const f = stealableFrom(); if (f && G.phase === 'windup') { G.steal = { from: f }; Sound.click(); syncUI(true); } } }, 'Steal!');
 const batBar = h('div', { id: 'batBar', class: 'hidden' });
 const pickBar = h('div', { id: 'pickBar', class: 'hidden' });
+const cageBar = h('div', { id: 'cageBar', class: 'hidden' });
 const choiceEl = h('div', { id: 'choice', class: 'hidden' });
 const passEl = h('div', { id: 'pass', class: 'hidden', onpointerdown: e => { e.preventDefault(); passReady(); } },
   h('div', { class: 'big', text: '👀' }), h('div', { text: "Batter's turn!" }), h('div', { style: { fontSize: '20px', fontWeight: '700' }, text: 'Pitcher, hand it over. Batter, tap anywhere when ready.' }));
-[pauseBtn, pitchBar, batBar, pickBar, stealBtn, choiceEl, passEl].forEach(el => hudEl.appendChild(el));
+[pauseBtn, pitchBar, batBar, pickBar, cageBar, stealBtn, choiceEl, passEl].forEach(el => hudEl.appendChild(el));
 function passReady() { if (G && G.phase === 'pass') { Sound.unlock(); beginWindup(); syncUI(true); } }
 function hud(on) { hudEl.classList.toggle('hidden', !on); syncUI(true); }
 function setApproach(a) { if (!G) return; if (G.swing) return; G.approach = a; Sound.click(); syncUI(true); }
 let uiState = '';
 function syncUI(force) {
-  if (!G) { [pitchBar, stealBtn, batBar, pickBar, choiceEl, passEl].forEach(el => el.classList.add('hidden')); uiState = ''; return; }
+  if (!G) { [pitchBar, stealBtn, batBar, pickBar, choiceEl, passEl, cageBar].forEach(el => el.classList.add('hidden')); uiState = ''; cageBarState = ''; return; }
   const showPitch = defTeam().human && (G.phase === 'pickPitch' || G.phase === 'aim');
-  const showBat = offTeam().human && (G.phase === 'windup' || (G.phase === 'flight' && !G.swing));
-  const sf = offTeam().human && G.phase === 'windup' && !G.steal && G.outs < 3 ? stealableFrom() : 0;
+  syncCageBar(cageBar);
+  const showBat = G.mode === 'game' && offTeam().human && (G.phase === 'windup' || (G.phase === 'flight' && !G.swing));
+  const sf = G.mode === 'game' && offTeam().human && G.phase === 'windup' && !G.steal && G.outs < 3 ? stealableFrom() : 0;
   const picks = defTeam().human && G.phase === 'pickPitch' && G.pickoffs < 2 ? [1, 2].filter(b => G.bases[b - 1] && !G.bases[b]) : [];
   const pr = G.play && G.play.prompt && G.play.prompt.kind === 'choice' ? G.play.prompt : null;
   const rep = defTeam().pitcher.pitches.join(',');
@@ -2277,17 +2549,24 @@ function showTitle() {
     h('h1', { class: 'title', text: 'Pocket Slugger' }),
     h('div', { class: 'subtitle', text: '⚾ No ads. No internet needed. Just baseball.' }),
     h('button', { class: 'btn', onclick: () => showSetup('cpu') }, '▶  Play vs Computer'),
-    h('button', { class: 'btn blue', onclick: () => showSetup('2p') }, '👥  2 Players (one device)'),
-    h('button', { class: 'btn green', onclick: showTeam }, '🧢  My Team', h('span', { class: 'pill', text: '🪙 ' + save.coins })),
-    h('button', { class: 'btn gray', onclick: showSettings }, '⚙️  Settings & How to Play'),
+    h('button', { class: 'btn purple', onclick: () => save.season ? showSeasonHub() : showSeasonSetup() }, save.season ? `🏆  Season ${save.season.n} · ${seasonStatus()}` : '🏆  Start a Season'),
+    h('div', { class: 'grid3' },
+      h('button', { class: 'btn blue', onclick: () => showSetup('2p') }, '👥 2 Players'),
+      h('button', { class: 'btn teal', onclick: showDerbySetup }, '🏟️ HR Derby'),
+      h('button', { class: 'btn teal2', onclick: startCage }, '⚾ Batting Cage')),
+    h('div', { class: 'grid3' },
+      h('button', { class: 'btn green', onclick: showTeam }, '🧢 My Team', h('span', { class: 'pill', text: '🪙 ' + save.coins })),
+      h('button', { class: 'btn gold', onclick: showTrophies }, '🏅 Trophies'),
+      h('button', { class: 'btn gray', onclick: showSettings }, '⚙️ Settings')),
     h('div', { class: 'record', text: `${save.team.name} vs computer: ${r.w} W – ${r.l} L${r.t ? ' – ' + r.t + ' T' : ''}` }),
     window.innerHeight > window.innerWidth ? h('div', { class: 'tip', text: 'Tip: turn the iPad sideways for a bigger field.' }) : null));
 }
 
-function stadiumPicker(get, set) {
+function seasonStatus() { const s = save.season; if (!s) return ''; if (s.phase === 'done') return 'Final results'; if (s.phase === 'playoffs') return 'Playoffs!'; return `Game ${s.round + 1} of ${s.schedule.length}`; }
+function stadiumPicker(get, set, noRandom) {
   const wrap = h('div', { class: 'stadiums' });
   const render_ = () => wrap.replaceChildren(
-    h('button', { class: 'stadium' + (get() === 'random' ? ' sel' : ''), style: { background: 'linear-gradient(135deg,#334155,#64748b)' }, onclick: () => { set('random'); render_(); } },
+    noRandom ? null : h('button', { class: 'stadium' + (get() === 'random' ? ' sel' : ''), style: { background: 'linear-gradient(135deg,#334155,#64748b)' }, onclick: () => { set('random'); render_(); } },
       h('div', { class: 'sname', text: '🎲 Surprise me!' }), h('div', { class: 'sdesc', text: 'A random ballpark every game.' })),
     ...STADIUMS.map(s => h('button', { class: 'stadium' + (get() === s.id ? ' sel' : ''), style: { background: `linear-gradient(180deg, ${s.sky[0]}, ${s.sky[s.sky.length - 1]} 55%, ${s.grass[0]} 56%, ${s.grass[1]})` }, onclick: () => { set(s.id); render_(); } },
       h('div', { class: 'sname', text: `${s.emoji} ${s.name}` }), h('div', { class: 'sdesc', text: s.desc }),
@@ -2319,7 +2598,9 @@ function showSetup(mode) {
   showScreen(body);
 }
 
+function miniFace(pl) { const t = save.team; return previewCanvas(40, 50, () => { ctx.fillStyle = '#e0f2fe'; rr(0, 0, 40, 50, 8); drawKid(20, 66, 0.82, kidOpts(pl, t, {})); }); }
 function showTeam() {
+  G = null; hud(false);
   const t = save.team;
   const coinsEl = h('span', { class: 'coins' });
   const refreshCoins = () => { coinsEl.textContent = '🪙 ' + save.coins + ' coins'; };
@@ -2338,7 +2619,7 @@ function showTeam() {
     const learnable = PITCH_ORDER.filter(k => !p.pitches.includes(k));
     cards.replaceChildren(
       h('div', { class: 'player wide' },
-        h('div', { class: 'row' }, h('span', { class: 'badge', style: { background: '#111827' }, text: 'P' }), h('div', { class: 'grow' }, nameInput(p))),
+        h('div', { class: 'row' }, miniFace(p), h('span', { class: 'badge', style: { background: '#111827' }, text: 'P' }), h('div', { class: 'grow' }, nameInput(p)), h('button', { class: 'btn small blue', onclick: () => showPlayerEditor(p, true) }, '✏️ Look')),
         h('div', { class: 'muted', text: `Pitcher · throws ${p.throws === 'L' ? 'left' : 'right'}` }),
         ...STATS_P.map(s => statRow(p, s)),
         h('div', { class: 'label', text: `Pitches (${p.pitches.length} of ${MAX_PITCHES})` }),
@@ -2346,9 +2627,9 @@ function showTeam() {
         learnable.length && p.pitches.length < MAX_PITCHES ? h('div', { class: 'label', text: 'Learn a new pitch' }) : null,
         p.pitches.length < MAX_PITCHES ? h('div', { class: 'learn' }, ...learnable.map(k => h('div', { class: 'learnrow' },
           h('div', {}, h('b', { text: PITCHES[k].name }), h('div', { class: 'muted', text: PITCHES[k].tip })),
-          h('button', { class: 'btn small blue', disabled: save.coins < PITCH_COST[k] ? true : null, onclick: () => { if (save.coins >= PITCH_COST[k] && p.pitches.length < MAX_PITCHES) { save.coins -= PITCH_COST[k]; p.pitches.push(k); persist(); Sound.coin(); renderCards(); refreshCoins(); } } }, `Learn · ${PITCH_COST[k]}🪙`)))) : h('div', { class: 'muted', text: 'Your pitcher knows the most pitches allowed.' })),
+          h('button', { class: 'btn small blue', disabled: save.coins < PITCH_COST[k] ? true : null, onclick: () => { if (save.coins >= PITCH_COST[k] && p.pitches.length < MAX_PITCHES) { save.coins -= PITCH_COST[k]; p.pitches.push(k); persist(); Sound.coin(); earnBadge('new_pitch'); renderCards(); refreshCoins(); } } }, `Learn · ${PITCH_COST[k]}🪙`)))) : h('div', { class: 'muted', text: 'Your pitcher knows the most pitches allowed.' })),
       ...t.batters.map(b => h('div', { class: 'player' },
-        h('div', { class: 'row' }, h('span', { class: 'badge', style: { background: t.color }, text: b.pos }), h('div', { class: 'grow' }, nameInput(b))),
+        h('div', { class: 'row' }, miniFace(b), h('span', { class: 'badge', style: { background: t.color }, text: b.pos }), h('div', { class: 'grow' }, nameInput(b)), h('button', { class: 'btn small blue', onclick: () => showPlayerEditor(b, false) }, '✏️ Look')),
         h('div', { class: 'muted', text: `${POS_NAME[b.pos]} · bats ${b.bats === 'L' ? 'left' : 'right'}` }),
         ...STATS_B.filter(s => !(b.pos === 'DH' && s === 'fld')).map(s => statRow(b, s)))));
   }
@@ -2369,8 +2650,7 @@ function showTeam() {
     h('div', { class: 'row between' }, h('h2', { text: '🧢 My Team' }), coinsEl),
     h('div', { class: 'label', text: 'Team name' }),
     h('input', { type: 'text', maxlength: '22', value: t.name, oninput: e => { t.name = cleanStr(e.target.value, 'My Team', 22); t.abbr = makeAbbr(t.name); persist(); } }),
-    h('div', { class: 'label', text: 'Team color' }),
-    colorPicker(() => t.color, c => { t.color = c; persist(); renderCards(); }),
+    h('details', { class: 'unidetails' }, h('summary', { text: '👕 Design your uniform (colors, stripes, cap logo)' }), uniformDesigner(() => renderCards())),
     h('div', { class: 'muted', text: 'Earn coins by playing the computer (wins, hits, home runs and strikeouts all pay) and by answering trivia between innings. Tap a name to rename a player.' }),
     cards,
     h('h3', { text: 'Backup' }),
@@ -2390,11 +2670,13 @@ function showSettings() {
     h('div', { class: 'label', text: 'Batting style' }),
     seg([['rookie', '🌱 Rookie'], ['pro', '⭐ Pro']], () => save.settings.help, v => { save.settings.help = v; persist(); }),
     h('div', { class: 'muted', text: 'Rookie: slower pitches, a ring that shrinks onto the ball to help your timing, and you just tap anywhere to swing. Pro: faster pitches, and you also tap where the ball will cross the zone.' }),
-    h('div', { class: 'label', text: 'Sound effects & crowd' }),
-    seg([[true, '🔊 On'], [false, '🔇 Off']], () => save.settings.sound, v => { save.settings.sound = v; persist(); if (!v) Sound.stopCrowd(); }),
-    h('div', { class: 'label', text: 'Umpire & announcer voice' }),
-    seg([[true, '🗣️ On'], [false, '🤐 Off']], () => save.settings.voice, v => { save.settings.voice = v; persist(); if (v) Voice.say('Play ball!', 0.8, 1); }),
-    h('div', { class: 'muted', text: Voice.voice ? 'Uses a voice built into this device — nothing goes online.' : 'This device doesn’t have a built-in English voice the game can use, so the voice stays quiet.' }),
+    h('div', { class: 'label', text: 'Sound effects' }),
+    seg([[true, '🔊 On'], [false, '🔇 Off']], () => save.settings.sound, v => { save.settings.sound = v; persist(); if (!v) Sound.stopCrowd(); else { Sound.unlock(); Sound.good(); } }),
+    h('div', { class: 'label', text: 'Crowd noise' }),
+    seg([[true, '👏 On'], [false, '🤫 Off']], () => save.settings.crowd, v => { save.settings.crowd = v; persist(); if (!v) Sound.stopCrowd(); }),
+    h('div', { class: 'label', text: 'Voice' }),
+    seg([['calls', '⚖️ Umpire calls'], ['all', '📣 Umpire + announcer'], ['off', '🤐 Off']], () => save.settings.voice, v => { save.settings.voice = v; persist(); if (v !== 'off') { Sound.unlock(); Voice.say('Strike three!', 2, true); } }),
+    voicePicker(),
     h('div', { class: 'label', text: 'Trivia & fun facts between innings' }),
     seg([['half', 'Every half-inning'], ['inning', 'Every inning'], ['off', 'Off']], () => save.settings.trivia, v => { save.settings.trivia = v; persist(); }),
     h('h3', { text: 'How to play' }),
@@ -2412,6 +2694,19 @@ function showSettings() {
     h('div', { class: 'row', style: { marginTop: '8px' } }, h('button', { class: 'btn', onclick: showTitle }, '← Done'))));
 }
 
+function voicePicker() {
+  Voice.choose();
+  const wrap = h('div', { class: 'stack', style: { gap: '8px' } });
+  if (!Voice.voices.length) {
+    wrap.append(h('div', { class: 'muted', text: 'This device doesn’t have a built-in English voice the game can use, so the voice stays quiet. (See the tip below to add one.)' }));
+  } else {
+    const sel = h('select', { 'aria-label': 'Choose a voice', onchange: e => { save.settings.voiceName = e.target.value; persist(); Voice.choose(); Sound.unlock(); Voice.say('Now batting, number seven.', 2, true); } },
+      ...Voice.voices.map(v => { const o = h('option', { value: v.name, text: `${v.name} (${v.lang})` }); if (Voice.voice && v.name === Voice.voice.name) o.selected = true; return o; }));
+    wrap.append(h('div', { class: 'row' }, h('div', { class: 'grow' }, sel), h('button', { class: 'btn small blue', onclick: () => { Sound.unlock(); Voice.say('Strike three! You are out!', 2, true); } }, '▶ Test voice')));
+  }
+  wrap.append(h('div', { class: 'muted', text: 'The game only uses voices built into this device — nothing goes online. Tip: for a much more natural voice, download a free “Premium” or “Enhanced” voice (Ava Premium is a good one). On the iPad: Settings → Accessibility → Read & Speak → Voices → English (on older iPads it’s called Spoken Content instead of Read & Speak), or just search Settings for “Voices”. On a Mac: System Settings → Accessibility → Spoken Content → System Voice → Manage Voices. Then come back and pick it here.' }));
+  return wrap;
+}
 function showTrivia(card, done) {
   const finish = () => { hideScreen(); done(); };
   const head = { fact: ['⚾ Did you know?', '#1d4ed8'], rule: ['📘 Rule of the game', '#7c3aed'], tip: ['🧠 Coach’s tip', '#047857'], q: ['❓ Trivia time!', '#b45309'] }[card.k];
@@ -2425,7 +2720,7 @@ function showTrivia(card, done) {
       const right = i === card.c;
       btns[order.indexOf(card.c)].classList.add('right');
       if (!right) btns[order.indexOf(i)].classList.add('wrong');
-      if (right) { save.coins += 5; save.triviaRight++; persist(); Sound.coin(); } else Sound.bad();
+      if (right) { save.coins += 5; save.triviaRight++; persist(); Sound.coin(); if (save.triviaRight >= 10) earnBadge('trivia10'); } else Sound.bad();
       fb.replaceChildren(h('b', { text: right ? 'Correct! +5 🪙  ' : 'Not quite!  ' }), document.createTextNode(card.why));
       const sk = box.querySelector('.skiprow'); if (sk) sk.remove();
       box.append(h('div', { class: 'row', style: { justifyContent: 'center' } }, h('button', { class: 'btn green', onclick: finish }, 'Play on ▶')));
@@ -2443,9 +2738,9 @@ function showPause() {
   G.paused = true; hud(false);
   showScreen(h('div', { class: 'stack menu' },
     h('h1', { class: 'title', text: 'Paused' }),
-    h('div', { class: 'subtitle', text: `${G.teams[0].abbr} ${G.score[0]} – ${G.score[1]} ${G.teams[1].abbr} · ${G.half ? 'Bottom' : 'Top'} ${ordinal(G.inning)} · ${G.stadium.name}` }),
+    h('div', { class: 'subtitle', text: G.mode === 'derby' ? 'Home Run Derby' : G.mode === 'cage' ? 'Batting Cage' : `${G.teams[0].abbr} ${G.score[0]} – ${G.score[1]} ${G.teams[1].abbr} · ${G.half ? 'Bottom' : 'Top'} ${ordinal(G.inning)} · ${G.stadium.name}` }),
     h('button', { class: 'btn green', onclick: () => { G.paused = false; hideScreen(); hud(true); if (G.phase === 'trivia') { G.phase = 'none'; startAtBat(); } } }, '▶ Keep playing'),
-    h('button', { class: 'btn gray', onclick: showTitle }, 'Quit game (no coins)')));
+    h('button', { class: 'btn gray', onclick: () => { const ss = G.opts.season; G = null; if (ss) showSeasonHub(); else showTitle(); } }, G.mode === 'game' ? (G.opts.season ? 'Quit (replay this season game later)' : 'Quit game (no coins)') : 'Quit')));
 }
 
 function lineScoreTable() {
@@ -2469,10 +2764,572 @@ function showGameOver(won, tie, rewards) {
     vs ? h('div', { class: 'stack', style: { gap: '2px' } }, h('h3', { text: 'Coins earned' }), ...rewards.map(r => h('div', { class: 'reward' }, h('span', { text: r[0] }), h('b', { text: '+' + r[1] }))),
       h('div', { class: 'reward' }, h('b', { text: 'Total' }), h('b', { class: 'coins', text: '🪙 +' + total }))) : null,
     vs && !won ? h('div', { class: 'muted', text: 'Tip: spend coins on Contact and Power to hit better, or try Easy mode.' }) : null,
+    opts.season ? h('div', { class: 'muted', style: { textAlign: 'center' }, text: 'Season game recorded — check the standings!' }) : null,
     h('div', { class: 'row', style: { justifyContent: 'center' } },
-      h('button', { class: 'btn green', onclick: () => startGame(Object.assign({}, opts, { userHome: Math.random() < 0.5 })) }, 'Play again'),
+      opts.season ? h('button', { class: 'btn purple', onclick: () => showSeasonHub() }, '🏆 Back to Season') : h('button', { class: 'btn green', onclick: () => startGame(Object.assign({}, opts, { userHome: Math.random() < 0.5 })) }, 'Play again'),
       h('button', { class: 'btn blue', onclick: showTeam }, '🧢 My Team'),
       h('button', { class: 'btn gray', onclick: showTitle }, 'Menu'))));
+}
+
+
+// ================= Badges (achievements) =================
+const BADGES = [
+  { id: 'first_hit', icon: '🏏', name: 'First Hit', desc: 'Get a hit in a game.' },
+  { id: 'first_hr', icon: '💥', name: 'Going, Going, Gone!', desc: 'Hit a home run in a game.' },
+  { id: 'grand_slam', icon: '🎆', name: 'Grand Slam', desc: 'Hit a home run with the bases loaded.' },
+  { id: 'three_hr', icon: '🔥', name: 'Hat Trick', desc: 'Hit 3 home runs in one game.' },
+  { id: 'cycle', icon: '🔄', name: 'Hit for the Cycle', desc: 'Single, double, triple and homer in one game.' },
+  { id: 'steal', icon: '💨', name: 'Speed Demon', desc: 'Steal a base.' },
+  { id: 'walkoff', icon: '🎉', name: 'Walk-Off Hero', desc: 'Win the game on the very last play.' },
+  { id: 'shutout', icon: '🧱', name: 'Shutout', desc: 'Win a game of 3+ innings without giving up a run.' },
+  { id: 'k_side', icon: '⚡', name: 'Strike Out the Side', desc: 'Get all 3 outs of an inning by strikeout.' },
+  { id: 'dp', icon: '🔁', name: 'Turn Two', desc: 'Turn a double play on defense.' },
+  { id: 'diving', icon: '🧤', name: 'Highlight Reel', desc: 'Make a diving catch.' },
+  { id: 'pickoff', icon: '👀', name: 'Gotcha!', desc: 'Pick off a runner.' },
+  { id: 'cannon', icon: '🎯', name: 'Cannon Arm', desc: 'Throw out a runner trying to steal.' },
+  { id: 'giant', icon: '🐉', name: 'Giant Slayer', desc: 'Beat a Hard team.' },
+  { id: 'perfect5', icon: '✨', name: 'Locked In', desc: 'Get 5 PERFECT swings in a row.' },
+  { id: 'derby5', icon: '🏟️', name: 'Derby Star', desc: 'Hit 5 home runs in one Derby round.' },
+  { id: 'derby8', icon: '👑', name: 'Derby Legend', desc: 'Hit 8 home runs in one Derby round.' },
+  { id: 'moonshot', icon: '🚀', name: 'Moonshot', desc: 'Hit a home run 420 feet or longer.' },
+  { id: 'new_pitch', icon: '🧠', name: 'New Trick', desc: 'Teach your pitcher a new pitch.' },
+  { id: 'trivia10', icon: '📚', name: 'Baseball Brain', desc: 'Answer 10 trivia questions right.' },
+  { id: 'playoffs', icon: '🎟️', name: 'Postseason', desc: 'Make the playoffs in Season mode.' },
+  { id: 'champion', icon: '🏆', name: 'Champions!', desc: 'Win a Season championship.' }
+];
+const BADGE_COINS = 20;
+const toastQueue = [];
+let toastBusy = false;
+function todayStr() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function earnBadge(id) {
+  if (!save || save.badges[id] || (G && G.opts && G.opts.auto) || (testMode && !window.__allowBadges)) return;
+  const b = BADGES.find(x => x.id === id); if (!b) return;
+  save.badges[id] = todayStr(); save.coins += BADGE_COINS; persist();
+  toast(`${b.icon}  Badge earned: ${b.name}!`, `+${BADGE_COINS} 🪙 · ${b.desc}`);
+}
+function toast(title, sub) { toastQueue.push([title, sub]); if (!toastBusy) nextToast(); }
+function nextToast() {
+  const t = toastQueue.shift();
+  if (!t) { toastBusy = false; return; }
+  toastBusy = true;
+  const el = h('div', { class: 'toast' }, h('b', { text: t[0] }), h('div', { text: t[1] }));
+  document.body.appendChild(el);
+  Sound.coin();
+  setTimeout(() => el.classList.add('show'), 20);
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => { el.remove(); nextToast(); }, 400); }, 3200);
+}
+// Is this team the player's own team (the one that earns badges)?
+const isMine = team => !!(team && team.isP1);
+
+// ================= Home Run Derby & Batting Cage =================
+function coachTeam() {
+  const t = makeTeam(5, 0, { name: 'Coach', color: '#475569' });
+  t.human = false; t.bonus = 0;
+  t.pitcher = { name: 'Coach Pat', throws: 'R', vel: 4, ctl: 10, brk: 4, pitches: PITCH_ORDER.slice(), look: makeLook('Coach Pat', 0) };
+  return t;
+}
+function newPractice(mode, stadium) {
+  const g = newGame({ mode: 'cpu', innings: 1, diff: 'medium', stadium, userHome: false });
+  g.teams[1] = coachTeam(); g.mode = mode;
+  return g;
+}
+function startDerby(o) {
+  G = newPractice('derby', o.stadium);
+  const mine = G.teams[0];
+  const players = o.picks.map((idx, i) => ({ label: o.picks.length > 1 ? `Player ${i + 1}` : mine.name, name: mine.batters[idx].name, idx, hr: 0, long: 0, swings: 0 }));
+  G.derby = { players, cur: 0, per: 10 };
+  save.lastStadium = o.stadium; persist();
+  hideScreen(); hud(true); Sound.unlock(); Sound.startCrowd();
+  Voice.say('Welcome to the Home Run Derby!', 1);
+  banner('HOME RUN DERBY!', `10 swings each · ${G.stadium.emoji} ${G.stadium.name}`, 2.2, derbyTurnStart, '#ffd166');
+}
+function derbyTurnStart() {
+  const p = G.derby.players[G.derby.cur];
+  G.half = 0; G.idx[0] = p.idx; G.balls = 0; G.strikes = 0; G.approach = 'swing';
+  banner(`${p.name.toUpperCase()} IS UP!`, 'Swing away! Pitches you don’t swing at don’t count.', 2, nextPitch);
+}
+function startCage() {
+  const sid = save.homePark || 'backyard';
+  G = newPractice('cage', sid);
+  G.cage = { type: 'mix', speed: 'medium', swings: 0, contact: 0, perfect: 0, hard: 0, hr: 0, streak: 0, best: 0 };
+  G.idx[0] = 0;
+  hideScreen(); hud(true); Sound.unlock(); Sound.startCrowd();
+  banner('BATTING CAGE', 'Pick a pitch and a speed below. Watch the timing meter after each swing!', 2.4, nextPitch, '#9be7ff');
+}
+function coachPitch() {
+  const coach = defTeam().pitcher;
+  let type, target;
+  if (G.mode === 'derby') { type = Math.random() < 0.85 ? 'FB' : 'CH'; target = { x: rnd(-0.35, 0.35), y: rnd(2.0, 3.1) }; coach.vel = 4; }
+  else {
+    const c = G.cage;
+    type = c.type === 'mix' ? pick(PITCH_ORDER) : c.type;
+    target = Math.random() < 0.8 ? { x: rnd(-0.6, 0.6), y: rnd(1.75, 3.35) } : { x: (Math.random() < 0.5 ? -1 : 1) * rnd(0.85, 1.2), y: rnd(1.5, 3.6) };
+    coach.vel = { slow: 2, medium: 5, fast: 8 }[c.speed];
+  }
+  return makePitch(type, target, 0.95, coach, 0);
+}
+function practiceNextPitch() { G.pitch = coachPitch(); beginWindup(); }
+
+// The ball's flight in practice: no fielders, just how far it goes.
+function* derbyGen(bb) {
+  const st = G.stadium, carry = st.carry || 1, hang = st.hang || 1;
+  const v = bb.ev * 1.467, la = rad(bb.la), sp = rad(bb.spray);
+  const dir = { x: Math.sin(sp), y: Math.cos(sp) }, foul = Math.abs(bb.spray) > 45;
+  if (bb.la <= 10 || bb.bunt) {
+    const s = clamp(v * 0.9, 30, 150), pt = { x: dir.x * s, y: dir.y * s };
+    yield anim([ballTo(pt, 0, 1.3, 1.5, 0, 1)], 1.5, [{ t: 0.3, text: foul ? 'FOUL' : 'GROUNDER', color: '#fff' }]);
+    return { hr: false, dist: 0, text: foul ? 'FOUL BALL' : 'GROUNDER', ev: bb.ev };
+  }
+  const T = Math.max(0.7, 2 * v * Math.sin(la) / 32.2 * 0.85) * hang;
+  const D = Math.max(20, 0.72 * v * v * Math.sin(2 * la) / 32.2) * carry;
+  const peak = Math.min(180, Math.pow(v * Math.sin(la), 2) / 64.4 * 0.75) * (hang > 1 ? 1.4 : 1);
+  const fence = fenceDist(bb.spray), wall = wallAt(st, bb.spray);
+  const hr = !foul && D > fence && hArc(fence / D, 3, 0, peak) > wall + 1;
+  const offWall = !foul && !hr && D > fence;
+  const end = offWall ? { x: dir.x * (fence - 1), y: dir.y * (fence - 1) } : { x: dir.x * D, y: dir.y * D };
+  const tEnd = offWall ? T * fence / D : T;
+  const ev = [];
+  if (hr) ev.push({ t: Math.min(T * 0.5, 1.4), text: `${Math.round(D)} FT!`, color: '#ffd166', crowd: ['wave', 1] }, { t: T * 0.9, fireworks: D > 380 });
+  else if (offWall) ev.push({ t: tEnd, text: 'OFF THE WALL!', at: end, sound: 'thud', crowd: ['ooh', 0.4] });
+  else ev.push({ t: tEnd, sound: 'bounce', dust: end, text: foul ? 'FOUL' : `${Math.round(D)} ft`, at: end });
+  yield anim([ballTo(end, 0, tEnd, offWall ? peak * (fence / D) * (fence / D) : peak, hr ? wall + 15 : (offWall ? hArc(fence / D, 3, 0, peak) : 0), 3)], tEnd + 0.4, ev);
+  if (hr) return { hr: true, dist: Math.round(D), text: Math.round(D) >= 420 ? 'MOONSHOT!' : 'HOME RUN!', sub: `${Math.round(D)} feet`, ev: bb.ev };
+  return { hr: false, dist: Math.round(D), text: foul ? 'FOUL BALL' : offWall ? 'OFF THE WALL!' : 'FLY BALL', sub: foul ? '' : `${Math.round(D)} feet`, ev: bb.ev };
+}
+function practiceNoContact() {
+  rememberPitch();
+  const swung = !!G.swing;
+  if (G.mode === 'cage') {
+    if (swung) { G.cage.swings++; }
+    return banner(swung ? 'SWING AND A MISS' : (G.pitch.inZone ? 'STRIKE (taken)' : 'BALL — good eye!'), '', 0.8, nextPitch);
+  }
+  if (!swung) return banner('NO SWING', 'That one doesn’t count — swing at the next one!', 0.9, nextPitch);
+  derbySwingUsed({ hr: false, text: 'SWING AND A MISS', dist: 0 });
+}
+function practiceAfterBall(res) {
+  if (res.hr && res.dist >= 420) earnBadge('moonshot');
+  if (G.mode === 'cage') {
+    const c = G.cage; c.swings++; c.contact++; if (res.ev >= 80) c.hard++; if (res.hr) c.hr++;
+    return banner(res.text, res.sub || '', res.hr ? 1.6 : 1.0, nextPitch, res.hr ? '#ffd166' : '#fff');
+  }
+  derbySwingUsed(res);
+}
+function derbySwingUsed(res) {
+  const d = G.derby, p = d.players[d.cur];
+  p.swings++;
+  if (res.hr) { p.hr++; p.long = Math.max(p.long, res.dist); if (p.hr === 5) Sound.charge(); }
+  const left = d.per - p.swings;
+  if (res.hr) Voice.say(res.text === 'MOONSHOT!' ? 'Moonshot!' : 'Home run!', 2);
+  banner(res.text, [res.sub, `${p.hr} HR · ${left} swing${left === 1 ? '' : 's'} left`].filter(Boolean).join(' · '), res.hr ? 1.9 : 1.1,
+    () => { if (left > 0) nextPitch(); else derbyTurnEnd(); }, res.hr ? '#ffd166' : '#fff');
+}
+function derbyTurnEnd() {
+  const d = G.derby, p = d.players[d.cur];
+  if (p.hr >= 5) earnBadge('derby5');
+  if (p.hr >= 8) earnBadge('derby8');
+  if (d.cur + 1 < d.players.length) {
+    d.cur++;
+    banner(`${p.hr} HOME RUN${p.hr === 1 ? '' : 'S'}!`, `Now it’s ${d.players[d.cur].label}’s turn — pass the iPad!`, 2.8, derbyTurnStart, '#ffd166');
+  } else derbyOver();
+}
+function derbyOver() {
+  G.phase = 'over'; G.banner = null; Sound.stopCrowd(); hud(false);
+  const d = G.derby, solo = d.players.length === 1, p1 = d.players[0];
+  let best = false;
+  if (solo && (p1.hr > save.derbyBest.hr || (p1.hr === save.derbyBest.hr && p1.long > save.derbyBest.long))) { save.derbyBest = { hr: p1.hr, long: p1.long }; best = true; }
+  const coins = Math.min(30, d.players.reduce((s, p) => s + p.hr, 0) * 3);
+  save.coins += coins; persist(); if (coins) Sound.coin();
+  Sound.cheer(true);
+  showDerbyOver(best, coins);
+}
+function showDerbyOver(best, coins) {
+  const d = G.derby, solo = d.players.length === 1;
+  const sorted = d.players.slice().sort((a, b) => b.hr - a.hr || b.long - a.long);
+  const tie = !solo && sorted[0].hr === sorted[1].hr && sorted[0].long === sorted[1].long;
+  const title = solo ? `${d.players[0].hr} HOME RUN${d.players[0].hr === 1 ? '' : 'S'}!` : tie ? 'It’s a tie!' : `${sorted[0].label} wins! 🏆`;
+  showScreen(h('div', { class: 'card stack' },
+    h('h2', { text: '🏟️ ' + title, style: { fontSize: '34px', textAlign: 'center' } }),
+    ...d.players.map(p => h('div', { class: 'derbyrow' }, h('b', { text: `${p.label}${solo ? '' : ' · ' + p.name}` }), h('span', { text: `${p.hr} HR · longest ${p.long ? p.long + ' ft' : '—'}` }))),
+    best ? h('div', { class: 'newbest', text: '⭐ NEW PERSONAL BEST! ⭐' }) : h('div', { class: 'muted', style: { textAlign: 'center' }, text: `Personal best: ${save.derbyBest.hr} HR (longest ${save.derbyBest.long || 0} ft)` }),
+    coins ? h('div', { class: 'reward' }, h('span', { text: 'Coins (3 per home run)' }), h('b', { class: 'coins', text: '🪙 +' + coins })) : null,
+    h('div', { class: 'row', style: { justifyContent: 'center' } },
+      h('button', { class: 'btn green', onclick: () => showDerbySetup() }, 'Go again'),
+      h('button', { class: 'btn gray', onclick: showTitle }, 'Menu'))));
+}
+function showDerbySetup() {
+  G = null; hud(false);
+  const st = { two: false, picks: [0, 0], stadium: save.lastStadium === 'random' ? 'backyard' : save.lastStadium };
+  const t = save.team;
+  const batterPicker = which => {
+    const wrap = h('div', { class: 'batpick' });
+    const render_ = () => wrap.replaceChildren(...t.batters.map((b, i) => h('button', { class: 'btn small ' + (st.picks[which] === i ? 'blue sel' : 'gray'), onclick: () => { st.picks[which] = i; render_(); } }, `${b.name.split(' ')[0]} · POW ${b.pow}`)));
+    render_(); return wrap;
+  };
+  const p2box = h('div', { class: 'stack hidden' }, h('div', { class: 'label', text: 'Player 2’s batter' }), batterPicker(1));
+  showScreen(h('div', { class: 'card stack' },
+    h('h2', { text: '🏟️ Home Run Derby' }),
+    h('div', { class: 'muted', text: `10 swings each — hit as many home runs as you can! Pitches you don’t swing at don’t count. Personal best: ${save.derbyBest.hr} HR.` }),
+    h('div', { class: 'label', text: 'Players' }),
+    seg([[false, '🙋 Just me'], [true, '👥 2 players (take turns)']], () => st.two, v => { st.two = v; p2box.classList.toggle('hidden', !v); }),
+    h('div', { class: 'label', text: 'Player 1’s batter' }), batterPicker(0), p2box,
+    h('div', { class: 'label', text: 'Pick a ballpark' }), stadiumPicker(() => st.stadium, v => { st.stadium = v; }, true),
+    h('div', { class: 'row between' },
+      h('button', { class: 'btn gray', onclick: showTitle }, '← Back'),
+      h('button', { class: 'btn green', onclick: () => startDerby({ picks: st.two ? st.picks : [st.picks[0]], stadium: st.stadium }) }, 'Start the Derby! 💥'))));
+}
+
+// ---------- the timing meter (shown after every swing) ----------
+function drawTimingMeter() {
+  const m = G.meter, life = G.mode === 'game' ? 1.8 : 2.6;
+  if (!m || m.t > life) return;
+  const a = clamp((life - m.t) * 3, 0, 1);
+  ctx.save(); ctx.globalAlpha = a;
+  const cx = 500, y = H - 104, w = 420, hh = 16;
+  ctx.fillStyle = 'rgba(15,23,42,.82)'; rr(cx - w / 2 - 18, y - 36, w + 36, 80, 16);
+  const px = e => cx + clamp(e / (1.6 * m.W), -1, 1) * w / 2;
+  ctx.fillStyle = '#ef4444'; rr(cx - w / 2, y - hh / 2, w, hh, 8);
+  ctx.fillStyle = '#facc15'; ctx.fillRect(px(-m.W), y - hh / 2, px(m.W) - px(-m.W), hh);
+  ctx.fillStyle = '#22c55e'; ctx.fillRect(px(-m.W * 0.22), y - hh / 2, px(m.W * 0.22) - px(-m.W * 0.22), hh);
+  txt('EARLY', cx - w / 2 + 28, y - 22, 13, '#fecaca', 'center', 0);
+  txt('LATE', cx + w / 2 - 24, y - 22, 13, '#fecaca', 'center', 0);
+  txt('PERFECT', cx, y - 22, 13, '#bbf7d0', 'center', 0);
+  const mx = px(m.e);
+  ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.moveTo(mx - 9, y - hh / 2 - 9); ctx.lineTo(mx + 9, y - hh / 2 - 9); ctx.lineTo(mx, y - 1); ctx.closePath(); ctx.fill();
+  ctx.fillRect(mx - 1.5, y - hh / 2, 3, hh);
+  const ae = Math.abs(m.e), secs = (ae).toFixed(2);
+  const msg = ae < m.W * 0.22 ? 'PERFECT timing!' : ae < m.W ? `A little ${m.e < 0 ? 'early' : 'late'} · ${secs} sec` : `Way ${m.e < 0 ? 'early' : 'late'} · ${secs} sec`;
+  txt(msg, cx, y + 26, 18, ae < m.W * 0.22 ? '#ffd166' : '#fff', 'center', 0);
+  ctx.restore();
+}
+function drawPracticeHUD() {
+  const x = 14, y = 14;
+  ctx.fillStyle = 'rgba(15,23,42,.85)'; rr(x, y, 320, 108, 16);
+  if (G.mode === 'derby') {
+    const d = G.derby, p = d.players[d.cur];
+    txt('🏟️ HOME RUN DERBY', x + 14, y + 20, 15, '#9be7ff', 'left', 0);
+    txt(p.name, x + 14, y + 46, 19, '#fff', 'left', 0);
+    txt(`${p.hr}`, x + 290, y + 52, 46, '#ffd166', 'right', 0);
+    txt('HR', x + 290, y + 86, 13, '#ffd166', 'right', 0);
+    txt(`Swings left: ${d.per - p.swings}  ·  Longest: ${p.long ? p.long + ' ft' : '—'}`, x + 14, y + 72, 14, '#cbd5e1', 'left', 0);
+    if (d.players.length > 1) { const o = d.players[1 - d.cur]; txt(`${o.label}: ${o.hr} HR${o.swings >= d.per ? ' (done)' : ''}`, x + 14, y + 94, 13, '#94a3b8', 'left', 0); }
+  } else {
+    const c = G.cage, pct = c.swings ? Math.round(100 * c.contact / c.swings) : 0;
+    txt('⚾ BATTING CAGE', x + 14, y + 20, 15, '#9be7ff', 'left', 0);
+    txt(`Swings ${c.swings} · Contact ${pct}%`, x + 14, y + 46, 17, '#fff', 'left', 0);
+    txt(`Perfect ${c.perfect} · Hard hits ${c.hard} · HR ${c.hr}`, x + 14, y + 70, 15, '#cbd5e1', 'left', 0);
+    txt(`Perfect streak ${c.streak} (best ${c.best})`, x + 14, y + 92, 14, '#ffd166', 'left', 0);
+  }
+}
+// in-cage controls (pitch type, speed, done)
+let cageBarState = '';
+function syncCageBar(bar) {
+  const show = G && G.mode === 'cage' && G.phase !== 'over';
+  bar.classList.toggle('hidden', !show);
+  if (!show) { cageBarState = ''; return; }
+  const state = G.cage.type + '|' + G.cage.speed;
+  if (state === cageBarState) return;
+  cageBarState = state;
+  const sel = h('select', { 'aria-label': 'Pitch type', onchange: e => { G.cage.type = e.target.value; cageBarState = ''; } },
+    h('option', { value: 'mix', text: '🎲 Mix it up' }), ...PITCH_ORDER.map(k => h('option', { value: k, text: PITCHES[k].name })));
+  sel.value = G.cage.type;
+  bar.replaceChildren(sel,
+    ...[['slow', '🐢 Slow'], ['medium', '🙂 Medium'], ['fast', '🔥 Fast']].map(([v, l]) => h('button', { class: 'btn small ' + (G.cage.speed === v ? 'blue sel' : 'gray'), onclick: e => { e.stopPropagation(); G.cage.speed = v; Sound.click(); cageBarState = ''; syncCageBar(bar); } }, l)),
+    h('button', { class: 'btn small red', onclick: e => { e.stopPropagation(); cageDone(); } }, 'Done'));
+}
+function cageDone() {
+  const c = G.cage; G.phase = 'over'; Sound.stopCrowd(); hud(false);
+  const pct = c.swings ? Math.round(100 * c.contact / c.swings) : 0;
+  showScreen(h('div', { class: 'card stack' },
+    h('h2', { text: '⚾ Batting practice done!', style: { textAlign: 'center' } }),
+    h('div', { class: 'reward' }, h('span', { text: 'Swings' }), h('b', { text: String(c.swings) })),
+    h('div', { class: 'reward' }, h('span', { text: 'Contact' }), h('b', { text: pct + '%' })),
+    h('div', { class: 'reward' }, h('span', { text: 'Perfect swings' }), h('b', { text: String(c.perfect) })),
+    h('div', { class: 'reward' }, h('span', { text: 'Best perfect streak' }), h('b', { text: String(c.best) })),
+    h('div', { class: 'reward' }, h('span', { text: 'Hard hits / home runs' }), h('b', { text: `${c.hard} / ${c.hr}` })),
+    h('div', { class: 'muted', text: 'Tip: if the meter keeps saying “early”, wait a tiny bit longer before you tap. If it says “late”, tap a little sooner.' }),
+    h('div', { class: 'row', style: { justifyContent: 'center' } }, h('button', { class: 'btn green', onclick: startCage }, 'Keep practicing'), h('button', { class: 'btn gray', onclick: showTitle }, 'Menu'))));
+}
+
+// ================= Season mode =================
+// A 6-team league: you + 5 computer teams. 10 games (everyone plays everyone twice), then the top 4 make the playoffs.
+function makeSchedule(n) {
+  const arr = Array.from({ length: n }, (_, i) => i), rounds = [];
+  for (let r = 0; r < n - 1; r++) {
+    const pairs = [];
+    for (let i = 0; i < n / 2; i++) { const a = arr[i], b = arr[n - 1 - i]; pairs.push((r + i) % 2 ? [a, b] : [b, a]); }
+    rounds.push(pairs);
+    arr.splice(1, 0, arr.pop());
+  }
+  return rounds.concat(rounds.map(rd => rd.map(([hm, aw]) => [aw, hm])));
+}
+function newSeason(o) {
+  const metas = shuffle(CPU_TEAMS.filter(t => t.color.toLowerCase() !== save.team.color.toLowerCase())).slice(0, 5);
+  const parks = shuffle(STADIUMS.map(s => s.id).filter(id => id !== o.homePark));
+  const base = DIFF[o.diff].base;
+  const teams = [{ id: 0, me: true }].concat(metas.map((m, i) => ({ id: i + 1, name: m.name, color: m.color, park: parks[i % parks.length], roster: makeTeam(base + rnd(-0.8, 0.8), 1.5, m, 3 + Math.floor(Math.random() * 3)) })));
+  save.season = { n: save.seasonsPlayed + 1, innings: o.innings, diff: o.diff, homePark: o.homePark, teams, schedule: makeSchedule(6), round: 0, results: [], phase: 'regular', playoff: null, champion: null };
+  save.homePark = o.homePark;
+  persist();
+}
+function cleanSeason(o) {
+  if (!o || typeof o !== 'object' || !Array.isArray(o.teams) || o.teams.length !== 6 || !Array.isArray(o.schedule) || o.schedule.length !== 10) return null;
+  const id6 = v => Number.isInteger(v) && v >= 0 && v < 6;
+  const sc = v => clamp(Math.floor(Number(v)) || 0, 0, 99);
+  const teams = [{ id: 0, me: true }];
+  for (let i = 1; i < 6; i++) {
+    const t = o.teams[i]; if (!t || typeof t !== 'object') return null;
+    const roster = cleanTeam(t.roster); if (!roster) return null;
+    teams.push({ id: i, name: cleanStr(t.name, roster.name, 22), color: cleanColor(t.color, roster.color), park: STADIUMS.some(s => s.id === t.park) ? t.park : 'backyard', roster });
+  }
+  const schedule = o.schedule.map(rd => Array.isArray(rd) && rd.length === 3 && rd.every(p => Array.isArray(p) && p.length === 2 && id6(p[0]) && id6(p[1])) ? rd.map(p => [p[0], p[1]]) : null);
+  if (schedule.some(x => !x)) return null;
+  const game = g => (g && typeof g === 'object' && id6(g.h) && id6(g.a)) ? { r: clamp(Math.floor(Number(g.r)) || 0, 0, 20), h: g.h, a: g.a, hs: sc(g.hs), as: sc(g.as) } : null;
+  const results = Array.isArray(o.results) ? o.results.map(game).filter(Boolean).slice(0, 60) : [];
+  let playoff = null;
+  if (o.playoff && typeof o.playoff === 'object') {
+    const P = o.playoff, pair = p => Array.isArray(p) && p.length === 2 && id6(p[0]) && id6(p[1]) ? [p[0], p[1]] : null;
+    playoff = { seeds: Array.isArray(P.seeds) ? P.seeds.filter(id6).slice(0, 4) : [], semis: Array.isArray(P.semis) ? P.semis.map(pair) : [null, null], semiRes: Array.isArray(P.semiRes) ? P.semiRes.map(game) : [null, null], final: pair(P.final), finalRes: game(P.finalRes) };
+    if (playoff.semis.length !== 2 || playoff.semis.some(x => !x)) playoff = null;
+    else while (playoff.semiRes.length < 2) playoff.semiRes.push(null);
+  }
+  const phase = ['regular', 'playoffs', 'done'].includes(o.phase) ? o.phase : 'regular';
+  if (phase !== 'regular' && !playoff) return null;
+  return { n: clamp(Math.floor(Number(o.n)) || 1, 1, 9999), innings: [1, 3, 6, 9].includes(o.innings) ? o.innings : 3, diff: DIFF[o.diff] ? o.diff : 'medium',
+    homePark: STADIUMS.some(s => s.id === o.homePark) ? o.homePark : 'backyard', teams, schedule, round: clamp(Math.floor(Number(o.round)) || 0, 0, 10), results, phase, playoff, champion: id6(o.champion) ? o.champion : null };
+}
+const sTeam = (s, id) => id === 0 ? { name: save.team.name, abbr: makeAbbr(save.team.name), color: save.team.color, park: s.homePark } : { name: s.teams[id].name, abbr: makeAbbr(s.teams[id].name), color: s.teams[id].color, park: s.teams[id].park };
+function standings(s) {
+  const rows = s.teams.map(t => ({ id: t.id, w: 0, l: 0, t: 0, rs: 0, ra: 0 }));
+  for (const g of s.results) {
+    const H = rows[g.h], A = rows[g.a];
+    H.rs += g.hs; H.ra += g.as; A.rs += g.as; A.ra += g.hs;
+    if (g.hs > g.as) { H.w++; A.l++; } else if (g.as > g.hs) { A.w++; H.l++; } else { H.t++; A.t++; }
+  }
+  rows.sort((p, q) => (q.w - q.l) - (p.w - p.l) || q.w - p.w || (q.rs - q.ra) - (p.rs - p.ra) || p.id - q.id);
+  return rows;
+}
+function teamRating(s, id) {
+  const t = id === 0 ? save.team : s.teams[id].roster, bonus = id === 0 ? 0 : DIFF[s.diff].bonus;
+  const bat = t.batters.reduce((sum, b) => sum + (b.pow + b.con + b.spd * 0.5) / 2.5, 0) / 9 + bonus;
+  const pit = (t.pitcher.vel + t.pitcher.ctl + t.pitcher.brk) / 3 + bonus;
+  return { bat, pit };
+}
+function poisson(m) { const L = Math.exp(-m); let k = 0, p = 1; do { k++; p *= Math.random(); } while (p > L); return k - 1; }
+function simGame(s, hm, aw, noTie) {
+  const H = teamRating(s, hm), A = teamRating(s, aw), f = s.innings / 9;
+  const mh = f * clamp(4.6 + 0.55 * (H.bat - A.pit), 0.8, 10), ma = f * clamp(4.4 + 0.55 * (A.bat - H.pit), 0.8, 10);
+  let hs = poisson(mh), as = poisson(ma);
+  if (hs === as && (noTie || Math.random() < 0.75)) { if (Math.random() < mh / (mh + ma)) hs++; else as++; }
+  return { h: hm, a: aw, hs, as };
+}
+function seasonNextGame(s) {
+  if (!s) return null;
+  if (s.phase === 'regular') { const p = s.schedule[s.round].find(q => q.includes(0)); return { kind: 'regular', h: p[0], a: p[1], label: `Game ${s.round + 1} of ${s.schedule.length}` }; }
+  if (s.phase === 'playoffs') {
+    const P = s.playoff, i = P.semis.findIndex(q => q.includes(0));
+    if (i >= 0 && !P.semiRes[i]) return { kind: 'semi', h: P.semis[i][0], a: P.semis[i][1], label: 'SEMIFINAL' };
+    if (P.final && !P.finalRes && P.final.includes(0)) return { kind: 'final', h: P.final[0], a: P.final[1], label: '🏆 CHAMPIONSHIP GAME' };
+  }
+  return null;
+}
+const winnerOf = g => g.hs > g.as ? g.h : g.as > g.hs ? g.a : (Math.random() < 0.5 ? g.h : g.a);
+function startPlayoffs(s) {
+  const seeds = standings(s).map(r => r.id).slice(0, 4);
+  s.playoff = { seeds, semis: [[seeds[0], seeds[3]], [seeds[1], seeds[2]]], semiRes: [null, null], final: null, finalRes: null };
+  s.phase = 'playoffs';
+  if (seeds.includes(0)) earnBadge('playoffs');
+  advancePlayoffs(s);
+}
+// Simulate any playoff games the player isn't in.
+function advancePlayoffs(s) {
+  const P = s.playoff;
+  P.semis.forEach((q, i) => { if (!P.semiRes[i] && !q.includes(0)) P.semiRes[i] = simGame(s, q[0], q[1], true); });
+  if (P.semiRes[0] && P.semiRes[1] && !P.final) {
+    const w = P.semiRes.map(winnerOf), rank = id => P.seeds.indexOf(id);
+    P.final = rank(w[0]) <= rank(w[1]) ? [w[0], w[1]] : [w[1], w[0]];
+  }
+  if (P.final && !P.finalRes && !P.final.includes(0)) P.finalRes = simGame(s, P.final[0], P.final[1], true);
+  if (P.finalRes) finishSeason(s);
+}
+function finishSeason(s) {
+  s.champion = winnerOf(s.playoff.finalRes); s.phase = 'done';
+  save.seasonsPlayed++;
+  if (s.champion === 0) {
+    const r = standings(s).find(x => x.id === 0);
+    save.trophies.push({ n: s.n, team: save.team.name, date: todayStr(), record: `${r.w}-${r.l}${r.t ? '-' + r.t : ''}` });
+    save.coins += 200; earnBadge('champion');
+  }
+}
+// Called when a season game you played ends.
+function seasonRecord() {
+  const s = save.season, o = G.opts.season; if (!s || !o) return;
+  const me = G.teams.findIndex(t => t.isP1), mine = G.score[me], theirs = G.score[1 - me];
+  const res = { h: o.h, a: o.a, hs: o.h === 0 ? mine : theirs, as: o.a === 0 ? mine : theirs };
+  if (o.kind === 'regular') {
+    s.results.push(Object.assign({ r: s.round }, res));
+    for (const p of s.schedule[s.round]) if (!p.includes(0)) s.results.push(Object.assign({ r: s.round }, simGame(s, p[0], p[1])));
+    s.round++;
+    if (s.round >= s.schedule.length) startPlayoffs(s);
+  } else if (o.kind === 'semi') {
+    const i = s.playoff.semis.findIndex(q => q.includes(0)); s.playoff.semiRes[i] = res; advancePlayoffs(s);
+  } else if (o.kind === 'final') { s.playoff.finalRes = res; finishSeason(s); }
+  persist();
+}
+function simulateMyGame() {
+  const s = save.season, n = seasonNextGame(s); if (!n) return;
+  const g = simGame(s, n.h, n.a, n.kind !== 'regular');
+  G = { opts: { season: n }, teams: [{ isP1: n.a === 0 }, { isP1: n.h === 0 }], score: [g.as, g.hs] };
+  seasonRecord(); G = null;
+  showSeasonHub(`Simulated: ${sTeam(s, n.a).abbr} ${g.as} – ${g.hs} ${sTeam(s, n.h).abbr}`);
+}
+function playSeasonGame() {
+  const s = save.season, n = seasonNextGame(s); if (!n) return;
+  const oppId = n.h === 0 ? n.a : n.h;
+  Sound.unlock();
+  startGame({ mode: 'cpu', innings: s.innings, diff: s.diff, stadium: n.h === 0 ? s.homePark : s.teams[n.h].park, userHome: n.h === 0, season: Object.assign({ opp: oppId }, n), noTie: n.kind !== 'regular' });
+}
+function showSeasonSetup() {
+  G = null; hud(false);
+  const st = { innings: 3, diff: 'medium', homePark: save.homePark || 'backyard' };
+  showScreen(h('div', { class: 'card stack' },
+    h('h2', { text: `🏆 Start Season ${save.seasonsPlayed + 1}` }),
+    h('div', { class: 'muted', text: 'Your team plus 5 computer teams. Play 10 games — the top 4 teams make the playoffs. Win the championship to earn a trophy and 200 coins!' }),
+    h('div', { class: 'label', text: 'Innings per game' }),
+    seg([[1, '1 (quick)'], [3, '3'], [6, '6'], [9, '9']], () => st.innings, v => { st.innings = v; }),
+    h('div', { class: 'label', text: 'League difficulty' }),
+    seg([['easy', '🙂 Easy'], ['medium', '😎 Medium'], ['hard', '🔥 Hard']], () => st.diff, v => { st.diff = v; }),
+    h('div', { class: 'label', text: 'Your home ballpark' }),
+    stadiumPicker(() => st.homePark, v => { st.homePark = v; }, true),
+    h('div', { class: 'row between' }, h('button', { class: 'btn gray', onclick: showTitle }, '← Back'),
+      h('button', { class: 'btn green', onclick: () => { newSeason(st); showSeasonHub(); } }, 'Start the Season! 🏆'))));
+}
+function teamChip(s, id) { const t = sTeam(s, id); return h('span', { class: 'tchip' }, h('i', { style: { background: t.color } }), h('span', { text: t.name })); }
+function showSeasonHub(note) {
+  G = null; hud(false); Sound.stopCrowd();
+  const s = save.season;
+  if (!s) return showSeasonSetup();
+  const rows = standings(s), lead = rows[0], gb = r => (((lead.w - r.w) + (r.l - lead.l)) / 2);
+  const ties = rows.some(r => r.t);
+  const table = h('table', { class: 'line standings' },
+    h('tr', {}, h('th', { text: '#' }), h('th', { text: 'Team' }), h('th', { text: 'W' }), h('th', { text: 'L' }), ties ? h('th', { text: 'T' }) : null, h('th', { text: 'GB' }), h('th', { text: 'Runs' })),
+    ...rows.map((r, i) => h('tr', { class: (r.id === 0 ? 'me ' : '') + (i === 3 ? 'cutline' : '') },
+      h('td', { text: String(i + 1) }), h('td', {}, teamChip(s, r.id)), h('td', { text: String(r.w) }), h('td', { text: String(r.l) }), ties ? h('td', { text: String(r.t) }) : null,
+      h('td', { text: gb(r) ? String(gb(r)) : '–' }), h('td', { text: `${r.rs}-${r.ra}` }))));
+  const next = seasonNextGame(s);
+  let nextCard = null;
+  if (next) {
+    const opp = next.h === 0 ? next.a : next.h, oppRow = rows.find(r => r.id === opp), park = stadiumById(next.h === 0 ? s.homePark : s.teams[next.h].park);
+    nextCard = h('div', { class: 'nextgame' },
+      h('div', { class: 'ngl', text: next.label }),
+      h('div', { class: 'ngteams' }, teamChip(s, next.a), h('b', { text: ' at ' }), teamChip(s, next.h)),
+      h('div', { class: 'muted', text: `${park.emoji} ${park.name} · ${sTeam(s, opp).name} are ${oppRow.w}-${oppRow.l} · ${next.h === 0 ? 'You bat second (home)' : 'You bat first (away)'}` }),
+      h('div', { class: 'row', style: { justifyContent: 'center' } },
+        h('button', { class: 'btn green', onclick: playSeasonGame }, 'Play Ball! ⚾'),
+        h('button', { class: 'btn small gray', onclick: simulateMyGame }, 'Simulate this game')));
+  }
+  const lastRound = s.results.filter(g => g.r === (s.phase === 'regular' ? s.round - 1 : s.schedule.length - 1));
+  const results = s.phase === 'regular' && lastRound.length ? h('div', { class: 'stack', style: { gap: '4px' } }, h('div', { class: 'label', text: 'Last round' }),
+    ...lastRound.map(g => h('div', { class: 'result' + (g.h === 0 || g.a === 0 ? ' me' : '') }, h('span', { text: `${sTeam(s, g.a).abbr} ${g.as}` }), h('span', { text: ' @ ' }), h('span', { text: `${sTeam(s, g.h).abbr} ${g.hs}` })))) : null;
+  let bracket = null;
+  if (s.playoff) {
+    const P = s.playoff, gameTxt = (q, r) => r ? `${sTeam(s, r.a).abbr} ${r.as} – ${r.hs} ${sTeam(s, r.h).abbr}` : `${sTeam(s, q[1]).abbr} at ${sTeam(s, q[0]).abbr}`;
+    bracket = h('div', { class: 'bracket' }, h('div', { class: 'label', text: '🎟️ Playoffs' }),
+      h('div', { class: 'brow' }, h('span', { class: 'bl', text: 'Semifinal 1' }), h('span', { text: gameTxt(P.semis[0], P.semiRes[0]) })),
+      h('div', { class: 'brow' }, h('span', { class: 'bl', text: 'Semifinal 2' }), h('span', { text: gameTxt(P.semis[1], P.semiRes[1]) })),
+      h('div', { class: 'brow final' }, h('span', { class: 'bl', text: 'Championship' }), h('span', { text: P.final ? gameTxt(P.final, P.finalRes) : 'TBD' })));
+  }
+  let doneBox = null;
+  if (s.phase === 'done') {
+    const champ = sTeam(s, s.champion), won = s.champion === 0;
+    doneBox = h('div', { class: 'champ' + (won ? ' won' : '') }, h('div', { class: 'big', text: won ? '🏆' : '🥈' }),
+      h('div', { text: won ? `${champ.name} are the CHAMPIONS! +200 🪙` : `${champ.name} won the championship.` }),
+      h('div', { class: 'muted', text: won ? 'Your trophy is in the Trophy Case.' : (s.playoff.seeds.includes(0) ? 'Great playoff run! Get ’em next season.' : 'You didn’t make the playoffs this time — upgrade your team and try again!') }),
+      h('button', { class: 'btn green', onclick: () => { save.season = null; persist(); showSeasonSetup(); } }, 'Start a new season'));
+  }
+  let quitArmed = false;
+  const quitBtn = h('button', { class: 'btn small red', onclick: () => { if (!quitArmed) { quitArmed = true; quitBtn.textContent = 'Tap again to quit this season'; return; } save.season = null; persist(); showTitle(); } }, 'Quit season');
+  showScreen(h('div', { class: 'card stack' },
+    h('div', { class: 'row between' }, h('h2', { text: `🏆 Season ${s.n}` }), h('span', { class: 'muted', text: `${DIFF[s.diff].label} · ${s.innings}-inning games` })),
+    note ? h('div', { class: 'note', text: note }) : null,
+    doneBox, nextCard, table, h('div', { class: 'muted', text: 'Top 4 make the playoffs.' }), bracket, results,
+    h('div', { class: 'row between' }, h('button', { class: 'btn gray', onclick: showTitle }, '← Menu'), s.phase !== 'done' ? quitBtn : null)));
+}
+function showTrophies() {
+  G = null; hud(false);
+  const earned = BADGES.filter(b => save.badges[b.id]).length;
+  showScreen(h('div', { class: 'card stack' },
+    h('h2', { text: '🏅 Trophy Case' }),
+    h('div', { class: 'label', text: 'Championship trophies' }),
+    save.trophies.length ? h('div', { class: 'trophies' }, ...save.trophies.map(t => h('div', { class: 'trophy' }, h('div', { class: 'big', text: '🏆' }), h('b', { text: `Season ${t.n}` }), h('div', { text: t.team }), h('div', { class: 'muted', text: `${t.record} · ${t.date}` }))))
+      : h('div', { class: 'muted', text: 'No trophies yet — win a Season championship to put one here!' }),
+    h('div', { class: 'label', text: `Badges (${earned} of ${BADGES.length})` }),
+    h('div', { class: 'badges' }, ...BADGES.map(b => h('div', { class: 'bdg' + (save.badges[b.id] ? ' got' : '') }, h('div', { class: 'bi', text: save.badges[b.id] ? b.icon : '🔒' }), h('b', { text: b.name }), h('div', { class: 'muted', text: save.badges[b.id] ? `Earned ${save.badges[b.id]}` : b.desc })))),
+    h('div', { class: 'label', text: 'Records' }),
+    h('div', { class: 'reward' }, h('span', { text: 'Record vs computer' }), h('b', { text: `${save.record.w}-${save.record.l}${save.record.t ? '-' + save.record.t : ''}` })),
+    h('div', { class: 'reward' }, h('span', { text: 'Best Home Run Derby' }), h('b', { text: `${save.derbyBest.hr} HR (longest ${save.derbyBest.long || 0} ft)` })),
+    h('div', { class: 'reward' }, h('span', { text: 'Trivia answered right' }), h('b', { text: String(save.triviaRight) })),
+    h('div', { class: 'row' }, h('button', { class: 'btn', onclick: showTitle }, '← Done'))));
+}
+
+// ================= Create-a-player & uniform designer =================
+function previewCanvas(w, hh, drawFn) {
+  const c = h('canvas', { width: String(w * 2), height: String(hh * 2), class: 'preview', style: { width: w + 'px', height: hh + 'px' } });
+  c.redraw = () => withCanvas(c, () => { ctx.setTransform(2, 0, 0, 2, 0, 0); ctx.clearRect(0, 0, w, hh); drawFn(); });
+  c.redraw();
+  return c;
+}
+function previewBackdrop(w, hh) {
+  const g = ctx.createLinearGradient(0, 0, 0, hh); g.addColorStop(0, '#7dd3fc'); g.addColorStop(1, '#e0f2fe');
+  ctx.fillStyle = g; rr(0, 0, w, hh, 14);
+  ctx.fillStyle = '#4ade80'; ctx.fillRect(0, hh - 34, w, 34); ctx.fillStyle = '#c99060'; ell(w / 2, hh - 14, w * 0.42, 10);
+}
+function swatchRow(colors, get, set, labels) {
+  const wrap = h('div', { class: 'row' });
+  const render_ = () => wrap.replaceChildren(...colors.map((c, i) => h('button', { class: 'swatch' + (get() === i || get() === c ? ' sel' : ''), style: { background: c }, 'aria-label': labels ? labels[i] : 'color', onclick: () => { set(i, c); render_(); } })));
+  render_(); return wrap;
+}
+function showPlayerEditor(pl, isPitcher) {
+  const t = save.team, L = pl.look;
+  const prev = previewCanvas(320, 200, () => {
+    previewBackdrop(320, 200);
+    drawKid(90, 182, 2.0, kidOpts(pl, t, { glove: true }));
+    drawBatter(232, 188, 2.05, t, pl, 0, !isPitcher && pl.bats === 'L', false);
+  });
+  const upd = () => { persist(); prev.redraw(); };
+  const numIn = h('input', { type: 'number', min: '0', max: '99', value: String(L.num), 'aria-label': 'jersey number', class: 'numin', oninput: e => { const v = Math.round(Number(e.target.value)); if (Number.isFinite(v)) { L.num = clamp(v, 0, 99); upd(); } } });
+  showScreen(h('div', { class: 'card stack editor' },
+    h('div', { class: 'row between' }, h('h2', { text: '✏️ Create-a-Player' }), h('span', { class: 'badge', style: { background: isPitcher ? '#111827' : t.color }, text: isPitcher ? 'P' : pl.pos })),
+    h('div', { class: 'previewwrap' }, prev),
+    h('div', { class: 'label', text: 'Name' }),
+    h('input', { type: 'text', maxlength: '18', value: pl.name, 'aria-label': 'player name', oninput: e => { pl.name = cleanStr(e.target.value, pl.name, 18); upd(); } }),
+    h('div', { class: 'row' }, h('div', { class: 'label', text: 'Jersey number' }), numIn,
+      h('div', { class: 'label', style: { marginLeft: '12px' }, text: isPitcher ? 'Throws' : 'Bats' }),
+      seg([['R', 'Right'], ['L', 'Left']], () => isPitcher ? pl.throws : pl.bats, v => { if (isPitcher) pl.throws = v; else pl.bats = v; upd(); })),
+    h('div', { class: 'label', text: 'Skin tone' }), swatchRow(SKIN, () => L.skin, i => { L.skin = i; upd(); }),
+    h('div', { class: 'label', text: 'Hair color' }), swatchRow(HAIR, () => L.hair, i => { L.hair = i; upd(); }),
+    h('div', { class: 'label', text: 'Hair style' }), seg(HAIR_STYLES.map(s => [s, HAIR_STYLE_LABEL[s]]), () => L.style, v => { L.style = v; upd(); }),
+    h('div', { class: 'label', text: 'Gear' }), seg(ACCS.map(a => [a, ACC_LABEL[a]]), () => L.acc, v => { L.acc = v; upd(); }),
+    h('div', { class: 'row', style: { justifyContent: 'center', marginTop: '6px' } }, h('button', { class: 'btn green', onclick: showTeam }, 'Done ✓'))));
+}
+function uniformDesigner(onChange) {
+  const t = save.team, u = t.uni;
+  const prev = previewCanvas(330, 200, () => {
+    previewBackdrop(330, 200);
+    drawKid(80, 182, 2.0, kidOpts(t.batters[0], t, { glove: true }));
+    drawBatter(240, 188, 2.05, t, t.batters[1], 0, false, false);
+    ctx.fillStyle = 'rgba(255,255,255,.85)'; circle(165, 46, 30); drawLogo(u, 165, 46, 22, t.color);
+  });
+  const upd = () => { persist(); prev.redraw(); if (onChange) onChange(); };
+  const letterIn = h('input', { type: 'text', maxlength: '1', value: u.letter, class: 'numin', 'aria-label': 'logo letter', oninput: e => { const v = e.target.value; if (/^[A-Za-z0-9]$/.test(v)) { u.letter = v.toUpperCase(); upd(); } } });
+  const box = h('div', { class: 'stack uniform' },
+    h('div', { class: 'previewwrap' }, prev),
+    h('div', { class: 'label', text: 'Main color' }), colorPicker(() => t.color, c => { t.color = c; upd(); }),
+    h('div', { class: 'label', text: 'Trim color (numbers, stripes, logo)' }), swatchRow(SECONDARY, () => u.secondary, (i, c) => { u.secondary = c; upd(); }),
+    h('div', { class: 'label', text: 'Jersey style' }), seg(UNI_STYLES.map(s => [s, UNI_STYLE_LABEL[s]]), () => u.style, v => { u.style = v; upd(); }),
+    h('div', { class: 'label', text: 'Pants' }), seg([['white', 'White'], ['gray', 'Gray'], ['dark', 'Dark']], () => u.pants, v => { u.pants = v; upd(); }),
+    h('div', { class: 'label', text: 'Cap logo' }), seg(LOGOS.map(l => [l, LOGO_LABEL[l]]), () => u.logo, v => { u.logo = v; upd(); }),
+    h('div', { class: 'row' }, h('div', { class: 'label', text: 'Logo letter' }), letterIn));
+  return box;
 }
 
 // ================= Main loop =================
@@ -2485,6 +3342,9 @@ function frame(now) {
   render();
   requestAnimationFrame(frame);
 }
+save = loadSave();
+persist();
+Voice.init();
 resize();
 updateFieldCam(0, true);
 showTitle();
@@ -2514,9 +3374,33 @@ if (testMode) {
     start: o => startGame(o),
     tap: (x, y) => onTap({ x, y }),
     save: () => save,
+    async renderSound(name, dur, arg) {
+      const sr = 22050, oc = new OfflineAudioContext(1, Math.ceil(sr * dur), sr);
+      const keep = {}; for (const k of ['ctx', 'master', 'white', 'pink', 'crowdOn', 'crowdGain', 'crowdNodes']) keep[k] = Sound[k];
+      Sound.crowdOn = false; Sound.setup(oc);
+      try { if (name === 'crowd') { Sound.startCrowd(); Sound.setCrowd(arg); } else Sound[name](arg); }
+      catch (e) { Object.assign(Sound, keep); return { error: String(e) }; }
+      const buf = await oc.startRendering();
+      Object.assign(Sound, keep);
+      return Array.from(buf.getChannelData(0), x => Math.round(x * 32767));
+    },
     trivia: i => showTrivia(TRIVIA[i], () => {}),
     unlock: () => { Sound.unlock(); Sound.startCrowd(); },
     P3: (x, y, z) => P3(x, y, z),
+    derbyRate(stadium, sd, n) {
+      G = newPractice('derby', stadium); G.derby = { players: [{ idx: 0, hr: 0, long: 0, swings: 0 }], cur: 0, per: 10 }; G.idx[0] = 0;
+      let hr = 0, cnt = 0;
+      for (let i = 0; i < n; i++) {
+        G.pitch = coachPitch(); G.pitch.t = G.pitch.T; G.swing = null;
+        doSwing({ e: gauss() * sd, cx: 0, cy: 2.5 }); cnt++;
+        if (!G.swing.contact) continue;
+        G.scene = { actors: { ball: { x: 0, y: 0, h: 3 } }, texts: [] };
+        const gen = derbyGen(G.swing.bb); let r = gen.next(); while (!r.done) r = gen.next();
+        if (r.value.hr) hr++;
+      }
+      G = null; return hr / cnt;
+    },
+    seasonSimAll: () => { const s = save.season; while (s && s.phase !== 'done') { if (!seasonNextGame(s)) break; simulateMyGame(); } return save.season; },
     spots: () => (G && G.play && G.play.prompt && G.play.prompt.kind === 'throwChoice') ? throwChoiceSpots(G.play.prompt) : null
   };
 }
