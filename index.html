@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Jtm3EAoEMlhXO24ZPmZyRh9eZf/qInuEyVKwe/yEz5w='; style-src 'sha256-AwbWXOAw9t5kz0O/pVKo4kQKLgBLLJlSlBjBcLqlYjw='; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-+y0dTxv2rZhPp43xAFxENUTRNPOueQ33wCqR/9/Bs2Y='; style-src 'sha256-AwbWXOAw9t5kz0O/pVKo4kQKLgBLLJlSlBjBcLqlYjw='; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>Pocket Slugger</title>
 <meta name="description" content="A small, ad-free baseball game that works offline.">
@@ -1114,7 +1114,7 @@ function advancePlay(input) {
   if (r.done) { const cb = P.onDone; cb(r.value || {}); return; }
   const y = r.value;
   if (y.anim) startStage(y.anim);
-  else if (y.prompt) { P.prompt = y.prompt; P.prompt.t = 0; P.stage = null; if (y.prompt.kind !== 'choice') Sound.click(); }
+  else if (y.prompt) { P.prompt = y.prompt; P.prompt.t = 0; P.stage = null; P.prompts = (P.prompts || 0) + 1; if (y.prompt.kind !== 'choice') Sound.click(); }
 }
 function startStage(a) {
   const S = G.scene, last = {};
@@ -1160,11 +1160,19 @@ function fireEvent(ev) {
   if (ev.hide && S.actors[ev.hide]) S.actors[ev.hide].hidden = true;
   if (ev.text) S.texts.push({ text: ev.text, color: ev.color || '#fff', at: ev.at || null, t: 0 });
   if (ev.call) umpire(ev.call);
-  if (ev.dive && S.actors[ev.dive]) { S.actors[ev.dive].diveT = 0; Sound.slide(); }
-  if (ev.slide && S.actors[ev.slide]) { S.actors[ev.slide].slideT = 0; Sound.slide(); }
+  if (ev.dive && S.actors[ev.dive]) { const a = S.actors[ev.dive]; a.diveT = 0; a.diveDir = screenDir(a, ev.toward); Sound.slide(); }
+  if (ev.slide && S.actors[ev.slide]) { const a = S.actors[ev.slide]; a.slideT = 0; a.slideDir = screenDir(a, ev.toward); Sound.slide(); }
   if (ev.dust) addDust(ev.dust.x, ev.dust.y);
+  if (testMode) { window.__ev = window.__ev || []; if (ev.dive) { const a = S.actors[ev.dive]; window.__ev.push({ k: 'dive', id: ev.dive, dir: a.diveDir, toward: ev.toward, at: { x: a.x, y: a.y } }); } if (ev.text && /CATCH|STOP|missed|reach/i.test(ev.text)) { const ds = Object.entries(S.actors).filter(([i, a]) => a.diveT != null).map(([i, a]) => [i, +a.diveT.toFixed(2)]); window.__ev.push({ k: 'text', text: ev.text, divers: ds }); } }
   if (ev.crowd) crowdReact(ev.crowd[1], ev.crowd[0]);
   if (ev.fireworks) { for (let i = 0; i < 7; i++) addFirework(i * 0.25); }
+}
+// Which way (left = -1, right = +1) is a point from this player, as seen on screen?
+function screenDir(a, pt) {
+  if (!pt) return a.face || 1;
+  const s1 = P3(a.x, a.y, 0), s2 = P3(pt.x, pt.y, 0);
+  const d = s1 && s2 ? s2.x - s1.x : pt.x - a.x;
+  return Math.abs(d) < 2 ? (pt.x >= a.x ? 1 : -1) : Math.sign(d);
 }
 function addDust(x, y) { for (let i = 0; i < 10; i++) G.fx.push({ k: 'dust', x: x + rnd(-2, 2), y: y + rnd(-2, 2), z: 0.5, vx: rnd(-6, 6), vy: rnd(-6, 6), vz: rnd(2, 6), t: 0, life: rnd(0.5, 0.9) }); }
 function addFirework(delay) {
@@ -1180,6 +1188,7 @@ function updatePlay(dt) {
     let sp = PLAY_SPEED * (st.fast ? 3 : 1);
     if (st.slow && st.t >= st.slow[0] && st.t <= st.slow[1] && !st.fast) sp *= 0.35;
     st.t += dt * sp;
+    for (const a of Object.values(G.scene.actors)) { if (a.diveT != null) a.diveT += dt * sp; if (a.slideT != null) a.slideT += dt * sp; }
     for (const ev of st.events) if (!ev.done && st.t >= ev.t) { ev.done = true; fireEvent(ev); }
     applyStage(st, Math.min(st.t, st.dur));
     if (st.t >= st.dur) { for (const ev of st.events) if (!ev.done) { ev.done = true; fireEvent(ev); } P.stage = null; advancePlay(); }
@@ -1191,7 +1200,7 @@ function updatePlay(dt) {
   }
 }
 function promptRingR(pr) { return 88 * (1 - pr.t / pr.dur); }
-function timingScore(pr) { return clamp(1 - Math.abs(promptRingR(pr) - 18) / 28, 0, 1); }
+function timingScore(pr) { return clamp(1 - Math.abs(promptRingR(pr) - 18) / (kidMode() ? 34 : 28), 0, 1); }
 function resolvePrompt(val) {
   const pr = G.play && G.play.prompt; if (!pr) return;
   G.play.prompt = null;
@@ -1257,14 +1266,16 @@ function* inPlayGen(bb) {
     }
     const fid = 'F_' + best.pos;
     const outText = bb.la > 45 && D < 170 ? 'POP OUT' : bb.la < 20 ? 'LINE OUT' : 'FLY OUT';
-    if (best.m >= 0.25) {
+    const routine = best.m >= 0.25;
+    if (routine && !def.human) {
       const tws = [ballTo(L, 0, T, peak, 4, 3), moveTo(fid, L, 0.35, Math.min(best.tr, T - 0.05))];
       yield anim(tws, T + 0.35, [{ t: T, sound: 'pop', text: 'CAUGHT!', at: L, call: 'Out!' }]);
       return yield* tagUps(L, best.f, outText, fid);
     }
     let elapsed = 0, ua = 0;
-    if (best.m > -0.45) {
-      const p0 = clamp((best.m + 0.45) / 0.7, 0.05, 0.95);
+    const diveRange = def.human ? -0.9 : -0.45;
+    if (best.m > diveRange) {
+      const p0 = routine ? 0.97 : clamp((best.m + 0.45) / 0.7, 0.02, 0.95);
       ua = 0.6; elapsed = T * ua;
       const F0 = FP[best.pos], dd = Math.max(1, dist(F0, L));
       const cov = clamp(best.f.spd * Math.max(0, elapsed - 0.35), 0, dd - 4);
@@ -1273,15 +1284,15 @@ function* inPlayGen(bb) {
       let pOut = p0;
       if (def.human) {
         const s = yield promptTiming(fid, best.m > 0 ? 'CATCH IT!' : 'DIVE!');
-        pOut = clamp(0.12 + 0.82 * s + (p0 - 0.5) * 0.3, 0.03, 0.97);
+        pOut = routine ? clamp(0.86 + 0.13 * s, 0, 0.99) : best.m > -0.45 ? clamp(0.12 + 0.82 * s + (p0 - 0.5) * 0.3, 0.03, 0.97) : clamp(0.05 + 0.45 * s + (best.m + 0.45) * 0.5, 0.02, 0.45);
       }
       const rest = T - elapsed;
       if (Math.random() < pOut) {
-        const word = best.m > 0 ? 'NICE CATCH!' : 'DIVING CATCH!';
+        const word = routine ? 'CAUGHT!' : best.m > 0 ? 'NICE CATCH!' : 'DIVING CATCH!';
         if (best.m <= 0 && isMine(def)) earnBadge('diving');
         const tws = [ballTo(L, 0, rest, peak * (1 - ua) * (1 - ua), 2), moveTo(fid, L, 0, rest - 0.02)];
-        const ev = [{ t: rest, sound: 'pop', text: word, at: L, color: '#ffd166', call: 'Out!', crowd: ['cheer', 0.6], dust: L }];
-        if (best.m <= 0) ev.push({ t: Math.max(0, rest - 0.35), dive: fid });
+        const ev = [{ t: rest, sound: 'pop', text: word, at: L, color: '#ffd166', call: 'Out!', crowd: ['cheer', routine ? 0.3 : 0.6], dust: L }];
+        if (best.m <= 0) ev.push({ t: Math.max(0, rest - 0.32), dive: fid, toward: L });
         yield anim(tws, rest + 0.5, ev, [Math.max(0, rest - 0.6), rest + 0.1]);
         return yield* tagUps(L, best.f, word, fid);
       }
@@ -1291,19 +1302,21 @@ function* inPlayGen(bb) {
     const roll = clamp(18 + v * 0.5 * (1 - bb.la / 75), 0, Math.max(0, fence2 - D - 5));
     const P = { x: L.x + dir.x * roll, y: L.y + dir.y * roll };
     const tLand = T - elapsed, tP = tLand + roll / 32;
+    const dove = elapsed && best.m <= 0;
     let rf = null;
     for (const pos of ['LF', 'CF', 'RF', 'SS', '2B', '3B', '1B']) {
       const f = fielderStats(pos), moved = elapsed && pos === best.pos;
       const from = moved ? A[fid] : FP[pos];
-      const t = (moved ? 0 : Math.max(0, 0.35 - elapsed)) + dist(from, P) / f.spd;
+      const t = (moved ? 0 : Math.max(0, 0.35 - elapsed)) + dist(from, P) / f.spd + (moved && dove ? 0.7 : 0);
       if (!rf || t < rf.t) rf = { pos, f, t };
     }
     const tRet = Math.max(rf.t, tP) + 0.5;
     const b1 = ballTo(L, 0, tLand, peak * (1 - ua) * (1 - ua), 0); if (!ua) b1.h0 = 3;
     const ballTws = [b1, ballTo(P, tLand, tP, Math.min(6, roll / 10), 0, 0)];
     const pre = [{ t: tLand, sound: 'bounce', dust: L }];
-    if (elapsed && best.m <= 0) pre.push({ t: Math.max(0, tLand - 0.3), dive: fid });
-    return yield* hitRunning({ P, tRet, fid: 'F_' + rf.pos, f: rf.f, ballTws, elapsed, preEvents: pre });
+    if (def.human) pre.push({ t: Math.max(0.1, tLand - 0.2), text: routine ? 'Dropped it!' : best.m > -0.45 ? 'Just missed!' : 'Too far to reach!', at: A[fid] ? { x: A[fid].x, y: A[fid].y } : L, color: '#fff' });
+    if (dove) pre.push({ t: Math.max(0, tLand - 0.3), dive: fid, toward: L });
+    return yield* hitRunning({ P, tRet, fid: 'F_' + rf.pos, f: rf.f, ballTws, elapsed, preEvents: pre, delay: dove && rf.pos === best.pos ? tLand + 0.4 : 0 });
   }
 
   // ---------- ground ball / bunt ----------
@@ -1333,6 +1346,28 @@ function* inPlayGen(bb) {
       if (!fielded || t < fielded.t) fielded = { pos, f, pt, t };
     }
   }
+  let el = 0, diveMiss = null;
+  if (!fielded && !bb.bunt) {
+    let near = null;
+    for (let s = 5; s <= Math.min(sStop, 160); s += 2) {
+      const pt = { x: dir.x * s, y: dir.y * s }, tb = tAt(s);
+      for (const pos of ['3B', 'SS', '2B', '1B']) {
+        const f = fielderStats(pos), deficit = 0.35 + dist(FP[pos], pt) / (f.spd * 0.68) - tb;
+        if (deficit < 0.45 && (!near || deficit < near.deficit)) near = { pos, f, pt, tb, deficit };
+      }
+    }
+    if (near) {
+      const nfid = 'F_' + near.pos, tStop = Math.max(0.2, near.tb - 0.25);
+      const sNow = vg * tStop - 0.5 * dec * tStop * tStop, d0 = Math.max(1, dist(FP[near.pos], near.pt));
+      const lunge = clamp((tStop - 0.35) * near.f.spd * 0.68 / d0, 0, 0.75);
+      yield anim([ballTo({ x: dir.x * sNow, y: dir.y * sNow }, 0, tStop, 1.5, 0.5, 1), moveTo(nfid, lerpPt(FP[near.pos], near.pt, lunge), 0.3, tStop)], tStop, []);
+      el = tStop;
+      let p = clamp(0.3 * (1 - near.deficit / 0.45), 0.02, 0.3);
+      if (def.human) { const s = yield promptTiming(nfid, 'DIVE!'); p = clamp(0.08 + 0.75 * s - near.deficit * 0.6, 0.03, 0.85); }
+      if (Math.random() < p) { if (isMine(def)) earnBadge('diving'); return yield* groundPlay({ pos: near.pos, f: near.f, pt: near.pt, t: near.tb + 0.55, ballT: near.tb, dove: true }, false, el); }
+      diveMiss = { fid: nfid, pt: near.pt };
+    }
+  }
   if (!fielded) {
     const sEnd = Math.min(sStop, fenceDist(bb.spray) - 4);
     let of = null;
@@ -1350,13 +1385,19 @@ function* inPlayGen(bb) {
         if (!of || t < of.t) of = { pos, f, pt, t };
       }
     }
-    return yield* hitRunning({ P: of.pt, tRet: of.t + 0.3, fid: 'F_' + of.pos, f: of.f, ballTws: [ballTo(of.pt, 0, of.t, 1.5, 0, 1)], elapsed: 0, preEvents: [{ t: 0.4, crowd: ['cheer', 0.3] }] });
+    const pre = [{ t: 0.4, crowd: ['cheer', 0.3] }];
+    if (diveMiss) { pre.push({ t: 0, dive: diveMiss.fid, toward: diveMiss.pt }, { t: 0.15, dust: diveMiss.pt }); if (def.human) pre.push({ t: 0.25, text: 'Just missed!', at: diveMiss.pt }); }
+    return yield* hitRunning({ P: of.pt, tRet: of.t + 0.3 - el, fid: 'F_' + of.pos, f: of.f, ballTws: [ballTo(of.pt, 0, Math.max(0.15, of.t - el), 1.5, 0, 1)], elapsed: el, preEvents: pre });
   }
   return yield* groundPlay(fielded, !!bb.bunt);
 }
 
 // ---------- ground balls: choose where to throw ----------
-function* groundPlay(fd, bunt) {
+function* groundPlay(fd, bunt, el) {
+  el = el || 0;
+  const DIVE_REACH = 25; // feet an infielder has to range to the side before it's a dive
+  const reach = dist(G.fpos[fd.pos], fd.pt);
+  if (!bunt && !fd.dove && reach > DIVE_REACH && ['1B', '2B', 'SS', '3B'].includes(fd.pos)) { fd.dove = true; fd.ballT = fd.t; fd.t += 0.45; fd.ranging = true; }
   const off = offTeam(), def = defTeam(), batter = curBatter();
   const P = fd.pt, f = fd.f, fid = 'F_' + fd.pos;
   const forced = [!!G.bases[0], !!G.bases[0] && !!G.bases[1], !!G.bases[0] && !!G.bases[1] && !!G.bases[2]];
@@ -1372,13 +1413,35 @@ function* groundPlay(fd, bunt) {
     const head = G.headStart === i + 1 ? -0.5 : 0.25;
     runners.push({ id: 'R' + (i + 1), from: i + 1, to, pl: r, t: head + 90 * (to - (i + 1)) / runSpeed(r, off), forced: forced[i] });
   }
+  // A diving stop on a ball hit to the side: YOU tap to dive (if you miss, you knock it down but the batter is safe)
+  if (fd.ranging && def.human) {
+    const tPart = Math.max(0.15, (fd.ballT - el) * 0.62), u = tPart / Math.max(0.2, fd.ballT - el);
+    const ball = G.scene.actors.ball, from = { x: ball.x, y: ball.y };
+    yield anim([ballTo(lerpPt(from, P, u), 0, tPart, 1, 1, 1), moveTo(fid, lerpPt(G.fpos[fd.pos], P, Math.min(0.7, u)), 0.2, tPart)], tPart, []);
+    el += tPart;
+    const s = yield promptTiming(fid, 'DIVE!');
+    if (Math.random() >= clamp(0.55 + 0.45 * s, 0, 0.98)) {
+      const left = Math.max(0.15, fd.ballT - el), tw = [ballTo(P, 0, left, 0.5, 0.3, 1), moveTo(fid, P, 0, left)];
+      const ev = [{ t: Math.max(0, left - 0.28), dive: fid, toward: P }, { t: left, dust: P, text: 'Knocked it down!', at: P, color: '#fff' }];
+      const res = { outs: 0, runs: 0, bases: [null, null, null], hit: 1, text: 'INFIELD HIT!', sub: 'Great try — knocked it down, but the runner is safe' };
+      tw.push(moveTo('R0', BASES[1], 0, Math.max(left + 0.6, 0.9 + 90 / runSpeed(batter, off) - el)));
+      res.bases[0] = batter;
+      for (let i = 0; i < 3; i++) { const r = G.bases[i]; if (!r) continue; const to = forced[i] ? i + 2 : i + 1; const t2 = runTw('R' + (i + 1), i + 1, to, 0.05, runSpeed(r, off)); if (t2) tw.push(t2); if (to === 4) { res.runs++; ev.push({ t: t2.t1, hide: 'R' + (i + 1) }); } else res.bases[to - 1] = r; }
+      yield anim(tw, maxT(tw) + 0.5, ev);
+      return res;
+    }
+    if (isMine(def)) earnBadge('diving');
+  }
   // Stage A: the ball goes to the fielder while the runners take off
-  const tws = [ballTo(P, 0, fd.t, bunt ? 0.8 : 1.5, 1, 1), moveTo(fid, P, 0.3, fd.t - 0.02)];
+  const tBall = Math.max(0.1, (fd.ballT || fd.t) - el);
+  const tws = [ballTo(P, 0, tBall, bunt ? 0.8 : 1.5, 1, 1), moveTo(fid, P, Math.max(0, 0.3 - el), Math.max(0.1, tBall - 0.02))];
   for (const r of runners) if (r.to > r.from) {
     const start = r.from === 0 ? 0.9 : 0.1, frac = clamp((fd.t - start) / Math.max(0.1, r.t - start), 0, 0.85);
-    if (frac > 0) tws.push(moveTo(r.id, lerpPt(BASES[r.from], BASES[r.from + 1 > 3 ? 0 : r.from + 1], Math.min(frac * (r.to - r.from), 0.85)), start, fd.t));
+    if (frac > 0) tws.push(moveTo(r.id, lerpPt(BASES[r.from], BASES[r.from + 1 > 3 ? 0 : r.from + 1], Math.min(frac * (r.to - r.from), 0.85)), Math.max(0, start - el), Math.max(0.1, fd.t - el)));
   }
-  yield anim(tws, fd.t + 0.05, [{ t: fd.t, sound: 'pop' }]);
+  const evA = [{ t: tBall, sound: 'pop' }];
+  if (fd.dove) evA.push({ t: Math.max(0, tBall - 0.28), dive: fid, toward: P }, { t: tBall, dust: P, text: 'DIVING STOP!', at: P, color: '#ffd166', crowd: ['cheer', 0.5] });
+  yield anim(tws, Math.max(0.1, fd.t - el) + 0.05, evA);
 
   // Throw options: any base a runner is heading to
   const opts = runners.filter(r => r.to > r.from).map(r => {
@@ -1393,7 +1456,10 @@ function* groundPlay(fd, bunt) {
     ch = opts.find(o => o.base === base) || best();
   } else ch = def.human ? opts[0] : best();
   let out;
-  if (ch.margin > 0.35) out = true;
+  if (ch.margin > 0.35) {
+    if (def.human) { const s = yield promptTiming(fid, ch.self ? 'TAG THE BASE!' : 'THROW!'); out = Math.random() < clamp(0.86 + 0.13 * s, 0, 0.99); }
+    else out = true;
+  }
   else if (ch.margin < -0.35) out = false;
   else {
     let p = clamp(0.5 + ch.margin * 1.4, 0.05, 0.95);
@@ -1430,7 +1496,7 @@ function* groundPlay(fd, bunt) {
   const close = Math.abs(ch.margin) < 0.35;
   const tCall = Math.max(tArr, tR) + 0.02;
   ev2.push(...callEvents(tCall, !out, bp, ch.r.id));
-  if (close && ch.r.id !== 'R0') ev2.push({ t: Math.max(0, tR - 0.3), slide: ch.r.id });
+  if (close && ch.r.id !== 'R0') ev2.push({ t: Math.max(0, tR - 0.3), slide: ch.r.id, toward: bp });
   let slow = close ? [tCall - 0.5, tCall + 0.12] : null;
   const res = { outs: out ? 1 : 0, runs: 0, bases: [null, null, null], hit: 0 };
   let outTime = out ? tCall : Infinity;
@@ -1497,7 +1563,7 @@ function* hitRunning(c) {
     if (delta > -0.55) { p.stretch = n; p.delta = delta; }
   }
   const tws = c.ballTws.slice(), ev = (c.preEvents || []).slice();
-  tws.push(moveTo(c.fid, c.P, 0.05, Math.max(0.3, c.tRet - 0.3)));
+  tws.push(moveTo(c.fid, c.P, c.delay || 0.05, Math.max((c.delay || 0) + 0.3, c.tRet - 0.3)));
   for (const p of plan) {
     const tw = runTw(p.id, p.from, p.safe, p.from === 0 ? Math.max(0, 0.9 - el) : 0, runSpeed(p.pl, off));
     if (tw) tws.push(tw);
@@ -1541,7 +1607,7 @@ function* hitRunning(c) {
     const durR = 1.5, durB = safe ? durR + 0.2 : durR - 0.28, bp = BASES[target.stretch % 4], tCall = Math.max(durR, durB) + 0.03;
     const tws2 = [ballTo(bp, 0.1, 0.1 + durB, 8, 4, 4), moveTo(coverFor(target.stretch), bp, 0, 0.8)];
     const ev2 = callEvents(tCall, safe, bp, target.id);
-    ev2.push({ t: durR - 0.35, slide: target.id });
+    ev2.push({ t: durR - 0.35, slide: target.id, toward: bp });
     for (const g of goers) {
       tws2.push({ id: g.id, pts: [BASES[g.stretch % 4]], t0: 0, t1: g === target ? durR : durR * 0.9 });
       if (g.stretch === 4 && (g !== target || safe)) ev2.push({ t: g === target ? tCall + 0.1 : durR * 0.9, hide: g.id, text: g === target ? null : 'RUN!', at: BASES[0], color: '#ffd166' });
@@ -1596,7 +1662,7 @@ function* tagUps(L, f, outText, fid) {
   if (!safe && isMine(def)) earnBadge('dp');
   const durR = 1.6, durB = safe ? durR + 0.2 : durR - 0.28, bp = BASES[target.to % 4], tCall = Math.max(durR, durB) + 0.03;
   const tws = [ballTo(bp, 0.15, 0.15 + durB, 10, 4, 6), moveTo(coverFor(target.to), bp, 0, 0.6)];
-  const ev = callEvents(tCall, safe, bp, target.id); ev.push({ t: durR - 0.35, slide: target.id });
+  const ev = callEvents(tCall, safe, bp, target.id); ev.push({ t: durR - 0.35, slide: target.id, toward: bp });
   for (const g of goers) {
     tws.push({ id: g.id, pts: [BASES[g.to % 4]], t0: 0.1, t1: g === target ? durR : durR * 0.95 });
     res.bases[g.from - 1] = null;
@@ -1626,7 +1692,7 @@ function* stealGen(from) {
   const durR = 1.0, durB = safe ? durR + 0.12 : durR - 0.15, tCall = Math.max(durR, durB) + 0.03;
   const tws = [moveTo(id, next, 0, durR), moveTo(cover, next, 0, 0.6), ballTo(next, 0.05, durB, 4, 2.5, 5)];
   const ev = callEvents(tCall, safe, next, id);
-  ev.push({ t: durR - 0.35, slide: id }, { t: tCall, crowd: [safe === offTeam().human ? 'cheer' : 'ooh', 0.4] });
+  ev.push({ t: durR - 0.35, slide: id, toward: next }, { t: tCall, crowd: [safe === offTeam().human ? 'cheer' : 'ooh', 0.4] });
   yield anim(tws, tCall + 0.6, ev, [tCall - 0.5, tCall + 0.12]);
   G.bases[from - 1] = null;
   if (safe) G.bases[from] = r; else G.outs++;
@@ -1641,7 +1707,7 @@ function* pickoffGen(from) {
   const cover = from === 1 ? 'F_1B' : 'F_SS';
   const tCall = 0.8;
   const tws = [moveTo(cover, base, 0, 0.35), ballTo(base, 0.2, out ? 0.62 : 0.78, 2, 2, 5), moveTo(id, base, 0.25, out ? 0.95 : 0.65)];
-  const ev = callEvents(tCall, !out, base, id); ev.push({ t: 0.3, dive: id });
+  const ev = callEvents(tCall, !out, base, id); ev.push({ t: 0.3, dive: id, toward: base });
   yield anim(tws, tCall + 0.6, ev, [0.45, 0.9]);
   let held = false;
   if (out) { G.bases[from - 1] = null; G.outs++; if (isMine(def)) earnBadge('pickoff'); }
@@ -2164,6 +2230,7 @@ function updateFieldCam(dt, snap) {
     ff = b.y < 150 ? 760 : 690;
     const pr = G.play && G.play.prompt;
     if (pr && pr.kind === 'throwChoice') { fx = 0; fy = 100; fz = 0; ff = 760; }
+    if (pr && pr.kind === 'timing' && G.scene.actors[pr.target]) { const f = G.scene.actors[pr.target]; fx = clamp(f.x * 0.55, -120, 120); fy = clamp(70 + f.y * 0.6, 95, 300); fz = Math.min(25, (b.h || 0) * 0.2); ff = f.y < 150 ? 780 : 720; }
   }
   const k = snap ? 1 : 1 - Math.exp(-dt * 2.6);
   FC.tx += (fx - FC.tx) * k; FC.ty += (fy - FC.ty) * k; FC.tz += (fz - FC.tz) * k; FC.f += (ff - FC.f) * k;
@@ -2252,8 +2319,10 @@ function drawFieldView(titleMode) {
   for (const it of items) {
     const a = it.a, s = it.s, sc = Math.max(0.16, s.k * 7.5 / 70);
     let lie = 0;
-    if (a.diveT != null && a.diveT < 0.9) lie = (a.face || 1) * -1.35 * clamp(a.diveT * 5, 0, 1) * (a.diveT > 0.6 ? (0.9 - a.diveT) / 0.3 : 1);
-    if (a.slideT != null && a.slideT < 0.8) lie = (a.face || 1) * 1.2 * clamp(a.slideT * 5, 0, 1) * (a.slideT > 0.55 ? (0.8 - a.slideT) / 0.25 : 1);
+    // dive: head and glove stretch TOWARD the ball, stay down a moment, then pop back up
+    if (a.diveT != null && a.diveT < 1.2) lie = (a.diveDir || 1) * 1.45 * clamp(a.diveT / 0.16, 0, 1) * (a.diveT > 0.9 ? (1.2 - a.diveT) / 0.3 : 1);
+    // slide: feet first into the base
+    if (a.slideT != null && a.slideT < 0.9) lie = -(a.slideDir || 1) * 1.3 * clamp(a.slideT / 0.12, 0, 1) * (a.slideT > 0.65 ? (0.9 - a.slideT) / 0.25 : 1);
     drawKid(s.x, s.y, sc, { jersey: a.color, cap: a.color, skin: a.skin, look: a.look, uni: a.uni, glove: a.kind === 'fielder', helmet: a.kind === 'runner', run: a.moving ? clock * 18 : 0, lie });
     const pr = G.play && G.play.prompt;
     if (pr && pr.kind === 'timing' && pr.target === it.id) drawPromptRing(s.x, s.y - 34 * sc, pr);
@@ -2281,7 +2350,10 @@ function drawFieldView(titleMode) {
   }
   if (pr && pr.kind === 'throwChoice') drawThrowChoice(pr);
   if (G.play && G.play.stage && G.play.stage.slow && !G.banner && G.play.stage.t >= G.play.stage.slow[0] && G.play.stage.t <= G.play.stage.slow[1]) txt('SLOW-MO', W - 70, 150, 18, '#9be7ff');
-  if (G.play && G.play.stage && !G.banner) txt('tap to speed up', W - 16, H - 18, 15, 'rgba(255,255,255,.75)', 'right', 0);
+  if (G.play && G.play.stage && !G.banner) {
+    if (!defTeam().human || G.mode !== 'game') txt('tap to speed up', W - 16, H - 18, 15, 'rgba(255,255,255,.75)', 'right', 0);
+    else if (!G.play.prompts) txt('👀 Get ready to tap your fielder!', 500, H - 30, 22, '#ffd166');
+  }
   if (G.lastPitch && G.lastPitch.t < 3.5) drawPitchChip(14, 140, false);
 }
 function throwChoiceSpots(pr) { return pr.options.map(o => { const b = BASES[o.base % 4], s = P3(b.x, b.y, 0); return { base: o.base, x: s ? s.x : 0, y: s ? s.y : 0 }; }); }
@@ -2300,6 +2372,8 @@ function drawThrowChoice(pr) {
   txt(`⏱ ${Math.ceil(left)}`, 500 + 250, 136, 22, '#9be7ff', 'center', 0);
 }
 function drawPromptRing(x, y, pr) {
+  const bob = Math.sin(clockNow() * 8) * 5;
+  txt('👇 TAP!', x, y - 46 + bob, 20, '#ffd166');
   const r = promptRingR(pr), good = Math.abs(r - 18) < 8;
   ctx.strokeStyle = '#ffd166'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(x, y, 18, 0, Math.PI * 2); ctx.stroke();
   ctx.strokeStyle = good ? '#ffd166' : '#fff'; ctx.lineWidth = good ? 8 : 4; ctx.beginPath(); ctx.arc(x, y, Math.max(1, r), 0, Math.PI * 2); ctx.stroke();
@@ -2308,7 +2382,6 @@ function updateFx(dt) {
   if (!G) return;
   for (const p of G.fx) { p.t += dt; if (p.t < 0) continue; p.x += p.vx * dt; p.y += p.vy * dt; p.z += p.vz * dt; p.vz -= (p.k === 'spark' ? 18 : 12) * dt; if (p.k === 'dust') { p.vx *= 0.92; p.vy *= 0.92; if (p.z < 0) p.z = 0; } }
   G.fx = G.fx.filter(p => p.t < p.life);
-  if (G.scene) for (const a of Object.values(G.scene.actors)) { if (a.diveT != null) a.diveT += dt; if (a.slideT != null) a.slideT += dt; }
 }
 function drawFx() {
   for (const p of G.fx) {
@@ -2440,7 +2513,10 @@ function onTap(p) {
   }
   if (ph === 'inplay' && G.play) {
     const pr = G.play.prompt;
-    if (pr && pr.kind === 'timing') { resolvePrompt(timingScore(pr)); return; }
+    if (pr && pr.kind === 'timing') {
+      if (kidMode() && promptRingR(pr) > 62) { if (!pr.warned) { pr.warned = true; G.scene.texts.push({ text: 'Wait for the GOLD ring…', color: '#9be7ff', at: null, t: 0 }); } return; }
+      resolvePrompt(timingScore(pr)); return;
+    }
     if (pr && pr.kind === 'throwChoice') {
       if (!p) return;
       const spots = throwChoiceSpots(pr); let best = null, bd = 80;
@@ -2448,7 +2524,7 @@ function onTap(p) {
       if (best) resolvePrompt(best.base);
       return;
     }
-    if (G.play.stage) G.play.stage.fast = true;
+    if (G.play.stage && !defTeam().human) G.play.stage.fast = true;
   }
 }
 canvas.addEventListener('pointerdown', e => { Sound.unlock(); Sound.startCrowd(); e.preventDefault(); onTap(toV(e)); });
@@ -3400,6 +3476,8 @@ if (testMode) {
       }
       G = null; return hr / cnt;
     },
+    toScreen: (vx, vy) => ({ x: offX + vx * scale, y: offY + vy * scale }),
+    forcePlay(bb) { G = newGame({ mode: 'cpu', innings: 3, diff: 'medium', userHome: true, stadium: 'harbor' }); G.teams[0].human = false; G.half = 0; hud(true); hideScreen(); startInPlay(bb); },
     seasonSimAll: () => { const s = save.season; while (s && s.phase !== 'done') { if (!seasonNextGame(s)) break; simulateMyGame(); } return save.season; },
     spots: () => (G && G.play && G.play.prompt && G.play.prompt.kind === 'throwChoice') ? throwChoiceSpots(G.play.prompt) : null
   };
