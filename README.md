@@ -1,6 +1,6 @@
 # Pocket Slugger ⚾
 
-A small, ad-free baseball game for iPad and Mac. It works offline, has no accounts, and collects no data.
+A small baseball game for iPad and Mac with no real ads (only silly made-up ones on the ballpark walls, like Soggy O's cereal and Llama Insurance). It works offline, has no accounts, and collects no data.
 
 Your game's address: **https://justice2425.github.io/pocket-slugger/**
 
@@ -99,7 +99,7 @@ Voice options:
   - On close plays, tap when the ring hits the gold circle.
   - When the computer steals, you get a chance to throw the runner out.
 - **Team:** earn coins (games, hits, homers, strikeouts and trivia) and spend them on upgrades and **new pitches**. There are 11 pitches in all, including the knuckleball and the super-slow eephus.
-- **Ballparks:** 10 made-up stadiums with different fences. Watch out for the Grand Wall, and the low gravity on the Moon.
+- **Ballparks:** 10 made-up stadiums with different fences, each with its own made-up sponsors on the walls. The boards behind home plate flip to a new ad every few seconds. Watch out for the Grand Wall, and the low gravity on the Moon.
 - **Between innings:** a quick fact, rule, coach's tip or trivia question. You can change how often in Settings.
 - **Mac keyboard:**
   - Space: swing / throw / tap

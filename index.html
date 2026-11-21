@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-EP/JZIYBMVy4j1d3ZBTFI0757cEbM8f3FBNKbKpzTY8='; style-src 'sha256-3A42gBQWkvoFl/0/LpUhpOT1kEi5fbuP1aEK+zlKa3E='; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-5Tx8pcK0nPRYrDQL8wF0KlvumOYCqEidfsBSLwxiI+Y='; style-src 'sha256-3A42gBQWkvoFl/0/LpUhpOT1kEi5fbuP1aEK+zlKa3E='; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>Pocket Slugger</title>
 <meta name="description" content="A small, ad-free baseball game that works offline.">
@@ -2095,11 +2095,13 @@ function drawPitchView() {
   if (!st.roof) drawBackdrop(st, st.decks === 1 ? 232 : 174, 0, 0);
   if (st.night || st.dusk || st.roof) { drawLightTower(70, 70, 175); drawLightTower(930, 70, 175); }
   drawStadiumScoreboard(420, 96, 160, 62);
+  drawPitchBillboards(st);
   drawPitchStands(st);
   // outfield wall
   ctx.fillStyle = st.wallColor; ctx.fillRect(0, 286, W, 16);
   if (st.bigLeft) { ctx.fillStyle = st.wallColor; ctx.fillRect(0, 248, 300, 54); ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.font = '900 13px ' + FONT; ctx.textAlign = 'center'; ctx.fillText('THE GRAND WALL', 150, 262); }
   if (st.ivy) { ctx.fillStyle = '#3f8f35'; for (let x = 0; x < W; x += 9) { circle(x, 290 + (x % 3), 4); circle(x + 4, 297, 4); } }
+  drawPitchWallAds(st);
   ctx.fillStyle = '#facc15'; ctx.fillRect(0, 286, W, 2); if (st.bigLeft) ctx.fillRect(0, 248, 300, 2);
   const gg = ctx.createLinearGradient(0, 300, 0, H); gg.addColorStop(0, st.grass[0]); gg.addColorStop(1, st.grass[1]);
   ctx.fillStyle = gg; ctx.fillRect(0, 300, W, H - 300);
@@ -2295,6 +2297,7 @@ function drawFieldView(titleMode) {
   for (let a = -64; a <= 64; a += 2) { const d = fenceAt(st, clamp(a, -45, 45)), w = wallAt(st, clamp(a, -45, 45)); wallBot.push([Math.sin(rad(a)) * d, Math.cos(rad(a)) * d, 0]); wallTop.push([Math.sin(rad(a)) * d, Math.cos(rad(a)) * d, w]); }
   ctx.fillStyle = st.wallColor; if (poly3(wallBot.concat(wallTop.slice().reverse()))) ctx.fill();
   if (st.ivy) { ctx.fillStyle = 'rgba(80,160,60,.55)'; for (let j = 0; j < wallTop.length; j += 1) { const s = P3(wallTop[j][0], wallTop[j][1], wallTop[j][2] * 0.5); if (s) circle(s.x, s.y, Math.max(2, s.k * 5)); } }
+  drawOutfieldAds(st);
   ctx.strokeStyle = '#facc15'; ctx.lineWidth = 2; ctx.beginPath(); let n = 0;
   for (const p of wallTop) { const s = P3(p[0], p[1], p[2]); if (!s) continue; if (n++) ctx.lineTo(s.x, s.y); else ctx.moveTo(s.x, s.y); } ctx.stroke();
   for (const a of [-44, 0, 44]) { const d = fenceAt(st, a), s = P3(Math.sin(rad(a)) * (d - 0.5), Math.cos(rad(a)) * (d - 0.5), wallAt(st, a) * 0.5); if (s) txt(String(Math.round(d)), s.x, s.y, Math.max(9, s.k * 9), '#fff', 'center', 0); }
@@ -2649,7 +2652,7 @@ function showTitle() {
   const r = save.record;
   showScreen(h('div', { class: 'stack menu' },
     h('h1', { class: 'title', text: 'Pocket Slugger' }),
-    h('div', { class: 'subtitle', text: '⚾ No ads. No internet needed. Just baseball.' }),
+    h('div', { class: 'subtitle', text: '⚾ No real ads (just silly fake ones). No internet needed.' }),
     h('button', { class: 'btn', onclick: () => showSetup('cpu') }, '▶  Play vs Computer'),
     h('button', { class: 'btn purple', onclick: () => save.season ? showSeasonHub() : showSeasonSetup() }, save.season ? `🏆  Season ${save.season.n} · ${seasonStatus()}` : '🏆  Start a Season'),
     h('div', { class: 'grid3' },
@@ -3439,7 +3442,7 @@ function uniformDesigner(onChange) {
 // ================= Pitcher view: camera behind the mound, looking in at the batter =================
 // Field coords: home (0,0), +y toward center field, +x toward first base, z = height (feet).
 // From here, +x (first-base side) is on the LEFT of the screen.
-const PV = { px: -5.2, py: 90, pz: 5.2, tx: 1.6, ty: 0, tz: 2.8, f: 2350, cx: 500, cy: 350 };
+const PV = { px: -5.0, py: 90, pz: 5.0, tx: 1.9, ty: 0, tz: 2.9, f: 3050, cx: 500, cy: 350 };
 camBasis(PV);
 function pv(x, y, z) {
   const c = PV, dx = x - c.px, dy = y - c.py, dz = (z || 0) - c.pz;
@@ -3481,7 +3484,6 @@ function pvCrowd(st) {
   }
   return (pvCrowdCache[st.id] = { rows });
 }
-const BOARD_TEXT = st => ['POCKET SLUGGER', st.name.toUpperCase(), 'NO ADS · JUST BASEBALL', 'PLAY BALL!', 'HOME OF THE ' + (G ? G.teams[1].name.toUpperCase().split(' ').pop() : 'FANS'), 'GO TEAM GO'];
 function drawPvStands(st) {
   const clock = clockNow(), homeColor = G.teams[1].color, C = pvCrowd(st);
   // back wall of the seating bowl
@@ -3524,19 +3526,16 @@ function drawPvBackstop(st) {
   // padded wall with our own boards
   const pad = st.pad || st.wallColor;
   ctx.fillStyle = shade(pad, -0.2); if (pvPoly([[-80, Y, 0], [80, Y, 0], [80, Y, Ht], [-80, Y, Ht]])) ctx.fill();
-  const words = BOARD_TEXT(st), PW = 14;
+  // rotating sponsor boards behind home plate (made-up products), they flip every 7 seconds
+  const ads = parkAds(st), PW = 13, clock = clockNow(), cyc = Math.floor(clock / 7), ph = clock / 7 - cyc;
   for (let i = -5; i <= 5; i++) {
-    const x0 = i * PW - PW / 2 + 0.3, x1 = x0 + PW - 0.6;
-    const a = pv(x1, Y, Ht - 0.5), b = pv(x0, Y, 0.6); if (!a || !b) continue;
-    const kind = ((i % 3) + 3) % 3;
-    ctx.fillStyle = kind === 0 ? '#0f172a' : kind === 1 ? homeColor : '#f8fafc';
-    rr(Math.min(a.x, b.x), a.y, Math.abs(b.x - a.x), b.y - a.y, 4);
-    const word = words[((i % words.length) + words.length) % words.length];
-    ctx.save(); ctx.font = '900 ' + Math.round(a.k * 1.7) + 'px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    const w = ctx.measureText(word).width, maxW = Math.abs(b.x - a.x) - 10, sc = w > maxW ? maxW / w : 1;
-    ctx.translate((a.x + b.x) / 2, (a.y + b.y) / 2); ctx.scale(sc, 1);
-    ctx.fillStyle = kind === 2 ? homeColor : '#fff'; ctx.fillText(word, 0, 1);
-    ctx.restore();
+    const x0 = i * PW - PW / 2 + 0.25, x1 = x0 + PW - 0.5;
+    const a = pv(x1, Y, Ht - 0.35), b = pv(x0, Y, 0.45); if (!a || !b) continue;
+    const left = Math.min(a.x, b.x), right = Math.max(a.x, b.x), top = a.y, bot = b.y;
+    const flip = ph > 0.96 ? (ph - 0.96) / 0.04 : 0, ad = parkAds(st)[(((i + 5) * 3 + cyc + (flip > 0.5 ? 1 : 0)) % ads.length + ads.length) % ads.length];
+    const sy = flip ? Math.abs(Math.cos(flip * Math.PI)) : 1, hh = (bot - top) * sy, mid = (top + bot) / 2;
+    ctx.fillStyle = '#0f172a'; ctx.fillRect(left - 2, top - 2, right - left + 4, bot - top + 4);
+    if (hh > 1) drawAdQuad(ad, { x: left, y: mid - hh / 2 }, { x: right, y: mid - hh / 2 }, { x: left, y: mid + hh / 2 }, (right - left) / (bot - top), true);
   }
   ctx.fillStyle = '#facc15'; if (pvPoly([[-80, Y, Ht - 0.12], [80, Y, Ht - 0.12], [80, Y, Ht + 0.12], [-80, Y, Ht + 0.12]])) ctx.fill();
 }
@@ -3718,7 +3717,7 @@ function drawPitcherBack(x, y, s, team, pl, pose) {
   ctx.fillStyle = skin; rr(-4.5 + hx, -49 + hy, 9, 7, 3);
   ctx.fillStyle = hairC; circle(hx, -58 + hy, 12.5);
   if (look.style === 'curly') for (const cx of [-12, 12]) circle(cx + hx, -51 + hy, 4.5);
-  if (look.style === 'pony') { ctx.fillStyle = hairC; ell(hx, -43 + hy, 4.5, 9); }
+  if (look.style === 'pony') { ctx.fillStyle = hairC; ell(hx, -48.5 + hy, 3.6, 5.5); }
   ctx.fillStyle = skin; ell(-12.5 + hx, -56 + hy, 2.5, 3.5); ell(12.5 + hx, -56 + hy, 2.5, 3.5);
   ctx.fillStyle = team.color; ctx.beginPath(); ctx.arc(hx, -58 + hy, 14.4, Math.PI, 0); ctx.closePath(); ctx.fill();
   ctx.fillStyle = sec; circle(hx, -72 + hy, 1.6); ctx.fillRect(-4 + hx, -60 + hy, 8, 1.6);
@@ -3872,6 +3871,106 @@ function pvUpdate(dt) {
   const sp = G.phase === 'aim' ? 1.5 : 2.4;
   if (G.phase === 'pickPitch') G.kbAim = clampAim({ x: G.kbAim.x - joy.x * sp * dt, y: G.kbAim.y - joy.y * sp * dt });
   else G.aimTarget = clampAim({ x: G.aimTarget.x - joy.x * sp * dt, y: G.aimTarget.y - joy.y * sp * dt });
+}
+
+// ================= Silly ballpark ads (all made-up products) =================
+const ADS = [
+  { n: "SOGGY O's", t: 'Pre-soggy cereal. You’re welcome.', ic: '🥣', bg: '#fde047', fg: '#7c2d12', ac: '#ef4444' },
+  { n: 'NAP-O-MATIC 3000', t: 'Sleep twice as fast!', ic: '😴', bg: '#312e81', fg: '#e0e7ff', ac: '#a5b4fc' },
+  { n: 'INVISIBLE PAINT', t: 'See the difference? Neither do we.', ic: '🎨', bg: '#ffffff', fg: '#cbd5e1', ac: '#e2e8f0' },
+  { n: 'CAPTAIN BROCCOLI', t: 'Now 40% crunchier!', ic: '🥦', bg: '#166534', fg: '#ffffff', ac: '#86efac' },
+  { n: 'SPACE CHEDDAR', t: 'Grated on the actual Moon', ic: '🧀', bg: '#0f172a', fg: '#fde68a', ac: '#facc15' },
+  { n: 'BOTTLED THUNDER', t: 'Shake well. Then run.', ic: '⚡', bg: '#1e3a8a', fg: '#facc15', ac: '#60a5fa' },
+  { n: 'SNAIL MAIL EXPRESS', t: 'Delivery in 6–8 years', ic: '🐌', bg: '#a3e635', fg: '#14532d', ac: '#4d7c0f' },
+  { n: 'LLAMA INSURANCE', t: 'In case of llama.', ic: '🦙', bg: '#f5f5f4', fg: '#7c2d12', ac: '#d97706' },
+  { n: 'PANCAKE PILLOWS', t: 'Breakfast in bed. Literally.', ic: '🥞', bg: '#fbbf24', fg: '#78350f', ac: '#b45309' },
+  { n: 'SQUEAKY SOCKS', t: 'They squeak. Every. Step.', ic: '🧦', bg: '#ec4899', fg: '#ffffff', ac: '#fbcfe8' },
+  { n: 'WORM BURGERS', t: '100% gummy, 0% worm', ic: '🍔', bg: '#dc2626', fg: '#fef08a', ac: '#fde047' },
+  { n: 'DINO DENTAL', t: 'Rawr-some smiles!', ic: '🦖', bg: '#0d9488', fg: '#ffffff', ac: '#99f6e4' },
+  { n: 'HOVER-SHOES', t: 'Float one inch. Mostly.', ic: '👟', bg: '#7c3aed', fg: '#ffffff', ac: '#c4b5fd' },
+  { n: 'ROBO-BROOM', t: 'Cleans your room. Judges you.', ic: '🧹', bg: '#475569', fg: '#f1f5f9', ac: '#94a3b8' },
+  { n: 'CANNED CLOUDS', t: 'Instant shade. Just add sky.', ic: '☁️', bg: '#38bdf8', fg: '#ffffff', ac: '#e0f2fe' },
+  { n: 'PARROT TALK SCHOOL', t: 'Arrr you ready to chat?', ic: '🦜', bg: '#15803d', fg: '#fde047', ac: '#ef4444' },
+  { n: 'HOT DOG HATS', t: 'Lunch is on your head.', ic: '🌭', bg: '#f97316', fg: '#ffffff', ac: '#fde047' },
+  { n: 'TORTOISE TAXI', t: 'We’ll get there.', ic: '🐢', bg: '#facc15', fg: '#1f2937', ac: '#1f2937' },
+  { n: 'HAMSTER TUTORS', t: 'Tiny. Smart. Snacky.', ic: '🐹', bg: '#fef3c7', fg: '#92400e', ac: '#f59e0b' },
+  { n: 'ICE CREAM SOUP', t: 'For when you waited too long', ic: '🍦', bg: '#f9a8d4', fg: '#831843', ac: '#ffffff' },
+  { n: 'NOODLE SHOELACES', t: 'Tie ’em, then eat ’em.', ic: '🍝', bg: '#fff7ed', fg: '#c2410c', ac: '#fb923c' },
+  { n: 'GRUMPY GOAT YOGURT', t: 'Made with attitude.', ic: '🐐', bg: '#e2e8f0', fg: '#334155', ac: '#64748b' },
+  { n: 'BUBBLE BATH VOLCANO', t: 'Ages 8 and up. Way up.', ic: '🌋', bg: '#b91c1c', fg: '#fed7aa', ac: '#fb923c' },
+  { n: 'SPACE SOCK FINDER', t: 'Lost a sock? It’s on Mars.', ic: '🚀', bg: '#1e1b4b', fg: '#ffffff', ac: '#f472b6' }
+];
+// stable per-stadium shuffle so each park has its own sponsors
+const adsCache = {};
+function parkAds(st) {
+  if (adsCache[st.id]) return adsCache[st.id];
+  const R = seeded(hashStr(st.id) + 303), a = ADS.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(R() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return (adsCache[st.id] = a);
+}
+// Draws an ad in a local box (0,0)-(w,h). detail = show the slogan too.
+function drawAdLocal(ad, w, hh, detail) {
+  ctx.fillStyle = ad.bg; rr(0, 0, w, hh, hh * 0.12);
+  ctx.fillStyle = ad.ac; ctx.fillRect(0, hh * 0.86, w, hh * 0.14);
+  const icW = hh * 0.9;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = Math.round(hh * 0.62) + 'px ' + FONT; ctx.fillStyle = ad.fg; ctx.fillText(ad.ic, icW * 0.6, hh * 0.45);
+  const x0 = icW * 1.1, avail = w - x0 - hh * 0.25, cx = x0 + avail / 2;
+  const fit = (s, size, weight, y, color) => {
+    ctx.font = weight + ' ' + size + 'px ' + FONT; const tw = ctx.measureText(s).width;
+    ctx.save(); ctx.translate(cx, y); if (tw > avail) ctx.scale(avail / tw, 1); ctx.fillStyle = color; ctx.fillText(s, 0, 0); ctx.restore();
+  };
+  if (detail) { fit(ad.n, Math.round(hh * 0.4), 900, hh * 0.32, ad.fg); fit(ad.t, Math.round(hh * 0.22), 800, hh * 0.68, ad.fg); }
+  else fit(ad.n, Math.round(hh * 0.5), 900, hh * 0.45, ad.fg);
+}
+// Draws an ad onto a (nearly flat) quad on screen: p0 = top-left, p1 = top-right, p3 = bottom-left.
+function drawAdQuad(ad, p0, p1, p3, aspect, detail) {
+  if (!p0 || !p1 || !p3) return;
+  const hh = 50, w = hh * aspect;
+  ctx.save();
+  ctx.transform((p1.x - p0.x) / w, (p1.y - p0.y) / w, (p3.x - p0.x) / hh, (p3.y - p0.y) / hh, p0.x, p0.y);
+  drawAdLocal(ad, w, hh, detail);
+  ctx.restore();
+}
+// outfield-wall boards for the TV (field) camera
+function drawOutfieldAds(st) {
+  if (st.ivy) return; // the old-time park keeps its ivy
+  const ads = parkAds(st);
+  let i = 0;
+  for (let a = -42; a < 42; a += 10.5, i++) {
+    const a0 = a + 0.6, a1 = a + 9.9, ac = clamp((a0 + a1) / 2, -45, 45);
+    const w = wallAt(st, ac), z0 = Math.min(w * 0.82, 12), z1 = Math.max(0.6, z0 - Math.min(w * 0.68, 7));
+    const pt = (ang, z) => { const d = fenceAt(st, clamp(ang, -45, 45)) - 0.4; return P3(Math.sin(rad(ang)) * d, Math.cos(rad(ang)) * d, z); };
+    const p0 = pt(a0, z0), p1 = pt(a1, z0), p3 = pt(a0, z1), p2 = pt(a1, z1);
+    if (!p0 || !p1 || !p3 || !p2) continue;
+    const dist = fenceAt(st, ac), worldW = dist * rad(a1 - a0), aspect = clamp(worldW / (z0 - z1), 2.5, 9);
+    // the wall curves, so draw each board as two halves to follow it
+    const pm = pt((a0 + a1) / 2, z0), pmb = pt((a0 + a1) / 2, z1);
+    if (!pm || !pmb) { drawAdQuad(ads[i % ads.length], p0, p1, p3, aspect, Math.abs(p1.x - p0.x) > 150); continue; }
+    ctx.save(); ctx.beginPath(); ctx.moveTo(p0.x, p0.y); ctx.lineTo(pm.x, pm.y); ctx.lineTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.lineTo(pmb.x, pmb.y); ctx.lineTo(p3.x, p3.y); ctx.closePath(); ctx.clip();
+    const fake1 = { x: p0.x + (pm.x - p0.x) * 2, y: p0.y + (pm.y - p0.y) * 2 };
+    drawAdQuad(ads[i % ads.length], p0, fake1, p3, aspect, Math.abs(p1.x - p0.x) > 150);
+    ctx.restore();
+  }
+}
+// billboards beside the scoreboard (batter's view)
+function drawPitchBillboards(st) {
+  const ads = parkAds(st);
+  for (const [x, i] of [[226, 0], [604, 1]]) {
+    ctx.fillStyle = '#334155'; ctx.fillRect(x + 40, 150, 6, st.decks === 1 ? 82 : 22); ctx.fillRect(x + 124, 150, 6, st.decks === 1 ? 82 : 22);
+    ctx.fillStyle = '#0f172a'; rr(x - 4, 92, 178, 62, 6);
+    ctx.save(); ctx.translate(x, 96); drawAdLocal(ads[i], 170, 54, true); ctx.restore();
+  }
+}
+// boards along the outfield wall (batter's view)
+function drawPitchWallAds(st) {
+  if (st.ivy) return;
+  const ads = parkAds(st);
+  let i = 2;
+  for (let x = 8; x < W - 100; x += 166, i++) {
+    if (st.bigLeft && x < 300) continue;
+    ctx.save(); ctx.translate(x, 288); drawAdLocal(ads[i % ads.length], 150, 13, false); ctx.restore();
+  }
 }
 
 // ================= Main loop =================
