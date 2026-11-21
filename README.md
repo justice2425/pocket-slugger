@@ -93,7 +93,7 @@ Voice options:
 - **Batting:** tap as the ball reaches the box. In *Rookie* mode a ring shrinks onto the ball to help with timing. After each pitch you'll see which pitch it was and the path it took.
 - **Batting options (before the pitch):** Swing, **Bunt**, or **Fly ball**. Fly ball turns into **Sac fly** when a runner is on third with fewer than two outs.
 - **Running:** use **Steal** before a pitch. After a hit you may be asked whether to send a runner. After a catch you may be asked whether to tag up.
-- **Pitching:** pick from your pitches, tap a spot, then tap when the ring turns gold. You get **pickoff** throws when a runner is on (2 per batter).
+- **Pitching:** the camera sits behind your pitcher, looking in at the batter. Pick a pitch, steer the crosshair with the **thumb-stick** (bottom left) or tap where you want it, press **PITCH**, then press it again (**THROW!**) when the ring turns gold. **IBB** (tap twice) walks the batter on purpose. You get **pickoff** throws when a runner is on (2 per batter). Prefer the old view? Settings → *Camera when you pitch* → *Behind home plate*.
 - **Fielding:**
   - On ground balls with runners on, **tap the base you want to throw to**.
   - On close plays, tap when the ring hits the gold circle.

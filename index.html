@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-+y0dTxv2rZhPp43xAFxENUTRNPOueQ33wCqR/9/Bs2Y='; style-src 'sha256-AwbWXOAw9t5kz0O/pVKo4kQKLgBLLJlSlBjBcLqlYjw='; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-EP/JZIYBMVy4j1d3ZBTFI0757cEbM8f3FBNKbKpzTY8='; style-src 'sha256-3A42gBQWkvoFl/0/LpUhpOT1kEi5fbuP1aEK+zlKa3E='; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>Pocket Slugger</title>
 <meta name="description" content="A small, ad-free baseball game that works offline.">
@@ -150,6 +150,21 @@ select { font:inherit; font-size:17px; padding:9px 12px; border-radius:12px; bor
 .unidetails summary { font-weight:900; font-size:18px; cursor:pointer; padding:4px 0; }
 .player .row canvas.preview { border-radius:8px; }
 .grid3 .pill { display:block; margin:3px auto 0; width:fit-content; font-size:13px; padding:1px 8px; }
+/* pitcher view controls */
+#joy { position:absolute; left:max(18px, env(safe-area-inset-left)); bottom:max(18px, env(safe-area-inset-bottom)); width:150px; height:150px; border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,255,.10) 0 55%, rgba(255,255,255,.22) 56% 60%, rgba(15,23,42,.35) 61%); border:3px solid rgba(255,255,255,.55);
+  pointer-events:auto; touch-action:none; display:flex; align-items:center; justify-content:center; }
+#joy.on { border-color:#ffd166; }
+#joy .knob { width:66px; height:66px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #fff, #cbd5e1 60%, #94a3b8); box-shadow:0 4px 10px rgba(0,0,0,.4); pointer-events:none; }
+#pitchBtn { position:absolute; right:max(20px, env(safe-area-inset-right)); bottom:max(20px, env(safe-area-inset-bottom)); width:132px; height:132px; border-radius:50%; padding:0;
+  font-size:26px; letter-spacing:1px; background:radial-gradient(circle at 40% 30%, #ff8a5c, #e8462a 60%, #b5301b); color:#fff; border:4px solid #fff; box-shadow:0 6px 16px rgba(0,0,0,.45); touch-action:none; }
+#pitchBtn.aim { background:radial-gradient(circle at 40% 30%, #93c5fd, #2563eb 60%, #1e3a8a); font-size:24px; }
+#pitchBtn.good { background:radial-gradient(circle at 40% 30%, #fff3c4, #ffd166 55%, #e0a100); color:#3b2a00; transform:scale(1.08); border-color:#fff7d6; }
+#ibbBtn { position:absolute; right:max(160px, calc(env(safe-area-inset-right) + 150px)); bottom:max(30px, env(safe-area-inset-bottom)); width:76px; height:76px; min-height:0; border-radius:50%; padding:0;
+  font-size:18px; background:rgba(15,23,42,.8); color:#fff; border:3px solid rgba(255,255,255,.7); touch-action:none; line-height:1.1; }
+#ibbBtn.armed { width:96px; font-size:14px; background:#7c3aed; border-color:#ffd166; border-radius:20px; }
+#hud.pv #pitchBar { max-width:calc(100vw - 440px); bottom:max(14px, env(safe-area-inset-bottom)); }
+#hud.pv #pickBar { top:auto; bottom:190px; }
 </style>
 </head>
 <body>
@@ -322,7 +337,7 @@ function defaultSave() {
   const team = makeTeam(4, 1.5, { name: 'Backyard Bombers', color: '#d7263d' });
   team.pitcher.pitches = ['FB', 'CB', 'SL', 'CH'];
   team.uni = { secondary: '#111827', pants: 'white', style: 'solid', logo: 'circle', letter: 'B' };
-  return { v: 3, team, coins: 150, record: { w: 0, l: 0, t: 0 }, settings: { help: 'rookie', sound: true, crowd: true, voice: 'calls', voiceName: '', trivia: 'half' },
+  return { v: 3, team, coins: 150, record: { w: 0, l: 0, t: 0 }, settings: { help: 'rookie', sound: true, crowd: true, voice: 'calls', voiceName: '', trivia: 'half', pitchCam: 'mound' },
     p2: { name: 'Player 2 Pirates', color: '#1b4fd8' }, lastStadium: 'random', triviaRight: 0, triviaSeen: [],
     derbyBest: { hr: 0, long: 0 }, badges: {}, trophies: [], season: null, seasonsPlayed: 0, homePark: 'backyard' };
 }
@@ -370,7 +385,7 @@ function sanitizeSave(o) {
     v: 3, team, coins: ci(o.coins), record: { w: ci(r.w), l: ci(r.l), t: ci(r.t) },
     settings: { help: s.help === 'pro' ? 'pro' : 'rookie', sound: s.sound !== false, crowd: s.crowd !== false,
       voice: s.voice === false || s.voice === 'off' ? 'off' : s.voice === 'all' ? 'all' : 'calls', voiceName: typeof s.voiceName === 'string' ? s.voiceName.slice(0, 100) : '',
-      trivia: ['half', 'inning', 'off'].includes(s.trivia) ? s.trivia : 'half' },
+      trivia: ['half', 'inning', 'off'].includes(s.trivia) ? s.trivia : 'half', pitchCam: s.pitchCam === 'plate' ? 'plate' : 'mound' },
     p2: { name: cleanStr(p2.name, d.p2.name, 22), color: cleanColor(p2.color, d.p2.color) },
     lastStadium: (o.lastStadium === 'random' || STADIUMS.some(x => x.id === o.lastStadium)) ? o.lastStadium : 'random',
     triviaRight: ci(o.triviaRight), triviaSeen: seen,
@@ -2428,7 +2443,7 @@ function drawScoreboard() {
 function drawBanner() {
   const b = G.banner; if (!b) return;
   const s = Math.min(1, 0.6 + b.t * 3);
-  ctx.save(); ctx.translate(500, 330); ctx.scale(s, s);
+  ctx.save(); if (usePitcherView()) ctx.translate(620, 235); else ctx.translate(500, 330); ctx.scale(s, s);
   txt(b.text, 0, 0, b.text.length > 14 ? 54 : 70, b.color);
   if (b.sub) { ctx.font = '900 24px ' + FONT; const w = ctx.measureText(b.sub).width; const sz = w > 900 ? 24 * 900 / w : 24; txt(b.sub, 0, 58, sz, '#fff'); }
   ctx.restore();
@@ -2448,7 +2463,7 @@ function render() {
   ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, H); ctx.clip();
   if (!G || G.phase === 'over') drawFieldView(true);
   else {
-    if (G.view === 'field') drawFieldView(false); else drawPitchView();
+    if (G.view === 'field') drawFieldView(false); else if (usePitcherView()) drawPitcherView(); else drawPitchView();
     drawHUD();
     drawTimingMeter();
     if (G.phase === 'stretch') drawStretch();
@@ -2475,9 +2490,13 @@ function update(dt) {
   if (G.phase !== 'stretch') c.stand = 0;
   crowdTick -= dt; if (crowdTick <= 0) { crowdTick = 0.25; Sound.setCrowd(c.excite); }
   updateFx(dt);
+  pvUpdate(dt);
   const kx = (keys.ArrowRight ? 1 : 0) - (keys.ArrowLeft ? 1 : 0), ky = (keys.ArrowUp ? 1 : 0) - (keys.ArrowDown ? 1 : 0);
   if (kx || ky) {
-    if (G.phase === 'pickPitch' && G.kbAim) G.kbAim = clampAim({ x: G.kbAim.x + kx * 2.2 * dt, y: G.kbAim.y + ky * 2.2 * dt });
+    const inv = usePitcherView() ? -1 : 1; // behind the mound, first base is on the left
+    if (G.phase === 'pickPitch' && G.kbAim) G.kbAim = clampAim({ x: G.kbAim.x + inv * kx * 2.2 * dt, y: G.kbAim.y + ky * 2.2 * dt });
+    else if (G.phase === 'aim' && inv < 0) G.aimTarget = clampAim({ x: G.aimTarget.x - kx * 1.5 * dt, y: G.aimTarget.y + ky * 1.5 * dt });
+    else if (G.phase === 'pickPitch' && G.kbAim) G.kbAim = clampAim({ x: G.kbAim.x + kx * 2.2 * dt, y: G.kbAim.y + ky * 2.2 * dt });
     else if (G.phase === 'aim') G.aimTarget = clampAim({ x: G.aimTarget.x + kx * 1.5 * dt, y: G.aimTarget.y + ky * 1.5 * dt });
     else if ((G.phase === 'windup' || G.phase === 'flight') && offTeam().human && !kidMode()) G.cursor = clampCursor({ x: G.cursor.x + kx * 3 * dt, y: G.cursor.y + ky * 3 * dt });
   }
@@ -2498,6 +2517,12 @@ function onTap(p) {
   const ph = G.phase;
   if (ph === 'banner') { G.timer = Math.min(G.timer, 0.12); return; }
   if (ph === 'stretch') { G.timer = Math.min(G.timer, 0.1); return; }
+  if (ph === 'pickPitch' && p && usePitcherView()) {
+    const c = pvBall(G.kbAim.x, G.kbAim.y, 0);
+    if (Math.hypot(p.x - c.x, p.y - c.y) < 40) { pitchPress(); return; }
+    G.kbAim = clampAim(pvScreenToPlate(p)); Sound.click(); return;
+  }
+  if (ph === 'aim' && usePitcherView()) { throwHumanPitch(); return; }
   if (ph === 'pickPitch') {
     const t = p ? screenToPlate(p) : G.kbAim;
     G.aimTarget = clampAim(t); G.phase = 'aim'; G.aimT = 0; Sound.click(); return;
@@ -2573,6 +2598,7 @@ function hud(on) { hudEl.classList.toggle('hidden', !on); syncUI(true); }
 function setApproach(a) { if (!G) return; if (G.swing) return; G.approach = a; Sound.click(); syncUI(true); }
 let uiState = '';
 function syncUI(force) {
+  syncPitcherUI();
   if (!G) { [pitchBar, stealBtn, batBar, pickBar, choiceEl, passEl, cageBar].forEach(el => el.classList.add('hidden')); uiState = ''; cageBarState = ''; return; }
   const showPitch = defTeam().human && (G.phase === 'pickPitch' || G.phase === 'aim');
   syncCageBar(cageBar);
@@ -2753,6 +2779,8 @@ function showSettings() {
     h('div', { class: 'label', text: 'Voice' }),
     seg([['calls', '⚖️ Umpire calls'], ['all', '📣 Umpire + announcer'], ['off', '🤐 Off']], () => save.settings.voice, v => { save.settings.voice = v; persist(); if (v !== 'off') { Sound.unlock(); Voice.say('Strike three!', 2, true); } }),
     voicePicker(),
+    h('div', { class: 'label', text: 'Camera when you pitch' }),
+    seg([['mound', '⚾ Behind the pitcher'], ['plate', '🧢 Behind home plate']], () => save.settings.pitchCam, v => { save.settings.pitchCam = v; persist(); }),
     h('div', { class: 'label', text: 'Trivia & fun facts between innings' }),
     seg([['half', 'Every half-inning'], ['inning', 'Every inning'], ['off', 'Off']], () => save.settings.trivia, v => { save.settings.trivia = v; persist(); }),
     h('h3', { text: 'How to play' }),
@@ -2760,7 +2788,7 @@ function showSettings() {
       h('li', { text: 'Batting: tap to swing as the ball reaches the white box. In Rookie mode, tap when the shrinking ring lands on the ball. Early pulls the ball; late sends it the other way. After each pitch you’ll see what kind of pitch it was.' }),
       h('li', { text: 'Batting options (before the pitch): Swing, Bunt (tap to bunt — great for moving a runner up), or Fly ball / Sac fly (swing up to lift it — with a runner on third, a deep fly can score them).' }),
       h('li', { text: 'Running: tap the green Steal button before the pitch. After a hit, you may be asked whether to send a runner for an extra base.' }),
-      h('li', { text: 'Pitching: pick a pitch, tap where you want it, then tap again when the ring turns gold. Runner on base? Try a pickoff (2 per batter).' }),
+      h('li', { text: 'Pitching: pick a pitch, move the target with the thumb-stick (or tap where you want it), press PITCH, then press again when the ring turns gold. IBB walks the batter on purpose. Runner on base? Try a pickoff (2 per batter).' }),
       h('li', { text: 'Fielding: on ground balls with runners on, tap the base you want to throw to. On close plays, tap when the ring hits the gold circle. When the computer tries to steal, you’ll get a chance to throw them out.' }),
       h('li', { text: 'Team: win coins against the computer and spend them on upgrades — or teach your pitcher new pitches like the knuckleball or the super-slow eephus.' }),
       h('li', { text: 'Keyboard (Mac): Space = swing / throw / tap, arrows = aim, 1–7 = pick a pitch, B = bunt, F = fly ball, S = steal, Y / N = go or stay, 1/2/3/H = throw to a base, Esc = pause.' })),
@@ -3406,6 +3434,444 @@ function uniformDesigner(onChange) {
     h('div', { class: 'label', text: 'Cap logo' }), seg(LOGOS.map(l => [l, LOGO_LABEL[l]]), () => u.logo, v => { u.logo = v; upd(); }),
     h('div', { class: 'row' }, h('div', { class: 'label', text: 'Logo letter' }), letterIn));
   return box;
+}
+
+// ================= Pitcher view: camera behind the mound, looking in at the batter =================
+// Field coords: home (0,0), +y toward center field, +x toward first base, z = height (feet).
+// From here, +x (first-base side) is on the LEFT of the screen.
+const PV = { px: -5.2, py: 90, pz: 5.2, tx: 1.6, ty: 0, tz: 2.8, f: 2350, cx: 500, cy: 350 };
+camBasis(PV);
+function pv(x, y, z) {
+  const c = PV, dx = x - c.px, dy = y - c.py, dz = (z || 0) - c.pz;
+  const zc = dx * c.F.x + dy * c.F.y + dz * c.F.z; if (zc < 1) return null;
+  const xc = dx * c.R.x + dy * c.R.y, yc = dx * c.U.x + dy * c.U.y + dz * c.U.z, k = c.f / zc;
+  return { x: c.cx + xc * k, y: c.cy - yc * k, k };
+}
+// pitch coords (x = lateral, y = height, z = distance from the plate) -> screen
+const pvBall = (x, y, z) => pv(x, z, y);
+function pvScreenToPlate(p) {
+  const c = PV, a = (p.x - c.cx) / c.f, b = (c.cy - p.y) / c.f;
+  const d = { x: c.F.x + c.R.x * a + c.U.x * b, y: c.F.y + c.R.y * a + c.U.y * b, z: c.F.z + c.U.z * b };
+  if (Math.abs(d.y) < 1e-6) return { x: 0, y: 2.5 };
+  const t = (0 - c.py) / d.y;
+  return { x: c.px + d.x * t, y: c.pz + d.z * t };
+}
+function pvPoly(pts) { ctx.beginPath(); let n = 0; for (const p of pts) { const s = pv(p[0], p[1], p[2] || 0); if (!s) continue; if (n++) ctx.lineTo(s.x, s.y); else ctx.moveTo(s.x, s.y); } ctx.closePath(); return n > 2; }
+function usePitcherView() {
+  if (!G || G.mode !== 'game' || G.view !== 'pitch' || !save || save.settings.pitchCam === 'plate') return false;
+  if (!defTeam().human || G.phase === 'pass' || G.phase === 'over') return false;
+  if (G.phase === 'pickPitch' || G.phase === 'aim') return true;
+  return !offTeam().human; // vs the computer, stay behind the mound for the pitch itself
+}
+const pvAiming = () => G && (G.phase === 'pickPitch' || G.phase === 'aim') && usePitcherView();
+
+// ---- the crowd behind home plate (cached per stadium) ----
+const pvCrowdCache = {};
+function pvCrowd(st) {
+  if (pvCrowdCache[st.id]) return pvCrowdCache[st.id];
+  const R = seeded(hashStr(st.id) + 77), rp = arr => arr[Math.floor(R() * arr.length)];
+  const rows = [];
+  for (let r = 0; r < 22; r++) {
+    const y = -36 - r * 2.9, z = 6.2 + r * 1.75, fans = [];
+    for (let x = -64 + R() * 1.2; x < 64; x += 1.75 + R() * 0.35) {
+      if (Math.abs(((x + 200) % 36) - 18) < 1.1) continue; // aisles
+      fans.push({ x, shirt: rp(SHIRTS), skin: rp(SKIN), hair: rp(HAIR), ph: R() * 6.28, empty: R() < 0.06, team: R() < 0.3, hat: R() < 0.25, sign: R() < 0.012 });
+    }
+    rows.push({ y, z, fans });
+  }
+  return (pvCrowdCache[st.id] = { rows });
+}
+const BOARD_TEXT = st => ['POCKET SLUGGER', st.name.toUpperCase(), 'NO ADS · JUST BASEBALL', 'PLAY BALL!', 'HOME OF THE ' + (G ? G.teams[1].name.toUpperCase().split(' ').pop() : 'FANS'), 'GO TEAM GO'];
+function drawPvStands(st) {
+  const clock = clockNow(), homeColor = G.teams[1].color, C = pvCrowd(st);
+  // back wall of the seating bowl
+  ctx.fillStyle = shade(st.seats[1], -0.45); ctx.fillRect(0, 0, W, 420);
+  if (st.roof) { ctx.fillStyle = '#94a3b8'; ctx.fillRect(0, 0, W, 22); }
+  let idx = 0;
+  for (let ri = C.rows.length - 1; ri >= 0; ri--) {
+    const row = C.rows[ri];
+    const a = pv(-70, row.y, row.z), b = pv(70, row.y, row.z), a2 = pv(-70, row.y + 2.9, row.z - 1.75);
+    if (!a || !b) continue;
+    if (a.y < -30) continue;
+    // seat-row step
+    ctx.fillStyle = ri % 2 ? st.seats[0] : st.seats[1];
+    ctx.fillRect(0, a.y, W, Math.max(2, (a2 ? a2.y : a.y + 20) - a.y + 1));
+    const s = a.k;
+    for (const f of row.fans) {
+      idx++;
+      const p = pv(f.x, row.y, row.z); if (!p || p.x < -20 || p.x > W + 20) continue;
+      if (f.empty) { ctx.fillStyle = shade(ri % 2 ? st.seats[0] : st.seats[1], 0.15); ctx.fillRect(p.x - 0.5 * s, p.y - 0.9 * s, s, 0.6 * s); continue; }
+      const { bob, arms } = fanBob({ ph: f.ph, x: p.x, sx: p.x }, clock, idx), y = p.y + bob * s * 0.08;
+      ctx.fillStyle = f.team ? homeColor : f.shirt; ctx.fillRect(p.x - 0.55 * s, y - 1.25 * s, 1.1 * s, 1.15 * s);
+      if (arms) { ctx.fillRect(p.x - 0.8 * s, y - 2.3 * s, 0.25 * s, 1.1 * s); ctx.fillRect(p.x + 0.55 * s, y - 2.3 * s, 0.25 * s, 1.1 * s); }
+      ctx.fillStyle = f.skin; circle(p.x, y - 1.65 * s, 0.42 * s);
+      ctx.fillStyle = f.hat ? (f.team ? homeColor : f.shirt) : f.hair; ctx.fillRect(p.x - 0.44 * s, y - 2.1 * s, 0.88 * s, (f.hat ? 0.3 : 0.22) * s);
+      if (f.sign && s > 7) { ctx.fillStyle = '#fff'; ctx.fillRect(p.x - 1.1 * s, y - 3.4 * s, 2.2 * s, 1.1 * s); ctx.fillStyle = homeColor; ctx.fillRect(p.x - 0.9 * s, y - 3.2 * s, 1.8 * s, 0.25 * s); ctx.fillRect(p.x - 0.9 * s, y - 2.75 * s, 1.2 * s, 0.25 * s); }
+    }
+  }
+  // aisle stairs
+  ctx.fillStyle = 'rgba(203,213,225,.16)';
+  for (let x = -54; x <= 54; x += 36) { if (pvPoly([[x - 0.9, -36, 6.2], [x + 0.9, -36, 6.2], [x + 0.9, -97, 43], [x - 0.9, -97, 43]])) ctx.fill(); }
+}
+function drawPvBackstop(st) {
+  const Y = -32, Ht = 4.6, homeColor = G.teams[1].color;
+  // protective netting in front of the fans
+  ctx.strokeStyle = 'rgba(255,255,255,.16)'; ctx.lineWidth = 1;
+  for (let x = -60; x <= 60; x += 1.5) { const a = pv(x, Y, Ht), b = pv(x, Y, 34); if (a && b) line(a.x, a.y, b.x, b.y); }
+  for (let z = Ht; z <= 34; z += 1.5) { const a = pv(-60, Y, z), b = pv(60, Y, z); if (a && b) line(a.x, a.y, b.x, b.y); }
+  ctx.fillStyle = '#334155';
+  for (const x of [-26, 26]) { if (pvPoly([[x - 0.25, Y, 0], [x + 0.25, Y, 0], [x + 0.25, Y, 34], [x - 0.25, Y, 34]])) ctx.fill(); }
+  // padded wall with our own boards
+  const pad = st.pad || st.wallColor;
+  ctx.fillStyle = shade(pad, -0.2); if (pvPoly([[-80, Y, 0], [80, Y, 0], [80, Y, Ht], [-80, Y, Ht]])) ctx.fill();
+  const words = BOARD_TEXT(st), PW = 14;
+  for (let i = -5; i <= 5; i++) {
+    const x0 = i * PW - PW / 2 + 0.3, x1 = x0 + PW - 0.6;
+    const a = pv(x1, Y, Ht - 0.5), b = pv(x0, Y, 0.6); if (!a || !b) continue;
+    const kind = ((i % 3) + 3) % 3;
+    ctx.fillStyle = kind === 0 ? '#0f172a' : kind === 1 ? homeColor : '#f8fafc';
+    rr(Math.min(a.x, b.x), a.y, Math.abs(b.x - a.x), b.y - a.y, 4);
+    const word = words[((i % words.length) + words.length) % words.length];
+    ctx.save(); ctx.font = '900 ' + Math.round(a.k * 1.7) + 'px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const w = ctx.measureText(word).width, maxW = Math.abs(b.x - a.x) - 10, sc = w > maxW ? maxW / w : 1;
+    ctx.translate((a.x + b.x) / 2, (a.y + b.y) / 2); ctx.scale(sc, 1);
+    ctx.fillStyle = kind === 2 ? homeColor : '#fff'; ctx.fillText(word, 0, 1);
+    ctx.restore();
+  }
+  ctx.fillStyle = '#facc15'; if (pvPoly([[-80, Y, Ht - 0.12], [80, Y, Ht - 0.12], [80, Y, Ht + 0.12], [-80, Y, Ht + 0.12]])) ctx.fill();
+}
+function drawPvGround(st) {
+  const top = pv(0, -32, 0).y;
+  const gg = ctx.createLinearGradient(0, top, 0, H); gg.addColorStop(0, st.grass[1]); gg.addColorStop(1, st.grass[0]);
+  ctx.fillStyle = gg; ctx.fillRect(0, top, W, H - top);
+  // mowing stripes
+  ctx.fillStyle = 'rgba(255,255,255,0.045)';
+  for (let y = 4; y < 80; y += 10) if (pvPoly([[-90, y, 0], [90, y, 0], [90, y + 5, 0], [-90, y + 5, 0]])) ctx.fill();
+  // dirt: warning track behind the plate, the home-plate circle, the mound and the baselines
+  ctx.fillStyle = st.dirt;
+  if (pvPoly([[-90, -32, 0], [90, -32, 0], [90, -21, 0], [-90, -21, 0]])) ctx.fill();
+  const circ = (cx, cy, r) => { const o = []; for (let a = 0; a < 360; a += 10) o.push([cx + r * Math.cos(rad(a)), cy + r * Math.sin(rad(a)), 0]); return o; };
+  if (pvPoly(circ(0, 0, 13))) ctx.fill();
+  for (const sg of [-1, 1]) { if (pvPoly([[sg * 3, 3, 0], [sg * 4.5, -1, 0], [sg * 62, 61, 0], [sg * 60, 65, 0]])) ctx.fill(); }
+  if (pvPoly(circ(0, 60.5, 9))) ctx.fill();
+  ctx.fillStyle = 'rgba(0,0,0,.08)'; if (pvPoly(circ(0, 0, 13))) ctx.fill();
+  // chalk
+  ctx.strokeStyle = 'rgba(255,255,255,.9)'; ctx.lineWidth = 2.2;
+  for (const sg of [-1, 1]) { const a = pv(sg * 1.5, 1.5, 0), b = pv(sg * 66, 66, 0); if (a && b) line(a.x, a.y, b.x, b.y); }
+  ctx.lineWidth = 1.6; ctx.strokeStyle = 'rgba(255,255,255,.75)';
+  for (const sg of [-1, 1]) { if (pvPoly([[sg * 1.2, -2.5], [sg * 4.2, -2.5], [sg * 4.2, 3.5], [sg * 1.2, 3.5]])) ctx.stroke(); }
+  if (pvPoly([[-1.8, -2.5], [1.8, -2.5], [1.8, -8], [-1.8, -8]])) ctx.stroke();
+  ctx.fillStyle = '#fff'; if (pvPoly([[-0.71, 0.71], [0.71, 0.71], [0.71, 0], [0, -0.71], [-0.71, 0]])) ctx.fill();
+  if (pvPoly([[-1, 60.3, 0.8], [1, 60.3, 0.8], [1, 60.8, 0.8], [-1, 60.8, 0.8]])) ctx.fill();
+  // on-deck circles
+  ctx.fillStyle = 'rgba(255,255,255,.18)';
+  for (const sg of [-1, 1]) if (pvPoly(circ(sg * 30, -14, 2.5))) ctx.fill();
+}
+
+// ---- people ----
+function drawUmpire(x, y, s) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  ctx.fillStyle = 'rgba(0,0,0,.22)'; ell(0, 0, 18, 4.5);
+  ctx.fillStyle = '#6b7280'; rr(-15, -24, 11, 24, 4); rr(4, -24, 11, 24, 4);
+  ctx.fillStyle = '#111827'; ell(-10, -1.5, 7, 3); ell(10, -1.5, 7, 3);
+  ctx.fillStyle = '#1e293b'; rr(-16, -54, 32, 33, 10);
+  ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 7; ctx.lineCap = 'round'; line(-14, -48, -18, -30); line(14, -48, 18, -30);
+  ctx.fillStyle = '#e5e7eb'; ctx.fillRect(-2, -54, 4, 6);
+  ctx.fillStyle = '#d19a6a'; circle(0, -65, 11);
+  ctx.fillStyle = '#111827'; rr(-9, -70, 18, 15, 4); ctx.beginPath(); ctx.arc(0, -68, 11.5, Math.PI, 0); ctx.fill(); rr(-12, -70, 24, 3, 1.5);
+  ctx.strokeStyle = '#4b5563'; ctx.lineWidth = 1; for (let yy = -66; yy < -56; yy += 3) line(-8, yy, 8, yy);
+  ctx.restore();
+}
+function drawCatcher(x, y, s, team, pl, mitt) {
+  const skin = skinOf(pl), gear = '#1f2937', tc = team.color, sec = team.uni ? team.uni.secondary : '#fff';
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; ell(0, 0, 21, 5);
+  // squat: knees out wide, shin guards
+  ctx.fillStyle = team.uni ? PANTS[team.uni.pants] : '#f3f4f6'; rr(-21, -24, 16, 10, 5); rr(5, -24, 16, 10, 5);
+  ctx.fillStyle = gear; rr(-21, -20, 9, 20, 3); rr(12, -20, 9, 20, 3);
+  ctx.fillStyle = tc; ctx.fillRect(-21, -12, 9, 2.5); ctx.fillRect(12, -12, 9, 2.5);
+  ctx.fillStyle = '#111827'; ell(-16, -1.5, 6, 2.6); ell(16, -1.5, 6, 2.6);
+  // chest protector
+  ctx.fillStyle = tc; rr(-13, -47, 26, 26, 8);
+  ctx.fillStyle = gear; rr(-10, -46, 20, 23, 6);
+  ctx.strokeStyle = sec; ctx.lineWidth = 1.2; line(-10, -38, 10, -38); line(-10, -31, 10, -31);
+  // throwing hand tucked behind the knee
+  ctx.strokeStyle = tc; ctx.lineWidth = 6; ctx.lineCap = 'round'; line(-12, -43, -17, -28);
+  ctx.fillStyle = skin; circle(-17, -27, 3);
+  // helmet + mask
+  ctx.fillStyle = skin; circle(0, -58, 11.5);
+  ctx.fillStyle = tc; ctx.beginPath(); ctx.arc(0, -60, 12.5, Math.PI * 1.02, Math.PI * 1.98); ctx.fill();
+  ctx.fillStyle = gear; rr(-9, -62, 18, 14, 5);
+  ctx.strokeStyle = '#9ca3af'; ctx.lineWidth = 1.1; for (let yy = -60; yy < -49; yy += 3.4) line(-8, yy, 8, yy); line(0, -62, 0, -48);
+  ctx.restore();
+  // glove arm reaches to the target (mitt is in screen coords)
+  const sh = { x: x + 12 * s, y: y - 43 * s };
+  ctx.strokeStyle = tc; ctx.lineWidth = 6 * s; ctx.lineCap = 'round'; line(sh.x, sh.y, mitt.x, mitt.y);
+  ctx.fillStyle = '#8b5a2b'; ell(mitt.x, mitt.y, 8.5 * s, 9.5 * s);
+  ctx.fillStyle = '#5c3a1c'; ell(mitt.x, mitt.y, 4.2 * s, 5 * s);
+  ctx.strokeStyle = '#3b2412'; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(mitt.x, mitt.y, 8.5 * s, 9.5 * s, 0, 0, Math.PI * 2); ctx.stroke();
+}
+function drawBatterFront(sx, sy, s, team, pl, prog, mirror, bunt) {
+  const sw = clamp(prog, 0, 1), ease = sw * sw * (3 - 2 * sw);
+  let hx = lerp(7, -4, ease), hy = -47 + 9 * Math.sin(Math.PI * Math.min(1, sw / 0.75)), end;
+  const L = 34;
+  if (bunt && prog <= 0.05) { hx = 1; hy = -40; end = { x: hx - 30, y: hy + 2 }; }
+  else if (bunt) { hx = 1; hy = -40 + sw * 3; end = { x: hx - 30, y: hy + 2 - sw * 4 }; }
+  else if (sw < 0.3) { const a = rad(lerp(-62, -8, sw / 0.3)); end = { x: hx + L * Math.cos(a), y: hy + L * Math.sin(a) }; }
+  else if (sw < 0.62) { const t = rad(lerp(-8, 180, (sw - 0.3) / 0.32)); end = { x: hx + L * Math.cos(t), y: hy + L * 0.32 * Math.sin(t) }; }
+  else { const u = (sw - 0.62) / 0.38, a = rad(lerp(180, 222, u)), f = 1 - 0.3 * u; end = { x: hx + L * Math.cos(a) * f, y: hy + L * Math.sin(a) * f }; }
+  const ang = (shx) => Math.atan2(hy + 37, hx - shx) * 180 / Math.PI;
+  const behind = !bunt && sw < 0.3; // bat behind the body during the load
+  const drawBat = () => {
+    ctx.save(); ctx.translate(sx, sy); ctx.scale(mirror ? -s : s, s);
+    ctx.strokeStyle = '#c98b4a'; ctx.lineCap = 'round'; ctx.lineWidth = 2.4; line(hx, hy, end.x, end.y);
+    ctx.lineWidth = 3.8; line(lerp(hx, end.x, 0.45), lerp(hy, end.y, 0.45), end.x, end.y);
+    ctx.fillStyle = '#1f2937'; circle(hx, hy, 3.3);
+    ctx.restore();
+  };
+  if (behind) drawBat();
+  drawKid(sx, sy, s, kidOpts(pl, team, { helmet: true, mirror, armL: ang(-11), armR: ang(11) }));
+  if (!behind) drawBat();
+}
+// The pitcher, seen from behind. (x,y) = feet; s = scale (drawKid units, ~72 tall).
+const PK = { // pose keyframes (right-handed, screen-right = throwing arm)
+  set:    { g: [-12, -37], t: [-3, -38], lift: 0, stride: 0, lean: 0, ball: true },
+  lift:   { g: [-6, -47], t: [-2, -47], lift: 1, stride: 0, lean: 0, ball: true },
+  load:   { g: [-24, -45], t: [25, -50], lift: 0.25, stride: 1, lean: 0.3, ball: true },
+  cock:   { g: [-18, -40], t: [15, -68], lift: 0, stride: 1, lean: 0.55, ball: true },
+  rel:    { g: [-13, -34], t: [3, -64], lift: 0, stride: 1, lean: 0.85, ball: true },
+  follow: { g: [-11, -36], t: [-14, -24], lift: 0, stride: 1, lean: 1, kick: 1, ball: false }
+};
+function lerpPose(a, b, u) {
+  const o = {}; u = clamp(u, 0, 1);
+  for (const k of ['lift', 'stride', 'lean']) o[k] = lerp(a[k] || 0, b[k] || 0, u);
+  o.kick = lerp(a.kick || 0, b.kick || 0, u);
+  o.g = [lerp(a.g[0], b.g[0], u), lerp(a.g[1], b.g[1], u)]; o.t = [lerp(a.t[0], b.t[0], u), lerp(a.t[1], b.t[1], u)];
+  o.ball = u < 1 ? a.ball : b.ball; return o;
+}
+function pitcherPose() {
+  const pc = G.pitch;
+  if (G.phase === 'windup') {
+    const u = 1 - G.timer / G.windDur;
+    if (u < 0.35) return lerpPose(PK.set, PK.lift, u / 0.35);
+    if (u < 0.7) return lerpPose(PK.lift, PK.load, (u - 0.35) / 0.35);
+    if (u < 0.88) return lerpPose(PK.load, PK.cock, (u - 0.7) / 0.18);
+    return lerpPose(PK.cock, PK.rel, (u - 0.88) / 0.12);
+  }
+  if (pc && pc.released) {
+    const t = G.phase === 'flight' ? pc.t : 9;
+    if (t < 0.08) return lerpPose(PK.rel, PK.follow, t / 0.08);
+    if (t < 1.2) return lerpPose(PK.follow, PK.follow, 1);
+    return lerpPose(PK.follow, PK.set, Math.min(1, (t - 1.2) / 0.4));
+  }
+  return lerpPose(PK.set, PK.set, 0);
+}
+function drawPitcherBack(x, y, s, team, pl, pose) {
+  const look = pl.look || {}, uni = team.uni || { secondary: '#ffffff', style: 'solid', pants: 'white' }, sec = uni.secondary;
+  const hairC = HAIR[look.hair != null ? look.hair : hashStr(pl.name) % 5], skin = skinOf(pl), mirror = pl.throws === 'L';
+  const sleeve = uni.style === 'twotone' ? sec : team.color;
+  ctx.save(); ctx.translate(x, y);
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; ell(0, 0, 22 * s, 6 * s);
+  ctx.scale(mirror ? -s : s, s);
+  const lean = pose.lean, bx = -4 * lean, by = 4 * lean; // the body moves toward home on the stride
+  // legs (glove-side leg = screen left for a righty)
+  const pants = PANTS[uni.pants] || '#f3f4f6';
+  const hipL = [-6 + bx, -20 + by], hipR = [6 + bx, -20 + by];
+  const footL = [lerp(-8, -15, pose.stride), lerp(0, -9, pose.stride) - pose.lift * 4];
+  const kneeL = [lerp(-7, -9, pose.stride) + pose.lift * 2, lerp(-10, -12, pose.stride) - pose.lift * 16];
+  if (pose.lift > 0.05) { footL[0] = lerp(footL[0], -4, pose.lift); footL[1] = lerp(footL[1], -16, pose.lift); }
+  const footR = [lerp(8, 4, pose.kick), lerp(0, -16, pose.kick)], kneeR = [lerp(7, 7, pose.kick), lerp(-10, -15, pose.kick)];
+  ctx.strokeStyle = pants; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = 8;
+  for (const [hp, kn, ft] of [[hipR, kneeR, footR], [hipL, kneeL, footL]]) {
+    ctx.beginPath(); ctx.moveTo(hp[0], hp[1]); ctx.lineTo(kn[0], kn[1]); ctx.lineTo(ft[0], ft[1] - 2); ctx.stroke();
+    ctx.fillStyle = sec; ctx.fillRect(ft[0] - 3.5, ft[1] - 7, 7, 4);
+    ctx.fillStyle = '#111827'; ell(ft[0], ft[1] - 1.5, 5.5, 3);
+  }
+  // glove arm (drawn behind the body when tucked)
+  const sL = [-12 + bx, -42 + by], sR = [12 + bx, -42 + by];
+  const g = [pose.g[0] + bx, pose.g[1] + by], t = [pose.t[0] + bx, pose.t[1] + by];
+  const arm = (sh, hd, out) => {
+    const mx = (sh[0] + hd[0]) / 2 + out * 4, my = (sh[1] + hd[1]) / 2 + 3;
+    ctx.strokeStyle = sleeve; ctx.lineWidth = 7; line(sh[0], sh[1], lerp(sh[0], mx, 0.7), lerp(sh[1], my, 0.7));
+    ctx.strokeStyle = skin; ctx.lineWidth = 5.2; ctx.beginPath(); ctx.moveTo(lerp(sh[0], mx, 0.7), lerp(sh[1], my, 0.7)); ctx.lineTo(mx, my); ctx.lineTo(hd[0], hd[1]); ctx.stroke();
+  };
+  const gloveTucked = pose.g[0] > -14 && pose.g[1] > -48;
+  const throwTucked = pose.t[0] < 8 && pose.t[1] > -50;
+  const drawGlove = () => { arm(sL, g, -1); ctx.fillStyle = '#8b5a2b'; ell(g[0], g[1], 6.5, 7.5); ctx.fillStyle = '#6b4220'; ell(g[0] + 1, g[1], 3, 4); };
+  const drawThrow = () => { arm(sR, t, 1); ctx.fillStyle = skin; circle(t[0], t[1], 3.3); if (pose.ball) { ctx.fillStyle = '#fff'; circle(t[0] + 0.5, t[1] - 2.2, 3); ctx.strokeStyle = '#e11d48'; ctx.lineWidth = 0.7; ctx.beginPath(); ctx.arc(t[0] - 1, t[1] - 2.2, 2, -0.8, 0.8); ctx.stroke(); } };
+  if (throwTucked) drawThrow();
+  if (gloveTucked) drawGlove();
+  // torso (back of the jersey)
+  ctx.fillStyle = team.color; rr(-14 + bx, -47 + by, 28, 29, 9);
+  if (uni.style === 'pinstripe') { ctx.save(); rrPath(-14 + bx, -47 + by, 28, 29, 9); ctx.clip(); ctx.strokeStyle = hexA(sec, 0.5); ctx.lineWidth = 0.9; for (let px = -12; px < 14; px += 3.5) line(px + bx, -47 + by, px + bx, -18 + by); ctx.restore(); }
+  ctx.fillStyle = sec; ctx.fillRect(-14 + bx, -22 + by, 28, 3);
+  ctx.save(); if (mirror) ctx.scale(-1, 1);
+  const mx = mirror ? -bx : bx;
+  ctx.fillStyle = sec; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  const nm = String(pl.name).split(' ').pop().toUpperCase().slice(0, 10);
+  ctx.font = '900 ' + (nm.length > 7 ? 4.4 : 5.4) + 'px ' + FONT; ctx.fillText(nm, mx, -38.5 + by);
+  ctx.font = '900 12px ' + FONT; ctx.fillText(String(look.num != null ? look.num : (hashStr(pl.name) % 50) + 1), mx, -29 + by);
+  ctx.restore();
+  // head from behind
+  const hx = bx * 1.2, hy = by * 1.2;
+  if (look.style === 'long') { ctx.fillStyle = hairC; rr(-10 + hx, -54 + hy, 20, 9, 4); }
+  ctx.fillStyle = skin; rr(-4.5 + hx, -49 + hy, 9, 7, 3);
+  ctx.fillStyle = hairC; circle(hx, -58 + hy, 12.5);
+  if (look.style === 'curly') for (const cx of [-12, 12]) circle(cx + hx, -51 + hy, 4.5);
+  if (look.style === 'pony') { ctx.fillStyle = hairC; ell(hx, -43 + hy, 4.5, 9); }
+  ctx.fillStyle = skin; ell(-12.5 + hx, -56 + hy, 2.5, 3.5); ell(12.5 + hx, -56 + hy, 2.5, 3.5);
+  ctx.fillStyle = team.color; ctx.beginPath(); ctx.arc(hx, -58 + hy, 14.4, Math.PI, 0); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = sec; circle(hx, -72 + hy, 1.6); ctx.fillRect(-4 + hx, -60 + hy, 8, 1.6);
+  ctx.fillStyle = 'rgba(255,255,255,.18)'; ell(-5 + hx, -66 + hy, 5, 2.5);
+  if (!gloveTucked) drawGlove();
+  if (!throwTucked) drawThrow();
+  ctx.restore();
+  return { hand: { x: x + (mirror ? -1 : 1) * t[0] * s, y: y + t[1] * s } };
+}
+
+// ---- the whole scene ----
+let pvHand = null;
+// ball position on screen; the first bit is blended from the pitcher's hand so the ball leaves his fingers
+function pvAt(pc, uu) {
+  const b = pitchPos(pc, uu), s = pvBall(b.x, b.y, lerp(54, 0, uu));
+  if (s && pvHand && uu < 0.22) { const k = uu / 0.22, e = k * k * (3 - 2 * k); s.x = lerp(pvHand.x, s.x, e); s.y = lerp(pvHand.y, s.y, e); }
+  return s;
+}
+function catcherMitt() {
+  const pc = G.pitch;
+  let tgt = G.phase === 'aim' ? G.aimTarget : G.phase === 'pickPitch' ? G.kbAim : (pc ? pc.target : { x: 0, y: 2.5 });
+  if (pc && pc.released) { const u = clamp(pc.t / pc.T, 0, 1), k = clamp((u - 0.45) / 0.5, 0, 1); tgt = { x: lerp(pc.target.x, pc.actual.x, k), y: lerp(pc.target.y, pc.actual.y, k) }; }
+  return tgt || { x: 0, y: 2.5 };
+}
+function drawPitcherView() {
+  const off = offTeam(), def = defTeam(), st = G.stadium, pc = G.pitch;
+  drawPvStands(st);
+  drawPvBackstop(st);
+  drawPvGround(st);
+  const bt = curBatter(), lefty = bt.bats === 'L';
+  const mt = catcherMitt();
+  const cx = clamp(mt.x * 0.45, -0.7, 0.7);
+  const um = pv(cx * 0.5 + (lefty ? 0.9 : -0.9), -5.6, 0); drawUmpire(um.x, um.y, um.k * 5.4 / 72);
+  const ca = pv(cx, -2.9, 0), mitt = pv(mt.x, -1.2, mt.y);
+  const catcher = def.batters.find(b => b.pos === 'C') || def.pitcher;
+  drawCatcher(ca.x, ca.y, ca.k * 5.3 / 72, def, catcher, mitt);
+  // the batter (a righty stands on the third-base side = right side of this screen)
+  const bs = pv(lefty ? 3.4 : -3.4, 0.3, 0), prog = G.swing ? G.swing.anim / 0.24 : 0;
+  drawBatterFront(bs.x, bs.y, bs.k * 5.2 / 70, off, bt, prog, lefty, G.approach === 'bunt');
+  if (G.approach !== 'swing' && (G.phase === 'windup' || G.phase === 'flight' || G.phase === 'pickPitch' || G.phase === 'aim')) txt(G.approach === 'bunt' ? 'BUNT!' : (G.bases[2] && G.outs < 2 ? 'SAC FLY?' : 'FLY BALL?'), bs.x, bs.y + 22, 18, '#ffd166');
+  // strike zone + aiming
+  const z1 = pvBall(0.71, 3.5, 0), z2 = pvBall(-0.71, 1.6, 0);
+  const aiming = def.human && (G.phase === 'pickPitch' || G.phase === 'aim');
+  if (aiming) {
+    ctx.fillStyle = 'rgba(255,255,255,0.10)'; ctx.fillRect(z1.x, z1.y, z2.x - z1.x, z2.y - z1.y);
+    ctx.strokeStyle = 'rgba(255,255,255,0.75)'; ctx.lineWidth = 2; ctx.strokeRect(z1.x, z1.y, z2.x - z1.x, z2.y - z1.y);
+  }
+  // after the pitch: show its path
+  if (pc && pc.released && G.phase === 'banner') {
+    ctx.fillStyle = PITCHES[pc.type].color;
+    for (let u = 0.04; u <= 1.001; u += 0.04) { const s = pvAt(pc, u); if (s) circle(s.x, s.y, 3.6); }
+    const e = pvBall(pc.actual.x, pc.actual.y, 0); ctx.strokeStyle = '#fff'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(e.x, e.y, 6, 0, Math.PI * 2); ctx.stroke();
+  }
+  // the ball (drawn before the pitcher, who is closer to the camera)
+  const caught = pc && pc.released && pc.t >= pc.T && !(G.swing && G.swing.contact);
+  if (pc && pc.released && G.phase === 'flight' && !caught && !(G.swing && G.swing.contact && pc.t >= G.swing.resolveAt)) {
+    const u = pc.t / pc.T;
+    const at = uu => pvAt(pc, uu);
+    for (let i = 5; i >= 1; i--) { const uu = u - i * 0.03; if (uu <= 0) continue; const s = at(uu); if (s) { ctx.fillStyle = `rgba(255,255,255,${0.09 * (6 - i)})`; circle(s.x, s.y, Math.max(4, 0.2 * s.k) * (1 - i * 0.08)); } }
+    const b = pitchPos(pc, Math.min(u, 1)), gs = pvBall(b.x, 0, lerp(54, 0, Math.min(u, 1)));
+    if (gs) { ctx.fillStyle = 'rgba(0,0,0,.2)'; ell(gs.x, gs.y, Math.max(2, 0.11 * gs.k), Math.max(1, 0.04 * gs.k)); }
+    const s = at(Math.min(u, 1)); if (s) { ctx.fillStyle = 'rgba(255,255,255,.25)'; circle(s.x, s.y, Math.max(8, 0.3 * s.k)); drawBaseball(s.x, s.y, Math.max(5.5, 0.22 * s.k), pc.t * 30); }
+  }
+  if (caught && (G.phase === 'flight' || G.phase === 'banner')) { ctx.fillStyle = '#fff'; circle(mitt.x, mitt.y, 3.4); }
+  // crosshair over the catcher's mitt
+  if (aiming) {
+    const t = G.phase === 'aim' ? G.aimTarget : G.kbAim, c = pvBall(t.x, t.y, 0), col = PITCHES[G.pitchType].color;
+    ctx.strokeStyle = 'rgba(15,23,42,.6)'; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(c.x, c.y, 26, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = col; ctx.lineWidth = 3.5; ctx.beginPath(); ctx.arc(c.x, c.y, 26, 0, Math.PI * 2); ctx.stroke();
+    ctx.lineWidth = 3; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) line(c.x + dx * 14, c.y + dy * 14, c.x + dx * 36, c.y + dy * 36);
+    ctx.fillStyle = col; circle(c.x, c.y, 3);
+    if (G.phase === 'aim') {
+      const r = aimRing(G.aimT), good = Math.abs(r - AIM_SWEET) < 9;
+      ctx.strokeStyle = '#ffd166'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(c.x, c.y, AIM_SWEET, 0, Math.PI * 2); ctx.stroke();
+      ctx.strokeStyle = good ? '#ffd166' : '#fff'; ctx.lineWidth = good ? 7 : 4; ctx.beginPath(); ctx.arc(c.x, c.y, r, 0, Math.PI * 2); ctx.stroke();
+    }
+  }
+  // the pitcher, big in the foreground
+  const pm = pv(0, 60.5, 0.8), pit = def.pitcher;
+  const out = drawPitcherBack(pm.x, pm.y, pm.k * 5.6 / 72, def, pit, pitcherPose());
+  if (G.phase === 'windup' || (G.phase === 'aim' || G.phase === 'pickPitch')) pvHand = out.hand;
+  if (G.runnerGoing && G.phase === 'flight') txt('🏃 RUNNER GOING!', 640, 250, 24, '#9be7ff');
+  if (G.pitchFeedback && G.pitchFeedback.t < 1.4) txt(G.pitchFeedback.text, z1.x + (z2.x - z1.x) / 2, z1.y - 46, 26, '#fff');
+  if (G.lastPitch && G.lastPitch.pc === pc && G.lastPitch.t < 3 && (G.phase === 'banner' || G.phase === 'flight')) drawPitchChip(640, 520, true);
+  // short hint
+  let s = '';
+  if (G.phase === 'pickPitch') s = (off.human ? 'Batter, no peeking! 🙈 ' : '') + 'Aim with the stick (or tap), then press PITCH';
+  else if (G.phase === 'aim') s = 'Press PITCH again when the ring turns GOLD!';
+  if (s) { ctx.font = '900 19px ' + FONT; const w = ctx.measureText(s).width + 36; ctx.fillStyle = 'rgba(15,23,42,.66)'; rr(660 - w / 2, 82, w, 38, 19); txt(s, 660, 101, 19, '#fff', 'center', 0); }
+}
+
+// ---- touch controls: thumb-stick, PITCH button, intentional walk ----
+const joy = { x: 0, y: 0, id: null };
+const joyKnob = h('div', { class: 'knob' });
+const joyEl = h('div', { id: 'joy', class: 'hidden', 'aria-label': 'Aim stick' }, joyKnob);
+function joyMove(e) {
+  const r = joyEl.getBoundingClientRect(), R = r.width / 2;
+  let dx = (e.clientX - r.left - R) / (R * 0.72), dy = (e.clientY - r.top - R) / (R * 0.72);
+  const m = Math.hypot(dx, dy); if (m > 1) { dx /= m; dy /= m; }
+  joy.x = dx; joy.y = dy;
+  joyKnob.style.transform = `translate(${dx * R * 0.55}px, ${dy * R * 0.55}px)`;
+}
+function joyEnd() { joy.x = 0; joy.y = 0; joy.id = null; joyKnob.style.transform = ''; joyEl.classList.remove('on'); }
+joyEl.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); Sound.unlock(); joy.id = e.pointerId; try { joyEl.setPointerCapture(e.pointerId); } catch (_) { /* ignore */ } joyEl.classList.add('on'); joyMove(e); });
+joyEl.addEventListener('pointermove', e => { if (joy.id === e.pointerId) { e.preventDefault(); joyMove(e); } });
+for (const ev of ['pointerup', 'pointercancel', 'lostpointercapture']) joyEl.addEventListener(ev, e => { if (joy.id === e.pointerId || ev === 'lostpointercapture') joyEnd(); });
+function pitchPress() {
+  if (!G || G.paused) return;
+  Sound.unlock(); Sound.startCrowd();
+  if (G.phase === 'pickPitch') { G.aimTarget = clampAim(G.kbAim); G.phase = 'aim'; G.aimT = 0; Sound.click(); syncUI(true); }
+  else if (G.phase === 'aim') { throwHumanPitch(); syncUI(true); }
+}
+const pitchBtnEl = h('button', { id: 'pitchBtn', class: 'btn hidden', onpointerdown: e => { e.preventDefault(); e.stopPropagation(); pitchPress(); } }, 'PITCH');
+let ibbArmed = 0;
+const ibbBtnEl = h('button', { id: 'ibbBtn', class: 'btn hidden', title: 'Intentional walk', onpointerdown: e => {
+  e.preventDefault(); e.stopPropagation(); Sound.unlock();
+  if (!G || G.phase !== 'pickPitch') return;
+  if (!ibbArmed || clockNow() - ibbArmed > 3) { ibbArmed = clockNow(); ibbBtnEl.textContent = 'Walk him?'; ibbBtnEl.classList.add('armed'); Sound.click(); return; }
+  ibbArmed = 0; intentionalWalk();
+} }, 'IBB');
+function intentionalWalk() {
+  if (!G || G.phase !== 'pickPitch') return;
+  G.steal = null; G.stats[G.half].bb++;
+  const runs = walkAdvance(); if (runs) addRuns(runs);
+  tally('IBB'); umpire('Take your base.');
+  banner('INTENTIONAL WALK', runs ? 'A run scores!' : 'Free pass to first base', 1.5, endPA, '#9be7ff');
+  syncUI(true);
+}
+[joyEl, ibbBtnEl, pitchBtnEl].forEach(el => hudEl.appendChild(el));
+let pvUiState = '';
+function syncPitcherUI() {
+  const on = !!(G && pvAiming() && defTeam().human), aim = on && G.phase === 'aim';
+  const good = aim && Math.abs(aimRing(G.aimT) - AIM_SWEET) < 9;
+  const ibb = on && G.phase === 'pickPitch';
+  const st = [on, aim, good, ibb].join('|');
+  if (ibbArmed && clockNow() - ibbArmed > 3) { ibbArmed = 0; }
+  if (!ibbArmed && ibbBtnEl.classList.contains('armed')) { ibbBtnEl.classList.remove('armed'); ibbBtnEl.textContent = 'IBB'; }
+  hudEl.classList.toggle('pv', on);
+  if (st === pvUiState) return;
+  pvUiState = st;
+  joyEl.classList.toggle('hidden', !on); if (!on) joyEnd();
+  pitchBtnEl.classList.toggle('hidden', !on);
+  pitchBtnEl.classList.toggle('aim', aim); pitchBtnEl.classList.toggle('good', good);
+  pitchBtnEl.textContent = aim ? 'THROW!' : 'PITCH';
+  ibbBtnEl.classList.toggle('hidden', !ibb);
+  if (!ibb) { ibbArmed = 0; ibbBtnEl.classList.remove('armed'); ibbBtnEl.textContent = 'IBB'; }
+}
+// called from update(): move the target with the stick (screen-right = third-base side = -x)
+function pvUpdate(dt) {
+  if (!pvAiming() || (!joy.x && !joy.y)) return;
+  const sp = G.phase === 'aim' ? 1.5 : 2.4;
+  if (G.phase === 'pickPitch') G.kbAim = clampAim({ x: G.kbAim.x - joy.x * sp * dt, y: G.kbAim.y - joy.y * sp * dt });
+  else G.aimTarget = clampAim({ x: G.aimTarget.x - joy.x * sp * dt, y: G.aimTarget.y - joy.y * sp * dt });
 }
 
 // ================= Main loop =================
