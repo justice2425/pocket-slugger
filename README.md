@@ -101,6 +101,7 @@ Voice options:
 - **Team:** earn coins (games, hits, homers, strikeouts and trivia) and spend them on upgrades and **new pitches**. There are 11 pitches in all, including the knuckleball and the super-slow eephus.
 - **Ballparks:** 10 made-up stadiums with different fences, each with its own made-up sponsors on the walls. The boards behind home plate flip to a new ad every few seconds. Watch out for the Grand Wall, and the low gravity on the Moon.
 - **Between innings:** a quick fact, rule, coach's tip or trivia question. You can change how often in Settings.
+- **Ballpark organ:** when the home team takes the field at the start of a game, the organ plays a quick run and the classic bugle-call "Charge!" (Dodger Stadium's organist does the same thing every game). In the 7th inning (or the last inning of a short game) the organ plays the whole chorus of "Take Me Out to the Ball Game" (1908, public domain), with sing-along words and a bouncing ball. Tap to skip. You can also play the song any time: tap **🎵 Play "Take Me Out to the Ball Game"** on the main screen, or **🎵 Sing** in the pause menu during a game (the game stays paused while you sing).
 - **Mac keyboard:**
   - Space: swing / throw / tap
   - Arrow keys: aim

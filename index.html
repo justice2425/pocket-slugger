@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-5Tx8pcK0nPRYrDQL8wF0KlvumOYCqEidfsBSLwxiI+Y='; style-src 'sha256-3A42gBQWkvoFl/0/LpUhpOT1kEi5fbuP1aEK+zlKa3E='; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-c/mestdcM0nbTzFdogsfBlV94L41jrd8Gjp8Thmu4N8='; style-src 'sha256-EMb27VWAW3/VV7aF0O22reApnoGs1UOMo0L202udDX4='; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>Pocket Slugger</title>
 <meta name="description" content="A small, ad-free baseball game that works offline.">
@@ -165,6 +165,8 @@ select { font:inherit; font-size:17px; padding:9px 12px; border-radius:12px; bor
 #ibbBtn.armed { width:96px; font-size:14px; background:#7c3aed; border-color:#ffd166; border-radius:20px; }
 #hud.pv #pitchBar { max-width:calc(100vw - 440px); bottom:max(14px, env(safe-area-inset-bottom)); }
 #hud.pv #pickBar { top:auto; bottom:190px; }
+#songStop { position:fixed; right:max(20px, env(safe-area-inset-right)); bottom:max(20px, env(safe-area-inset-bottom)); z-index:50; width:auto; padding:14px 26px; font-size:22px; }
+.songBtn { margin-top:2px; }
 </style>
 </head>
 <body>
@@ -511,6 +513,40 @@ function nextTrivia() {
 // Version 2: softer, more natural sounds. Pink noise (warmer than white noise) for crowds and hits,
 // no raw square/sawtooth beeps, and a gentle limiter so layered sounds never distort.
 const NOTE = (() => { const m = { C: 0, 'C#': 1, D: 2, 'D#': 3, E: 4, F: 5, 'F#': 6, G: 7, 'G#': 8, A: 9, 'A#': 10, B: 11 }; return n => { const o = Number(n.slice(-1)), k = m[n.slice(0, -1)]; return 440 * Math.pow(2, (k + (o - 4) * 12 - 9) / 12); }; })();
+// chord voicings for the organist's left hand: [bass, [chord notes]]
+const CHORDS = {
+  C: ['C3', ['E3', 'G3', 'C4']], G: ['G2', ['G3', 'B3', 'D4']], G7: ['G2', ['F3', 'G3', 'B3']], A7: ['A2', ['E3', 'G3', 'C#4']],
+  Dm: ['D3', ['F3', 'A3', 'D4']], D7: ['D3', ['F#3', 'A3', 'C4']], C7: ['C3', ['E3', 'G3', 'A#3']], F: ['F2', ['F3', 'A3', 'C4']], Fd: ['F#2', ['A3', 'C4', 'D#4']]
+};
+// The chorus, bar by bar (3/4 time). Each melody note is [note, beats, word shown in the sing-along].
+// "/" at the start of a word begins a new line of the sing-along.
+const TAKE_ME_OUT = { bars: [
+  { ch: 'C', mel: [['C4', 1.5, '/Take'], [null, 0.5], ['C5', 1, 'me']] }, { ch: 'C', mel: [['A4', 1, 'out'], ['G4', 1, 'to'], ['E4', 1, 'the']] },
+  { ch: 'G7', mel: [['G4', 3, 'ball']] }, { ch: 'G7', mel: [['D4', 3, 'game,']] },
+  { ch: 'C', mel: [['C4', 1.5, 'take'], [null, 0.5], ['C5', 1, 'me']] }, { ch: 'C', mel: [['A4', 1, 'out'], ['G4', 1, 'with'], ['E4', 1, 'the']] },
+  { ch: 'G', mel: [['G4', 3, 'crowd;']] }, { ch: 'G7', mel: [['G4', 2.5], [null, 0.5]] },
+  { ch: 'A7', mel: [['A4', 1, '/Buy'], ['G#4', 1, 'me'], ['A4', 1, 'some']] }, { ch: 'A7', mel: [['E4', 1, 'pea-'], ['F4', 1, 'nuts'], ['G4', 1, 'and']] },
+  { ch: 'Dm', mel: [['A4', 2, 'Crack-'], ['F4', 1, 'er']] }, { ch: 'Dm', mel: [['D4', 3, 'Jack,']] },
+  { ch: 'D7', mel: [['A4', 2, 'I'], ['A4', 1, 'don’t']] }, { ch: 'D7', mel: [['A4', 1, 'care'], ['B4', 1, 'if'], ['C5', 1, 'I']] },
+  { ch: 'G7', mel: [['D5', 1, 'nev-'], ['B4', 1, 'er'], ['A4', 1, 'get']] }, { ch: 'G7', mel: [['G4', 1, 'back.'], ['F4', 1, '/Let'], ['D4', 1, 'me']] },
+  { ch: 'C', mel: [['C4', 1.5, 'root,'], [null, 0.5], ['C5', 1, 'root,']] }, { ch: 'C', mel: [['A4', 1, 'root'], ['G4', 1, 'for'], ['E4', 1, 'the']] },
+  { ch: 'G7', mel: [['G4', 3, 'home']] }, { ch: 'G7', mel: [['D4', 2, 'team,'], ['E4', 1, 'if']] },
+  { ch: 'C', mel: [['C4', 2, 'they'], ['D4', 1, 'don’t']] }, { ch: 'C7', mel: [['E4', 1, 'win'], ['F4', 1, 'it’s'], ['G4', 1, 'a']] },
+  { ch: 'F', mel: [['A4', 3, 'shame.']] }, { ch: 'F', mel: [['A4', 1], ['A4', 1, '/For'], ['B4', 1, 'it’s']] },
+  { ch: 'F', mel: [['C5', 1, 'one,'], [null, 2]] }, { ch: 'Fd', mel: [['C5', 1, 'two,'], [null, 2]] },
+  { ch: 'C', mel: [['C5', 1, 'three'], ['B4', 1, 'strikes,'], ['A4', 1, 'you’re']] }, { ch: 'A7', mel: [['G4', 1, 'out'], ['F#4', 1, 'at'], ['G4', 1, 'the']] },
+  { ch: 'D7', mel: [['A4', 3, 'old']] }, { ch: 'G7', mel: [['B4', 3, 'ball']] },
+  { ch: 'C', mel: [['C5', 3, 'game!']] }, { ch: 'C', mel: [['C5', 1.2], [null, 1.8]] }
+] };
+// sing-along lines: [{ w: word, t: beat it starts }]
+const TMO_LINES = (() => {
+  const lines = []; let t = 0;
+  for (const b of TAKE_ME_OUT.bars) for (const [, d, w] of b.mel) {
+    if (w) { const nl = w[0] === '/'; if (nl || !lines.length) lines.push([]); lines[lines.length - 1].push({ w: nl ? w.slice(1) : w, t }); }
+    t += d;
+  }
+  return lines;
+})();
 const Sound = {
   ctx: null, master: null, crowdOn: false, crowdGain: null, crowdNodes: [], white: null, pink: null,
   setup(ctx) {
@@ -578,7 +614,7 @@ const Sound = {
     s.connect(f); f.connect(lp); lp.connect(fl); fl.connect(g); g.connect(this.master);
   },
   // A ballpark organ note: drawbar-style overtones, soft key click, gentle tremolo. Exactly in tune.
-  organ(freq, dur, vol, when) {
+  organ(freq, dur, vol, when, dest) {
     if (!this.ok()) return;
     const c = this.ctx, t = c.currentTime + (when || 0);
     const g = c.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.012);
@@ -589,8 +625,8 @@ const Sound = {
       const o = c.createOscillator(), og = c.createGain(); o.type = 'sine'; o.frequency.value = freq * m; og.gain.value = v / 2.2;
       o.connect(og); og.connect(trem); o.start(t); o.stop(t + dur + 0.05);
     }
-    trem.connect(g); g.connect(this.master);
-    this.hit({ type: 'bandpass', freq: 2200, q: 1, dur: 0.01, vol: vol * 0.12, when });
+    trem.connect(g); g.connect(dest || this.master);
+    if (!dest) this.hit({ type: 'bandpass', freq: 2200, q: 1, dur: 0.01, vol: vol * 0.12, when });
   },
   melody(seq, beat, vol) { let t = 0; for (const [n, b] of seq) { if (n) this.organ(NOTE(n), b * beat * 0.97, vol, t); t += b * beat; } return t; },
   // ---- crowd ambience: three soft murmur bands that slowly drift, like a real crowd ----
@@ -656,9 +692,47 @@ const Sound = {
   charge() { this.melody([['G4', 1], ['C5', 1], ['E5', 1], ['G5', 2], ['E5', 1], ['G5', 4]], 0.12, 0.1); },
   jingle() { this.melody([['C5', 1], ['E5', 1], ['G5', 1], ['C6', 3]], 0.14, 0.07); },
   // The opening of "Take Me Out to the Ball Game" (1908, public domain).
-  takeMeOut() {
-    return this.melody([['C4', 2], ['C5', 1], ['A4', 1], ['G4', 1], ['E4', 1], ['G4', 3], ['D4', 3],
-      ['C4', 2], ['C5', 1], ['A4', 1], ['G4', 1], ['E4', 1], ['G4', 5]], 0.4, 0.11);
+  // The whole chorus of "Take Me Out to the Ball Game" (Albert Von Tilzer, 1908, public domain),
+  // played like a ballpark organist: melody on top, a bass note on beat 1 and chord "pah-pahs" on 2 and 3.
+  // Notes are scheduled a little at a time so an iPad isn't asked to build hundreds of sounds at once.
+  takeMeOut() { return this.playSong(TAKE_ME_OUT, 0.36); },
+  playSong(song, beat) {
+    if (!this.ok()) return 0;
+    this.stopSong();
+    const c = this.ctx, bus = c.createGain(); bus.gain.value = 1; bus.connect(this.master);
+    const t0 = c.currentTime + 0.15, bars = song.bars;
+    let next = 0;
+    const sched = () => {
+      while (next < bars.length && t0 + next * 3 * beat < c.currentTime + 1.6) {
+        const b = bars[next], bt = t0 + next * 3 * beat, ch = CHORDS[b.ch];
+        let t = 0;
+        for (const [n, d] of b.mel) { if (n) this.organ(NOTE(n), d * beat * 0.94, 0.1, bt + t - c.currentTime, bus); t += d * beat; }
+        if (ch) {
+          this.organ(NOTE(ch[0]), beat * 0.9, 0.07, bt - c.currentTime, bus);
+          for (const k of [1, 2]) for (const n of ch[1]) this.organ(NOTE(n), beat * 0.5, 0.026, bt + k * beat - c.currentTime, bus);
+        }
+        next++;
+      }
+      if (next >= bars.length) { clearInterval(this.songTimer); this.songTimer = null; }
+    };
+    sched(); this.songTimer = setInterval(sched, 250); this.songBus = bus;
+    return bars.length * 3 * beat + 0.15;
+  },
+  stopSong() {
+    if (this.songTimer) { clearInterval(this.songTimer); this.songTimer = null; }
+    const bus = this.songBus; this.songBus = null;
+    if (bus && this.ctx) { const t = this.ctx.currentTime; try { bus.gain.cancelScheduledValues(t); bus.gain.setValueAtTime(bus.gain.value, t); bus.gain.linearRampToValueAtTime(0.0001, t + 0.35); setTimeout(() => { try { bus.disconnect(); } catch (e) { /* ignore */ } }, 2600); } catch (e) { /* ignore */ } }
+  },
+  // Start of the game, as the home team takes the field: an organ run up the keyboard, a big chord,
+  // then the traditional bugle-call "Charge!" — the crowd answers with a roar.
+  gameOpen() {
+    if (!this.ok()) return;
+    const run = ['C4', 'E4', 'G4', 'C5', 'E5', 'G5', 'C6'];
+    run.forEach((n, i) => this.organ(NOTE(n), 0.09, 0.07, i * 0.055));
+    for (const n of ['C4', 'E4', 'G4', 'C5']) this.organ(NOTE(n), 1.0, 0.06, 0.42);
+    const T = 1.65, beat = 0.13;
+    [['G4', 1], ['C5', 1], ['E5', 1], ['G5', 2], ['E5', 1], ['G5', 4]].reduce((t, [n, b]) => { this.organ(NOTE(n), b * beat * 0.95, 0.11, T + t); for (const h of [-12]) this.organ(NOTE(n) * Math.pow(2, h / 12), b * beat * 0.95, 0.04, T + t); return t + b * beat; }, 0);
+    setTimeout(() => this.cheer(true), (T + 1.35) * 1000);
   }
 };
 
@@ -789,7 +863,9 @@ function startGame(opts) {
   hideScreen(); hud(true);
   Sound.startCrowd();
   Voice.say('Play ball!', 1);
-  banner('PLAY BALL!', `${G.teams[0].name} at ${G.teams[1].name} · ${G.stadium.emoji} ${G.stadium.name}`, 2.2, startAtBat, '#ffd166');
+  // the home team takes the field: organ run + "Charge!", like a big-league ballpark
+  if (!opts.auto) { Sound.gameOpen(); G.crowd.excite = 0.9; }
+  banner('PLAY BALL!', `${G.teams[0].name} at ${G.teams[1].name} · ${G.stadium.emoji} ${G.stadium.name}`, opts.auto ? 2.2 : 3.6, startAtBat, '#ffd166');
 }
 function startAtBat() {
   G.balls = 0; G.strikes = 0; G.approach = 'swing'; G.pickoffs = 0;
@@ -1068,8 +1144,8 @@ function interlude() {
   const N = G.opts.innings;
   if (!G.opts.auto && !G.stretchDone && G.half === 1 && (G.inning === 7 || (N < 7 && G.inning === N))) {
     G.stretchDone = true; G.phase = 'stretch'; G.crowd.stand = 1; G.view = 'field'; G.scene = null; G.play = null;
-    const len = Sound.ok() ? Sound.takeMeOut() : 6;
-    G.timer = (len || 8.3) + 0.6; G.stretchT = 0;
+    const len = Sound.ok() ? Sound.takeMeOut() : 0;
+    G.stretchBeat = 0.36; G.stretchLen = len || 34.7; G.timer = G.stretchLen + 0.8; G.stretchT = -0.15;
     return;
   }
   const mode = save.settings.trivia;
@@ -2452,12 +2528,36 @@ function drawBanner() {
   ctx.restore();
 }
 function drawStretch() {
-  const t = G.stretchT;
-  ctx.fillStyle = 'rgba(15,23,42,.55)'; rr(150, 300, 700, 150, 26);
-  txt(G.inning === 7 ? '🎵 SEVENTH-INNING STRETCH 🎵' : '🎵 STRETCH TIME! 🎵', 500, 340, 36, '#ffd166', 'center', 0);
-  const lineTxt = t < 4.3 ? 'Take me out to the ball game,' : 'Take me out with the crowd…';
-  txt(lineTxt, 500, 390, 30, '#fff', 'center', 0);
-  txt(G.inning === 7 ? 'Everybody stand up and stretch!  (tap to skip)' : 'A ballpark tradition from the 7th inning — everybody stretch!  (tap to skip)', 500, 428, 18, '#cbd5e1', 'center', 0);
+  drawSingAlong(G.stretchT, G.stretchBeat || 0.36, G.inning === 7 ? '🎵 SEVENTH-INNING STRETCH 🎵' : '🎵 STRETCH TIME! 🎵',
+    G.inning === 7 ? 'Everybody stand up and sing!  (tap to skip)' : 'A 7th-inning tradition — everybody sing!  (tap to skip)');
+}
+// sing-along: the current line with each word lighting up as it's played, and a bouncing ball
+function drawSingAlong(time, beatLen, title, footer) {
+  const beat = time / beatLen;
+  let li = 0; for (let i = 0; i < TMO_LINES.length; i++) if (beat >= TMO_LINES[i][0].t - 0.6) li = i;
+  const done = beat > 96.5;
+  ctx.fillStyle = 'rgba(15,23,42,.62)'; rr(90, 280, 820, 196, 26);
+  txt(title, 500, 314, 30, '#ffd166', 'center', 0);
+  const drawLine = (words, y, size, active) => {
+    ctx.font = '900 ' + size + 'px ' + FONT;
+    const gap = size * 0.32, widths = words.map(w => ctx.measureText(w.w).width), gapAfter = words.map((w, i) => i === words.length - 1 || w.w.endsWith('-') ? 0 : gap);
+    const total = widths.reduce((a, b) => a + b, 0) + gapAfter.reduce((a, b) => a + b, 0), sc = total > 780 ? 780 / total : 1;
+    ctx.save(); ctx.translate(500, y); ctx.scale(sc, 1);
+    let x = -total / 2, ballX = null, ballW = 0, ballT = 0;
+    words.forEach((w, i) => {
+      const sung = active && beat >= w.t;
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = sung ? '#ffd166' : active ? '#ffffff' : 'rgba(255,255,255,.55)';
+      ctx.fillText(w.w, x, 0);
+      if (active && beat >= w.t && (i === words.length - 1 || beat < words[i + 1].t)) { ballX = x; ballW = widths[i]; ballT = beat - w.t; }
+      x += widths[i] + gapAfter[i];
+    });
+    if (ballX !== null && !done) { const hop = Math.abs(Math.sin(Math.min(ballT, 1) * Math.PI)); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(ballX + ballW / 2, -size * 0.75 - hop * 14, 7, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = '#e11d48'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(ballX + ballW / 2 - 3, -size * 0.75 - hop * 14, 4.5, -0.9, 0.9); ctx.stroke(); }
+    ctx.restore();
+  };
+  if (beat < -0.2) drawLine(TMO_LINES[0], 378, 34, false);
+  else { drawLine(TMO_LINES[li], 378, 34, true); if (TMO_LINES[li + 1]) drawLine(TMO_LINES[li + 1], 420, 22, false); }
+  txt(done ? 'Play ball!' : footer, 500, 456, 17, '#cbd5e1', 'center', 0);
 }
 function render() {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -2472,6 +2572,7 @@ function render() {
     if (G.phase === 'stretch') drawStretch();
     drawBanner();
   }
+  drawSingAlongOverlay();
   ctx.restore();
 }
 
@@ -2509,7 +2610,7 @@ function update(dt) {
     case 'windup': G.timer -= dt; if (G.timer <= 0) release(); break;
     case 'flight': updateFlight(dt); break;
     case 'inplay': updatePlay(dt); break;
-    case 'stretch': G.stretchT += dt; G.timer -= dt; if (G.timer <= 0) { G.crowd.stand = 0; startAtBat(); } break;
+    case 'stretch': G.stretchT += dt; G.timer -= dt; if (G.timer <= 0) { G.crowd.stand = 0; Sound.stopSong(); startAtBat(); } break;
   }
 }
 const clampCursor = c => ({ x: clamp(c.x, -1.5, 1.5), y: clamp(c.y, 0.9, 4.3) });
@@ -2519,7 +2620,7 @@ function onTap(p) {
   if (!G || G.paused || G.phase === 'over' || G.phase === 'trivia') return;
   const ph = G.phase;
   if (ph === 'banner') { G.timer = Math.min(G.timer, 0.12); return; }
-  if (ph === 'stretch') { G.timer = Math.min(G.timer, 0.1); return; }
+  if (ph === 'stretch') { if (G.stretchT > 1) { G.timer = Math.min(G.timer, 0.1); Sound.stopSong(); } return; }
   if (ph === 'pickPitch' && p && usePitcherView()) {
     const c = pvBall(G.kbAim.x, G.kbAim.y, 0);
     if (Math.hypot(p.x - c.x, p.y - c.y) < 40) { pitchPress(); return; }
@@ -2555,13 +2656,14 @@ function onTap(p) {
     if (G.play.stage && !defTeam().human) G.play.stage.fast = true;
   }
 }
-canvas.addEventListener('pointerdown', e => { Sound.unlock(); Sound.startCrowd(); e.preventDefault(); onTap(toV(e)); });
+canvas.addEventListener('pointerdown', e => { e.preventDefault(); if (singAlong) { if (singAlong.t > 0.8) endSingAlong(); return; } Sound.unlock(); Sound.startCrowd(); onTap(toV(e)); });
 canvas.addEventListener('pointermove', e => {
   if (e.pointerType === 'mouse' && G && G.phase && (G.phase === 'windup' || G.phase === 'flight') && offTeam().human && !kidMode()) G.cursor = clampCursor(screenToPlate(toV(e)));
 });
 window.addEventListener('keydown', e => {
   const tag = e.target && e.target.tagName;
   if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if (singAlong) { if (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); endSingAlong(); } return; }
   keys[e.key] = true;
   if (!G || G.phase === 'over' || !screenEl.classList.contains('hidden')) return;
   Sound.unlock();
@@ -2648,6 +2750,7 @@ function colorPicker(get, set) {
 }
 
 function showTitle() {
+  Sound.stopSong();
   G = null; hud(false); Sound.stopCrowd();
   const r = save.record;
   showScreen(h('div', { class: 'stack menu' },
@@ -2663,6 +2766,7 @@ function showTitle() {
       h('button', { class: 'btn green', onclick: showTeam }, '🧢 My Team', h('span', { class: 'pill', text: '🪙 ' + save.coins })),
       h('button', { class: 'btn gold', onclick: showTrophies }, '🏅 Trophies'),
       h('button', { class: 'btn gray', onclick: showSettings }, '⚙️ Settings')),
+    h('button', { class: 'btn small teal songBtn', onclick: () => startSingAlong(showTitle) }, '🎵 Play “Take Me Out to the Ball Game”'),
     h('div', { class: 'record', text: `${save.team.name} vs computer: ${r.w} W – ${r.l} L${r.t ? ' – ' + r.t + ' T' : ''}` }),
     window.innerHeight > window.innerWidth ? h('div', { class: 'tip', text: 'Tip: turn the iPad sideways for a bigger field.' }) : null));
 }
@@ -2847,6 +2951,7 @@ function showPause() {
     h('h1', { class: 'title', text: 'Paused' }),
     h('div', { class: 'subtitle', text: G.mode === 'derby' ? 'Home Run Derby' : G.mode === 'cage' ? 'Batting Cage' : `${G.teams[0].abbr} ${G.score[0]} – ${G.score[1]} ${G.teams[1].abbr} · ${G.half ? 'Bottom' : 'Top'} ${ordinal(G.inning)} · ${G.stadium.name}` }),
     h('button', { class: 'btn green', onclick: () => { G.paused = false; hideScreen(); hud(true); if (G.phase === 'trivia') { G.phase = 'none'; startAtBat(); } } }, '▶ Keep playing'),
+    G.phase !== 'stretch' ? h('button', { class: 'btn teal', onclick: () => startSingAlong(showPause) }, '🎵 Sing “Take Me Out to the Ball Game”') : null,
     h('button', { class: 'btn gray', onclick: () => { const ss = G.opts.season; G = null; if (ss) showSeasonHub(); else showTitle(); } }, G.mode === 'game' ? (G.opts.season ? 'Quit (replay this season game later)' : 'Quit game (no coins)') : 'Quit')));
 }
 
@@ -3973,6 +4078,30 @@ function drawPitchWallAds(st) {
   }
 }
 
+// ================= Sing-along on demand: play "Take Me Out to the Ball Game" any time =================
+let singAlong = null;
+const songStopEl = h('button', { id: 'songStop', class: 'btn red hidden', onclick: e => { e.stopPropagation(); endSingAlong(); } }, '⏹ Stop');
+document.body.appendChild(songStopEl);
+function startSingAlong(onDone) {
+  Sound.unlock(); hideScreen(); hud(false);
+  const len = Sound.ok() ? Sound.takeMeOut() : 0;
+  singAlong = { t: -0.15, beat: 0.36, len: len || 34.7, onDone, muted: !len };
+  songStopEl.classList.remove('hidden');
+}
+function endSingAlong() {
+  if (!singAlong) return;
+  const done = singAlong.onDone; singAlong = null;
+  Sound.stopSong(); songStopEl.classList.add('hidden');
+  if (done) done();
+}
+function tickSingAlong(dt) { if (singAlong) { singAlong.t += dt; if (singAlong.t > singAlong.len + 0.8) endSingAlong(); } }
+function drawSingAlongOverlay() {
+  if (!singAlong) return;
+  ctx.fillStyle = 'rgba(2,6,23,.25)'; ctx.fillRect(0, 0, W, H);
+  drawSingAlong(singAlong.t, singAlong.beat, '🎵 TAKE ME OUT TO THE BALL GAME 🎵',
+    singAlong.muted ? 'Sound is off — turn it on in Settings to hear the organ' : 'Sing along! (tap or press Stop to end)');
+}
+
 // ================= Main loop =================
 let last = performance.now();
 function frame(now) {
@@ -3980,6 +4109,7 @@ function frame(now) {
   const dts = testMode && window.__slugger && window.__slugger.speed ? dt * window.__slugger.speed : dt;
   if (G && !G.paused && G.phase !== 'over' && G.phase !== 'trivia') { update(dts); syncUI(false); }
   updateFieldCam(dt, false);
+  tickSingAlong(dt);
   render();
   requestAnimationFrame(frame);
 }
@@ -3999,6 +4129,8 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
 // Test hook (only with ?test in the URL): simulate computer-vs-computer games quickly.
 if (testMode) {
   window.__slugger = {
+    interlude() { interlude(); },
+    songOn() { return !!Sound.songTimer || !!Sound.songBus; },
     simulate(n, innings, diff, simHuman, help) {
       const out = [];
       if (help) save.settings.help = help;
