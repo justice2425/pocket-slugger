@@ -1,6 +1,6 @@
 // Pocket Slugger service worker: keeps the game available offline.
 // Only ever handles requests for this site's own files.
-const CACHE = 'pocket-slugger-20261122041634';
+const CACHE = 'pocket-slugger-20261122164922';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {

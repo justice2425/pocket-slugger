@@ -90,7 +90,8 @@ Voice options:
 
 ## How to play
 
-- **Batting:** tap as the ball reaches the box. In *Rookie* mode a ring shrinks onto the ball to help with timing. After each pitch you'll see which pitch it was and the path it took.
+- **Batting:** slide the batting circle to where you think the pitch will cross — use the thumb-stick (bottom left) or drag a finger anywhere on the field — then press the big **SWING!** button (it says READY until the pitch is thrown). Pick **CONTACT** (bigger circle, easier to hit), **POWER** (smaller circle, hits harder and farther), **BUNT**, or **FLY BALL / SAC FLY** from the bar at the bottom. In *Rookie* mode the circle is extra big, a ring shrinks onto the ball for timing, and the circle drifts toward the ball to help. Cards show the batter's line for today and the pitcher's pitch count. On a Mac, move the mouse to aim and click (or press Space) to swing.
+- **Running the bases:** a base diamond appears bottom right (2B top, 3B left, 1B right, HOME bottom). Before a pitch, tap the lit base to **steal**. After a hit, when there's a chance to take an extra base, the base lights up: tap it to send the runner, or tap **↩ STAY** to hold. Bubbles show the runner's jersey number.
 - **Batting options (before the pitch):** Swing, **Bunt**, or **Fly ball**. Fly ball turns into **Sac fly** when a runner is on third with fewer than two outs.
 - **Running:** use **Steal** before a pitch. After a hit you may be asked whether to send a runner. After a catch you may be asked whether to tag up.
 - **Pitching:** the camera sits behind your pitcher, looking in at the batter. Pick a pitch, steer the crosshair with the **thumb-stick** (bottom left) or tap where you want it, press **PITCH**, then press it again (**THROW!**) when the ring turns gold. **IBB** (tap twice) walks the batter on purpose. You get **pickoff** throws when a runner is on (2 per batter). Prefer the old view? Settings → *Camera when you pitch* → *Behind home plate*.

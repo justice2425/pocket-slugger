@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-c/mestdcM0nbTzFdogsfBlV94L41jrd8Gjp8Thmu4N8='; style-src 'sha256-EMb27VWAW3/VV7aF0O22reApnoGs1UOMo0L202udDX4='; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-hJ7ZxBRwPhlNb1IdzJMUGmUcRg4TzpBqO3fWw6kZfGU='; style-src 'sha256-HneD4PpAw/TI7YoFRrOZ71t5Esfj6HUIWAImlpEQYWc='; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>Pocket Slugger</title>
 <meta name="description" content="A small, ad-free baseball game that works offline.">
@@ -167,6 +167,31 @@ select { font:inherit; font-size:17px; padding:9px 12px; border-radius:12px; bor
 #hud.pv #pickBar { top:auto; bottom:190px; }
 #songStop { position:fixed; right:max(20px, env(safe-area-inset-right)); bottom:max(20px, env(safe-area-inset-bottom)); z-index:50; width:auto; padding:14px 26px; font-size:22px; }
 .songBtn { margin-top:2px; }
+/* batting controls */
+#swingBtn { position:absolute; right:max(20px, env(safe-area-inset-right)); bottom:max(20px, env(safe-area-inset-bottom)); width:140px; height:140px; border-radius:50%; padding:0;
+  font-size:26px; letter-spacing:1px; background:radial-gradient(circle at 40% 30%, #64748b, #334155 60%, #1e293b); color:#e2e8f0; border:4px solid rgba(255,255,255,.7); box-shadow:0 6px 16px rgba(0,0,0,.45); touch-action:none; }
+#swingBtn.live { background:radial-gradient(circle at 40% 30%, #93c5fd, #2563eb 60%, #1e3a8a); color:#fff; border-color:#fff; }
+#swingBtn.live.power { background:radial-gradient(circle at 40% 30%, #ffb38a, #ea580c 60%, #9a3412); }
+#batModes { position:absolute; left:50%; transform:translateX(-50%); bottom:max(10px, env(safe-area-inset-bottom)); display:flex; background:rgba(15,23,42,.85); border-radius:12px; padding:4px; gap:2px; pointer-events:auto; max-width:calc(100vw - 400px); }
+#batModes .bm { font-weight:900; font-size:16px; line-height:1; color:#e2e8f0; background:transparent; border:0; border-radius:9px; padding:12px 14px; touch-action:none; white-space:nowrap; }
+#batModes .bm.sel { background:#2563eb; color:#fff; }
+/* base-running diamond */
+#diamond { position:absolute; right:max(18px, env(safe-area-inset-right)); bottom:max(18px, env(safe-area-inset-bottom)); width:220px; height:220px; pointer-events:auto; transform-origin:100% 100%; }
+#diamond.small { bottom:max(176px, calc(env(safe-area-inset-bottom) + 166px)); transform:scale(.72); }
+#diamond::before { content:''; position:absolute; left:22px; top:22px; width:176px; height:176px; transform:rotate(45deg) scale(.78); border:5px solid rgba(255,255,255,.75); border-radius:18px; background:rgba(15,23,42,.35); }
+#diamond .dq { position:absolute; width:70px; height:70px; margin:-35px 0 0 -35px; transform:rotate(45deg); border-radius:10px; border:2px solid rgba(255,255,255,.25); background:linear-gradient(145deg, #3f4b5c, #1f2937); color:#fff; padding:0; touch-action:none; box-shadow:0 3px 8px rgba(0,0,0,.4); }
+#diamond .dq span { display:block; transform:rotate(-45deg); font-weight:900; font-size:18px; line-height:1; }
+#diamond .b2 { left:110px; top:45px; } #diamond .b3 { left:45px; top:110px; } #diamond .b1 { left:175px; top:110px; } #diamond .b4 { left:110px; top:175px; }
+#diamond .b4 span { font-size:15px; }
+#diamond .dq.off { opacity:.55; }
+#diamond .dq.go { background:linear-gradient(145deg, #fde68a, #f59e0b); color:#422006; border-color:#fff; animation:dpulse .8s ease-in-out infinite; }
+@keyframes dpulse { 0%,100% { box-shadow:0 0 0 0 rgba(255,209,102,.8); } 50% { box-shadow:0 0 0 10px rgba(255,209,102,0); } }
+#diamond .dback { position:absolute; right:-14px; top:-6px; width:70px; height:70px; border-radius:14px; border:2px solid rgba(255,255,255,.4); background:linear-gradient(145deg, #475569, #1e293b); color:#fff; padding:0; touch-action:none; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+#diamond .dback span { font-size:30px; line-height:1; } #diamond .dback small { font-weight:900; font-size:11px; line-height:1; margin-top:2px; }
+#diamond .dtitle { position:absolute; right:0; bottom:calc(100% + 8px); width:340px; text-align:right; color:#fff; font-size:17px; text-shadow:0 2px 4px rgba(0,0,0,.8); }
+#diamond .dtitle b { display:block; font-size:21px; color:#ffd166; } #diamond .dtitle span { font-weight:800; }
+#diamond .bub { position:absolute; width:34px; height:34px; margin:-17px 0 0 -17px; border-radius:50%; background:#0ea5e9; color:#fff; font-weight:900; font-size:15px; line-height:30px; text-align:center; border:2px solid #fff; pointer-events:none; box-shadow:0 2px 6px rgba(0,0,0,.5); }
+#diamond .bub.moving { background:#f97316; animation:dpulse .8s infinite; }
 </style>
 </head>
 <body>
@@ -838,7 +863,7 @@ function newGame(opts) {
     idx: [0, 0], stats: [{ h: 0, hr: 0, k: 0, bb: 0 }, { h: 0, hr: 0, k: 0, bb: 0 }], phase: 'none', timer: 0, banner: null,
     pitch: null, swing: null, botSwing: null, play: null, scene: null, cursor: { x: 0, y: 2.55 }, view: 'pitch', steal: null,
     pitchType: 'FB', aimTarget: null, aimT: 0, feedback: null, paused: false, clock: 0, approach: 'swing', pickoffs: 0,
-    crowd: { excite: 0.3, wave: -1, stand: 0 }, lastPitch: null, fx: [], stretchDone: false, mode: 'game', track: {}, kHalf: 0, perfectStreak: 0, meter: null, walkoff: false
+    crowd: { excite: 0.3, wave: -1, stand: 0 }, lastPitch: null, fx: [], stretchDone: false, mode: 'game', track: {}, ps: {}, batMode: 'contact', kHalf: 0, perfectStreak: 0, meter: null, walkoff: false
   };
 }
 
@@ -914,6 +939,7 @@ function beginWindup() {
 }
 function release() {
   G.phase = 'flight'; G.pitch.t = 0; G.pitch.released = true;
+  if (G.ps) pStat(defTeam().pitcher).np++;
   if (G.cpuStealIntent && !G.steal) G.steal = G.cpuStealIntent;
   if (G.steal) { G.runnerGoing = { t: 0 }; crowdReact(0.3, 'ooh'); } else G.runnerGoing = null;
   G.botSwing = offTeam().human ? null : botBatDecision();
@@ -1005,6 +1031,15 @@ function botBatDecision() {
   const lq = pc.inZone ? clamp(1 - edge * 0.5 + gauss() * 0.1, 0.4, 1) : clamp(0.55 - edge * 0.3, 0.1, 0.6);
   return { bot: true, e, ts: pc.T + e, lq, dy: gauss() * 0.2 };
 }
+// per-game player stats (for the batter and pitcher cards)
+const jersey = pl => (pl.look && pl.look.num != null) ? pl.look.num : (hashStr(pl.name) % 50) + 1;
+function bStat(pl) { const k = 'b' + G.half + pl.name; return G.ps[k] || (G.ps[k] = { ab: 0, h: 0, hr: 0, rbi: 0, k: 0, bb: 0 }); }
+function pStat(pl) { const k = 'p' + (1 - G.half) + pl.name; return G.ps[k] || (G.ps[k] = { np: 0, k: 0 }); }
+// size of the batting circle (feet). Rookie gets a much bigger circle.
+function batRadius(team, b) {
+  const base = kidMode() ? 1.05 : 0.42 + eff(team, b.con) * 0.025;
+  return base * (G.approach === 'bunt' ? 1.4 : G.approach === 'fly' ? 1 : G.batMode === 'power' ? 0.72 : 1.1);
+}
 function humanSwing() {
   if (G.phase !== 'flight' || G.swing || !offTeam().human) return;
   doSwing({ e: G.pitch.t - G.pitch.T, cx: G.cursor.x, cy: G.cursor.y });
@@ -1017,16 +1052,20 @@ function doSwing(sw) {
   const pc = G.pitch, b = curBatter(), team = offTeam();
   const human = !sw.bot, pro = human && !kidMode();
   const bunt = G.approach === 'bunt', fly = G.approach === 'fly';
+  const power = human && !bunt && !fly && G.batMode === 'power';
   let Wn = human ? (pro ? 0.13 : 0.19) : 0.16;
   if (bunt) Wn *= 1.7;
+  if (human && !bunt && !fly) Wn *= power ? 0.9 : 1.08;
   const con = eff(team, b.con), pow = eff(team, b.pow), e = sw.e;
   const tq = clamp(1 - Math.pow(Math.abs(e) / Wn, 1.6), 0, 1);
   let lq, dy;
   if (!human) { lq = sw.lq; dy = sw.dy; }
-  else if (pro) {
-    const d = Math.hypot(sw.cx - pc.actual.x, sw.cy - pc.actual.y), R = (0.42 + con * 0.025) * (bunt ? 1.4 : 1);
-    lq = clamp(1 - Math.pow(d / R, 2), 0, 1); dy = clamp(sw.cy - pc.actual.y, -0.6, 0.6);
-  } else { lq = pc.inZone ? 1 : (bunt ? 0.7 : 0.55); dy = gauss() * 0.12; }
+  else {
+    // the batting circle: where you aimed vs. where the ball actually crossed
+    const d = Math.hypot(sw.cx - pc.actual.x, sw.cy - pc.actual.y), R = batRadius(team, b);
+    lq = pro ? clamp(1 - Math.pow(d / R, 2), 0, 1) : clamp(1.15 - Math.pow(d / R, 2), 0, 1);
+    dy = clamp(sw.cy - pc.actual.y, -0.6, 0.6) * (pro ? 1 : 0.6);
+  }
   let q = tq * lq * (0.78 + 0.022 * con) * (1 - (bunt ? 0.05 : 0.15) * pc.quality);
   if (fly) q *= 0.93;
   const contact = q >= (bunt ? 0.06 : human ? 0.1 : 0.18);
@@ -1036,7 +1075,7 @@ function doSwing(sw) {
     const ae = Math.abs(e);
     let text = ae < Wn * 0.22 ? 'PERFECT!' : e < 0 ? 'Early' : 'Late';
     if (ae >= Wn) text = e < 0 ? 'Way early!' : 'Way late!';
-    else if (!contact && pro && lq < 0.3) text = 'Missed the spot';
+    else if (!contact && lq < 0.3) text = 'Missed it — move the circle!';
     G.feedback = { text, t: 0, good: ae < Wn * 0.22 && contact };
     G.meter = { e, W: Wn, t: 0 };
     if (ae < Wn * 0.22 && contact) { G.perfectStreak++; if (G.perfectStreak >= 5) earnBadge('perfect5'); if (G.cage) { G.cage.perfect++; G.cage.streak++; G.cage.best = Math.max(G.cage.best, G.cage.streak); } }
@@ -1051,8 +1090,9 @@ function doSwing(sw) {
       if (Math.random() < 0.14 * (1 - tq)) bb.spray = (Math.random() < 0.5 ? -1 : 1) * rnd(50, 75);
     } else {
       const derby = G.mode === 'derby'; // in the Derby, batters swing for the fences
-      const ev = 55 + 52 * q * (0.55 + 0.045 * pow) + gauss() * 4 - (fly ? 2 : 0) + (derby ? 16 * q : 0);
-      const la = clamp(12 + (q - 0.5) * 22 - dy * 55 + gauss() * (derby ? 8 : 13) + (fly ? 15 : 0) + (derby ? 11 * q : 0), -25, 70);
+      const pm = !human || fly ? 0 : power ? 1 : -1; // POWER hits harder and higher; CONTACT is easier to square up
+      const ev = 55 + 52 * q * (0.55 + 0.045 * pow) + gauss() * 4 - (fly ? 2 : 0) + (derby ? 16 * q : 0) + (pm > 0 ? 8 * q : pm < 0 ? -2 : 0);
+      const la = clamp(12 + (q - 0.5) * 22 - dy * 55 + gauss() * (derby ? 8 : 13) + (fly ? 15 : 0) + (derby ? 11 * q : 0) + (pm > 0 ? 4 : 0), -25, 70);
       const spray = clamp((e / Wn) * 62 * (b.bats === 'R' ? 1 : -1) + gauss() * 11, -85, 85);
       bb = { ev, la, spray, q };
     }
@@ -1083,14 +1123,14 @@ function finishPitchNoContact() {
   if (swung || pc.inZone) {
     G.strikes++;
     if (G.strikes >= 3) {
-      G.outs++; G.stats[1 - G.half].k++; if (isMine(defTeam())) { G.kHalf++; if (G.kHalf >= 3 && G.outs >= 3) earnBadge('k_side'); } text = swung ? 'STRIKEOUT!' : 'STRIKE THREE!'; color = '#ff8a8a'; paDone = true; dur = 1.4;
+      G.outs++; G.stats[1 - G.half].k++; if (G.ps) { bStat(curBatter()).ab++; bStat(curBatter()).k++; pStat(defTeam().pitcher).k++; } if (isMine(defTeam())) { G.kHalf++; if (G.kHalf >= 3 && G.outs >= 3) earnBadge('k_side'); } text = swung ? 'STRIKEOUT!' : 'STRIKE THREE!'; color = '#ff8a8a'; paDone = true; dur = 1.4;
       umpire('Strike three!');
       crowdReact(0.35, defTeam() === G.teams[1] ? 'cheer' : 'groan');
     } else { text = swung ? 'SWING AND A MISS' : 'STRIKE!'; umpire('Strike!', 0); }
   } else {
     G.balls++;
     if (G.balls >= 4) {
-      text = 'WALK'; paDone = true; G.steal = null; dur = 1.3; G.stats[G.half].bb++;
+      text = 'WALK'; paDone = true; G.steal = null; dur = 1.3; G.stats[G.half].bb++; if (G.ps) bStat(curBatter()).bb++;
       const runs = walkAdvance(); if (runs) { addRuns(runs); sub = 'A run scores!'; }
       umpire('Ball four.');
     } else { text = 'BALL'; umpire('Ball.', 0); }
@@ -1671,7 +1711,7 @@ function* hitRunning(c) {
       const key = cands.reduce((a, b) => (b.from > a.from ? b : a));
       const p0 = clamp(0.5 + key.delta * 1.5, 0.08, 0.92);
       const title = key.from === 0 ? (key.stretch === 4 ? 'Try for HOME?!' : `Go for ${ordinal(key.stretch)}?`) : (key.stretch === 4 ? 'Send the runner HOME?' : `Send the runner to ${ordinal(key.stretch)}?`);
-      const go = yield { prompt: { kind: 'choice', title, sub: p0 > 0.6 ? 'Good chance!' : p0 > 0.4 ? 'Close call…' : 'Risky!' } };
+      const go = yield { prompt: { kind: 'choice', title, sub: p0 > 0.6 ? 'Good chance!' : p0 > 0.4 ? 'Close call…' : 'Risky!', from: key.from, to: key.stretch, num: jersey(key.pl) } };
       if (go) goers.push(key);
       for (const p of cands) if (p !== key && p.delta > 0.05) goers.push(p);
     } else for (const p of cands) { const p0 = clamp(0.5 + p.delta * 1.5, 0.08, 0.92); if (p0 > 0.5 + Math.random() * 0.15) goers.push(p); }
@@ -1739,7 +1779,7 @@ function* tagUps(L, f, outText, fid) {
   if (c3 && c3.delta > -0.7) {
     const p0 = clamp(0.5 + c3.delta * 1.4, 0.06, 0.95);
     let go;
-    if (off.human && p0 < 0.9) go = yield { prompt: { kind: 'choice', title: 'Tag up and run home?', sub: p0 > 0.6 ? 'Good chance — deep fly!' : p0 > 0.4 ? 'Close call…' : 'Risky — short fly ball!' } };
+    if (off.human && p0 < 0.9) go = yield { prompt: { kind: 'choice', title: 'Tag up and run home?', sub: p0 > 0.6 ? 'Good chance — deep fly!' : p0 > 0.4 ? 'Close call…' : 'Risky — short fly ball!', from: 3, to: 4, num: jersey(r3) } };
     else go = off.human ? true : p0 > 0.5 + Math.random() * 0.12;
     if (go) goers.push(c3);
   }
@@ -1829,6 +1869,7 @@ function finishPlay(res) {
     umpire('Foul ball.', 0);
     return banner('FOUL BALL', '', 0.9, nextPitch, '#ffd166');
   }
+  { const bs = bStat(curBatter()); if (!/SAC/.test(res.text || '')) bs.ab++; if (res.hit) bs.h++; if (res.hit === 4) bs.hr++; bs.rbi += res.runs || 0; }
   G.outs += res.outs || 0;
   G.bases = G.outs >= 3 ? [null, null, null] : res.bases;
   if (res.runs) addRuns(res.runs);
@@ -2162,6 +2203,14 @@ function drawStadiumScoreboard(x, y, w, hh) {
   ctx.fillStyle = '#0f172a'; rr(x, y, w, hh, 6); ctx.fillStyle = '#334155'; ctx.fillRect(x + w / 2 - 3, y + hh, 6, 10);
   ctx.strokeStyle = '#facc15'; ctx.lineWidth = 2; rrPath(x + 3, y + 3, w - 6, hh - 6, 4); ctx.stroke();
   if (!G) { txt('PLAY BALL!', x + w / 2, y + hh / 2, 16, '#facc15', 'center', 0); return; }
+  if (G.mode === 'game' && offTeam().human) {
+    const b = curBatter(), s = bStat(b);
+    txt('NOW BATTING', x + w / 2, y + 14, 10, '#94a3b8', 'center', 0);
+    ctx.save(); ctx.font = '900 15px ' + FONT; const nm = '#' + jersey(b) + ' ' + b.name, tw = ctx.measureText(nm).width; ctx.restore();
+    ctx.save(); ctx.translate(x + w / 2, y + 32); if (tw > w - 14) ctx.scale((w - 14) / tw, 1); txt(nm, 0, 0, 15, '#facc15', 'center', 0); ctx.restore();
+    txt(`Today: ${s.h} for ${s.ab}${s.hr ? ' · ' + s.hr + ' HR' : ''}`, x + w / 2, y + 50, 11, '#e5e7eb', 'center', 0);
+    return;
+  }
   for (let i = 0; i < 2; i++) { const yy = y + 18 + i * 20; txt(G.teams[i].abbr, x + 14, yy, 14, '#e5e7eb', 'left', 0); txt(String(G.score[i]), x + w - 14, yy, 15, '#facc15', 'right', 0); }
   txt((G.half ? 'BOT ' : 'TOP ') + G.inning, x + w / 2, y + 28, 11, '#94a3b8', 'center', 0);
 }
@@ -2255,10 +2304,18 @@ function drawPitchView() {
   const prog = G.swing ? G.swing.anim / 0.24 : 0;
   drawBatter(bs.x, bs.y, bs.k * 5 / 70, off, bt, prog, mirror, G.approach === 'bunt');
   if (G.approach !== 'swing' && (G.phase === 'windup' || G.phase === 'flight' || G.phase === 'pickPitch')) txt(G.approach === 'bunt' ? 'BUNT' : (G.bases[2] && G.outs < 2 ? 'SAC FLY' : 'FLY BALL'), bs.x, bs.y + 30, 22, '#ffd166');
-  if (off.human && !kidMode() && (G.phase === 'windup' || G.phase === 'flight')) {
-    const c = proj(G.cursor.x, G.cursor.y, 0), R = (0.42 + eff(off, bt.con) * 0.025) * c.k;
+  if (off.human && G.mode === 'game' && (G.phase === 'windup' || (G.phase === 'flight' && !(G.swing && G.swing.contact)))) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1.5;
+    for (let i = 1; i < 3; i++) { const gx = lerp(z1.x, z2.x, i / 3), gy = lerp(z1.y, z2.y, i / 3); line(gx, z1.y, gx, z2.y); line(z1.x, gy, z2.x, gy); }
+    const c = proj(G.cursor.x, G.cursor.y, 0), R = batRadius(off, bt) * c.k, col = G.batMode === 'power' && G.approach === 'swing' ? '#ff8a5c' : '#ffffff';
+    ctx.fillStyle = 'rgba(255,255,255,0.10)'; circle(c.x, c.y, R);
+    ctx.strokeStyle = 'rgba(15,23,42,.55)'; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(c.x, c.y, R, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(c.x, c.y, R, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = '#7dd3fc'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(c.x, c.y, 9, 0, Math.PI * 2); ctx.stroke();
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) line(c.x + dx * 5, c.y + dy * 5, c.x + dx * 14, c.y + dy * 14);
+  } else if (off.human && !kidMode() && (G.phase === 'windup' || G.phase === 'flight')) {
+    const c = proj(G.cursor.x, G.cursor.y, 0), R = batRadius(off, bt) * c.k;
     ctx.strokeStyle = 'rgba(255,214,102,0.95)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(c.x, c.y, R, 0, Math.PI * 2); ctx.stroke();
-    ctx.fillStyle = 'rgba(255,214,102,0.15)'; circle(c.x, c.y, R);
   }
   if (G.runnerGoing && G.phase === 'flight') txt('🏃 RUNNER GOING!', 500, 250, 24, '#9be7ff');
   if (G.feedback && G.feedback.t < 1.2) txt(G.feedback.text, 500, z1.y - 34, 30, G.feedback.good ? '#ffd166' : '#fff');
@@ -2290,11 +2347,11 @@ function drawAimUI(z1, z2) {
   }
 }
 function drawPitchHints() {
-  const off = offTeam(), def = defTeam(), y = 196;
+  const off = offTeam(), def = defTeam(), y = off.human && G.mode === 'game' && (G.phase === 'windup' || G.phase === 'flight') ? 596 : 196;
   let s = '';
   if (G.phase === 'pickPitch') s = (off.human ? 'Batter, no peeking! 🙈  ' : '') + 'Pick a pitch, then tap where to throw it';
   else if (G.phase === 'aim') s = `${PITCHES[G.pitchType].name}: tap when the ring turns GOLD!`;
-  else if ((G.phase === 'windup' || G.phase === 'flight') && off.human) s = G.approach === 'bunt' ? 'Tap to bunt when the ball reaches the box' : kidMode() ? 'Tap when the ring shrinks onto the ball!' : 'Tap where the ball will cross — right when it gets there!';
+  else if ((G.phase === 'windup' || G.phase === 'flight') && off.human) s = G.mode !== 'game' ? (kidMode() ? 'Tap when the ring shrinks onto the ball!' : 'Tap where the ball will cross — right when it gets there!') : G.approach === 'bunt' ? 'Line up the circle, press BUNT when the ball arrives' : kidMode() ? 'Slide the circle onto the ball · press SWING when the ring closes!' : 'Move the circle to where the ball will cross · SWING right on time!';
   if (s) { ctx.font = '900 21px ' + FONT; const w = Math.max(420, ctx.measureText(s).width + 40); ctx.fillStyle = 'rgba(15,23,42,.6)'; rr(500 - w / 2, y - 22, w, 44, 22); txt(s, 500, y, 21, '#fff', 'center', 0); }
   if (G.phase === 'windup' && off.human && !def.human && G.timer > 0.8) txt('Get ready…', 500, 250, 26, '#ffd166');
 }
@@ -2490,6 +2547,7 @@ function drawFx() {
 // ================= HUD =================
 function drawHUD() {
   if (G.mode !== 'game') drawPracticeHUD(); else drawScoreboard();
+  if (G.mode === 'game' && G.view === 'pitch' && G.phase !== 'over' && offTeam().human) { drawBatCards(); return; }
   if (G.view === 'pitch' && G.phase !== 'over') {
     const b = curBatter(), off = offTeam(), p = defTeam().pitcher;
     const bx0 = W - 84 - 380;
@@ -2498,6 +2556,28 @@ function drawHUD() {
     txt(`POW ${eff(off, b.pow)} · CON ${eff(off, b.con)} · SPD ${eff(off, b.spd)}`, bx0 + 14, 51, 14, '#cbd5e1', 'left', 0);
     txt(`⚾ ${p.name}`, bx0 + 366, 51, 14, '#cbd5e1', 'right', 0);
   }
+}
+function drawBatCards() {
+  const b = curBatter(), off = offTeam(), def = defTeam(), p = def.pitcher, bs = bStat(b), ps = pStat(p);
+  // batter card (left, under the scoreboard)
+  let x = 14, y = 122;
+  ctx.fillStyle = 'rgba(15,23,42,.85)'; rr(x, y, 300, 112, 14);
+  ctx.fillStyle = off.color; rr(x, y, 8, 112, 4);
+  txt(String(jersey(b)), x + 22, y + 26, 30, '#7dd3fc', 'left', 0);
+  txt(b.name, x + 76, y + 20, 18, '#fff', 'left', 0);
+  ctx.fillStyle = '#16a34a'; rr(x + 76, y + 32, 34, 18, 5); txt(b.pos, x + 93, y + 41, 12, '#fff', 'center', 0);
+  txt('Bats ' + (b.bats === 'L' ? 'L' : 'R') + ' · Batter #' + (G.idx[G.half] + 1), x + 118, y + 41, 12, '#cbd5e1', 'left', 0);
+  const cols = [['TODAY', bs.h + '-' + bs.ab], ['HR', bs.hr], ['RBI', bs.rbi], ['BB', bs.bb]];
+  cols.forEach(([k, v], i) => { const cx = x + 44 + i * 70; txt(k, cx, y + 66, 11, '#94a3b8', 'center', 0); txt(String(v), cx, y + 85, 18, '#fff', 'center', 0); });
+  txt(`POW ${eff(off, b.pow)} · CON ${eff(off, b.con)} · SPD ${eff(off, b.spd)}`, x + 150, y + 103, 11, '#94a3b8', 'center', 0);
+  // pitcher card (right)
+  const w = 250; x = W - 14 - w; y = 74;
+  ctx.fillStyle = 'rgba(15,23,42,.85)'; rr(x, y, w, 92, 14);
+  ctx.fillStyle = def.color; rr(x + w - 8, y, 8, 92, 4);
+  txt(String(jersey(p)), x + 14, y + 24, 26, '#7dd3fc', 'left', 0);
+  txt(p.name, x + 62, y + 18, 16, '#fff', 'left', 0);
+  txt('Pitcher · throws ' + (p.throws === 'L' ? 'L' : 'R'), x + 62, y + 38, 12, '#cbd5e1', 'left', 0);
+  [['PITCHES', ps.np], ['K', ps.k], ['VEL', p.vel], ['CTL', p.ctl]].forEach(([k, v], i) => { const cx = x + 34 + i * 60; txt(k, cx, y + 60, 10, '#94a3b8', 'center', 0); txt(String(v), cx, y + 78, 16, '#fff', 'center', 0); });
 }
 function drawScoreboard() {
   const x = 14, y = 14;
@@ -2595,6 +2675,7 @@ function update(dt) {
   crowdTick -= dt; if (crowdTick <= 0) { crowdTick = 0.25; Sound.setCrowd(c.excite); }
   updateFx(dt);
   pvUpdate(dt);
+  batUpdate(dt);
   const kx = (keys.ArrowRight ? 1 : 0) - (keys.ArrowLeft ? 1 : 0), ky = (keys.ArrowUp ? 1 : 0) - (keys.ArrowDown ? 1 : 0);
   if (kx || ky) {
     const inv = usePitcherView() ? -1 : 1; // behind the mound, first base is on the left
@@ -2602,7 +2683,7 @@ function update(dt) {
     else if (G.phase === 'aim' && inv < 0) G.aimTarget = clampAim({ x: G.aimTarget.x - kx * 1.5 * dt, y: G.aimTarget.y + ky * 1.5 * dt });
     else if (G.phase === 'pickPitch' && G.kbAim) G.kbAim = clampAim({ x: G.kbAim.x + kx * 2.2 * dt, y: G.kbAim.y + ky * 2.2 * dt });
     else if (G.phase === 'aim') G.aimTarget = clampAim({ x: G.aimTarget.x + kx * 1.5 * dt, y: G.aimTarget.y + ky * 1.5 * dt });
-    else if ((G.phase === 'windup' || G.phase === 'flight') && offTeam().human && !kidMode()) G.cursor = clampCursor({ x: G.cursor.x + kx * 3 * dt, y: G.cursor.y + ky * 3 * dt });
+    else if ((G.phase === 'windup' || G.phase === 'flight') && offTeam().human && (G.mode === 'game' || !kidMode())) G.cursor = clampCursor({ x: G.cursor.x + kx * 3 * dt, y: G.cursor.y + ky * 3 * dt });
   }
   switch (G.phase) {
     case 'banner': G.timer -= dt; if (G.timer <= 0) { const n = G.next; G.next = null; G.banner = null; if (n) n(); } break;
@@ -2636,7 +2717,7 @@ function onTap(p) {
     throwHumanPitch(); return;
   }
   if ((ph === 'windup' || ph === 'flight') && offTeam().human) {
-    if (!kidMode() && p) G.cursor = clampCursor(screenToPlate(p));
+    if ((G.mode === 'game' || !kidMode()) && p) G.cursor = clampCursor(screenToPlate(p));
     if (ph === 'flight') humanSwing();
     return;
   }
@@ -2656,9 +2737,11 @@ function onTap(p) {
     if (G.play.stage && !defTeam().human) G.play.stage.fast = true;
   }
 }
-canvas.addEventListener('pointerdown', e => { e.preventDefault(); if (singAlong) { if (singAlong.t > 0.8) endSingAlong(); return; } Sound.unlock(); Sound.startCrowd(); onTap(toV(e)); });
+canvas.addEventListener('pointerdown', e => { e.preventDefault(); if (singAlong) { if (singAlong.t > 0.8) endSingAlong(); return; } Sound.unlock(); Sound.startCrowd(); if (batPointerDown(e, toV(e))) return; onTap(toV(e)); });
+for (const ev of ['pointerup', 'pointercancel']) window.addEventListener(ev, e => batPointerUp(e));
 canvas.addEventListener('pointermove', e => {
-  if (e.pointerType === 'mouse' && G && G.phase && (G.phase === 'windup' || G.phase === 'flight') && offTeam().human && !kidMode()) G.cursor = clampCursor(screenToPlate(toV(e)));
+  batPointerMove(e, toV(e));
+  if (e.pointerType === 'mouse' && G && G.phase && (G.phase === 'windup' || G.phase === 'flight') && offTeam().human && (G.mode === 'game' || !kidMode())) G.cursor = clampCursor(screenToPlate(toV(e)));
 });
 window.addEventListener('keydown', e => {
   const tag = e.target && e.target.tagName;
@@ -2704,13 +2787,14 @@ function setApproach(a) { if (!G) return; if (G.swing) return; G.approach = a; S
 let uiState = '';
 function syncUI(force) {
   syncPitcherUI();
+  syncBattingUI();
   if (!G) { [pitchBar, stealBtn, batBar, pickBar, choiceEl, passEl, cageBar].forEach(el => el.classList.add('hidden')); uiState = ''; cageBarState = ''; return; }
   const showPitch = defTeam().human && (G.phase === 'pickPitch' || G.phase === 'aim');
   syncCageBar(cageBar);
-  const showBat = G.mode === 'game' && offTeam().human && (G.phase === 'windup' || (G.phase === 'flight' && !G.swing));
-  const sf = G.mode === 'game' && offTeam().human && G.phase === 'windup' && !G.steal && G.outs < 3 ? stealableFrom() : 0;
+  const showBat = false; // replaced by the CONTACT / POWER / BUNT / FLY bar
+  const sf = 0; // stealing now happens on the base diamond
   const picks = defTeam().human && G.phase === 'pickPitch' && G.pickoffs < 2 ? [1, 2].filter(b => G.bases[b - 1] && !G.bases[b]) : [];
-  const pr = G.play && G.play.prompt && G.play.prompt.kind === 'choice' ? G.play.prompt : null;
+  const pr = G.play && G.play.prompt && G.play.prompt.kind === 'choice' && !offTeam().human ? G.play.prompt : null; // human runners use the base diamond
   const rep = defTeam().pitcher.pitches.join(',');
   const sacFly = G.bases[2] && G.outs < 2;
   const state = [showPitch, G.pitchType, rep, showBat, G.approach, sacFly, sf, picks.join(','), G.pickoffs, pr ? pr.title : '', G.phase === 'pass'].join('|');
@@ -3945,7 +4029,7 @@ const ibbBtnEl = h('button', { id: 'ibbBtn', class: 'btn hidden', title: 'Intent
 } }, 'IBB');
 function intentionalWalk() {
   if (!G || G.phase !== 'pickPitch') return;
-  G.steal = null; G.stats[G.half].bb++;
+  G.steal = null; G.stats[G.half].bb++; bStat(curBatter()).bb++;
   const runs = walkAdvance(); if (runs) addRuns(runs);
   tally('IBB'); umpire('Take your base.');
   banner('INTENTIONAL WALK', runs ? 'A run scores!' : 'Free pass to first base', 1.5, endPA, '#9be7ff');
@@ -3957,13 +4041,14 @@ function syncPitcherUI() {
   const on = !!(G && pvAiming() && defTeam().human), aim = on && G.phase === 'aim';
   const good = aim && Math.abs(aimRing(G.aimT) - AIM_SWEET) < 9;
   const ibb = on && G.phase === 'pickPitch';
-  const st = [on, aim, good, ibb].join('|');
+  const bo = batOn();
+  const st = [on, aim, good, ibb, bo].join('|');
   if (ibbArmed && clockNow() - ibbArmed > 3) { ibbArmed = 0; }
   if (!ibbArmed && ibbBtnEl.classList.contains('armed')) { ibbBtnEl.classList.remove('armed'); ibbBtnEl.textContent = 'IBB'; }
   hudEl.classList.toggle('pv', on);
   if (st === pvUiState) return;
   pvUiState = st;
-  joyEl.classList.toggle('hidden', !on); if (!on) joyEnd();
+  joyEl.classList.toggle('hidden', !on && !bo); if (!on && !bo) joyEnd();
   pitchBtnEl.classList.toggle('hidden', !on);
   pitchBtnEl.classList.toggle('aim', aim); pitchBtnEl.classList.toggle('good', good);
   pitchBtnEl.textContent = aim ? 'THROW!' : 'PITCH';
@@ -4102,6 +4187,118 @@ function drawSingAlongOverlay() {
     singAlong.muted ? 'Sound is off — turn it on in Settings to hear the organ' : 'Sing along! (tap or press Stop to end)');
 }
 
+// ================= Batting controls + base-running diamond =================
+// Batting: slide the circle (thumb-stick, or drag a finger anywhere on the field) to where the
+// pitch will cross, pick CONTACT / POWER / BUNT / FLY, and press the big SWING button.
+// Running: a diamond of base buttons (2B on top, 3B left, 1B right, HOME bottom). Tap the lit
+// base to send the runner (or steal); the ↩ button keeps runners where they are.
+const batOn = () => !!(G && G.mode === 'game' && offTeam().human && !G.paused && (G.phase === 'windup' || (G.phase === 'flight' && !G.swing)));
+
+// ---- SWING button ----
+const swingBtnEl = h('button', { id: 'swingBtn', class: 'btn hidden', onpointerdown: e => {
+  e.preventDefault(); e.stopPropagation(); Sound.unlock(); Sound.startCrowd();
+  if (G && G.phase === 'flight') humanSwing();
+} }, 'READY');
+
+// ---- CONTACT / POWER / BUNT / FLY ----
+const batModesEl = h('div', { id: 'batModes', class: 'hidden' });
+function setBatMode(m) {
+  if (!G || G.swing) return;
+  if (m === 'contact' || m === 'power') { G.approach = 'swing'; G.batMode = m; } else G.approach = m;
+  Sound.click(); batUiState = ''; syncBattingUI();
+}
+const batModeOn = m => (m === 'contact' || m === 'power') ? G.approach === 'swing' && G.batMode === m : G.approach === m;
+
+// ---- base diamond ----
+const dqEls = {}, BASE_LABEL = { 1: '1B', 2: '2B', 3: '3B', 4: 'HOME' };
+const diamondTitle = h('div', { class: 'dtitle' });
+const diamondBack = h('button', { class: 'dback', 'aria-label': 'Stay', onpointerdown: e => { e.preventDefault(); e.stopPropagation(); diamondTap(0); } }, h('span', { text: '↩' }), h('small', { text: 'STAY' }));
+const diamondEl = h('div', { id: 'diamond', class: 'hidden' }, diamondTitle, diamondBack);
+for (const b of [2, 3, 1, 4]) {
+  dqEls[b] = h('button', { class: 'dq b' + b, onpointerdown: e => { e.preventDefault(); e.stopPropagation(); diamondTap(b); } }, h('span', { text: BASE_LABEL[b] }));
+  diamondEl.appendChild(dqEls[b]);
+}
+const bubEls = [1, 2, 3, 4].map(() => { const el = h('div', { class: 'bub hidden' }); diamondEl.appendChild(el); return el; });
+// where things sit inside the 220×220 diamond (centre of each base square)
+const DPOS = { 0: [110, 175], 1: [175, 110], 2: [110, 45], 3: [45, 110], 4: [110, 175] };
+function diamondMode() {
+  if (!G || G.mode !== 'game' || !offTeam().human || G.paused) return null;
+  const pr = G.play && G.play.prompt;
+  if (pr && pr.kind === 'choice') return { kind: 'run', to: pr.to || 4, from: pr.from != null ? pr.from : 0, num: pr.num, title: pr.title, sub: pr.sub };
+  if (G.phase === 'windup' && !G.steal && G.outs < 3) { const f = stealableFrom(); if (f) return { kind: 'steal', to: f + 1, from: f }; }
+  return null;
+}
+function diamondTap(b) {
+  const m = diamondMode(); if (!m) return;
+  if (m.kind === 'run') {
+    if (b === 0) { Sound.click(); resolvePrompt(false); }
+    else if (b === m.to) { Sound.click(); resolvePrompt(true); }
+  } else if (m.kind === 'steal' && b === m.to) {
+    if (G.phase === 'windup' && stealableFrom() === m.from) { G.steal = { from: m.from }; Sound.click(); syncUI(true); }
+  }
+}
+let batUiState = '';
+function syncBattingUI() {
+  const on = batOn(), dm = diamondMode();
+  const state = [on, on && G.phase, on && G.approach, on && G.batMode, G && G.bases.map(Boolean).join(), dm && JSON.stringify(dm)].join('|');
+  if (state === batUiState) return;
+  batUiState = state;
+  swingBtnEl.classList.toggle('hidden', !on);
+  if (on) {
+    const live = G.phase === 'flight';
+    swingBtnEl.textContent = !live ? 'READY' : G.approach === 'bunt' ? 'BUNT!' : 'SWING!';
+    swingBtnEl.classList.toggle('live', live); swingBtnEl.classList.toggle('power', G.approach === 'swing' && G.batMode === 'power');
+  }
+  batModesEl.classList.toggle('hidden', !on);
+  if (on) {
+    const sac = G.bases[2] && G.outs < 2;
+    batModesEl.replaceChildren(...[['contact', 'CONTACT'], ['power', 'POWER'], ['bunt', 'BUNT'], ['fly', sac ? 'SAC FLY' : 'FLY BALL']].map(([m, label]) =>
+      h('button', { class: 'bm' + (batModeOn(m) ? ' sel' : ''), onpointerdown: e => { e.preventDefault(); e.stopPropagation(); setBatMode(m); } }, label)));
+  }
+  diamondEl.classList.toggle('hidden', !dm);
+  if (!dm) return;
+  diamondEl.classList.toggle('small', dm.kind === 'steal');
+  diamondBack.classList.toggle('hidden', dm.kind !== 'run');
+  for (const b of [1, 2, 3, 4]) { dqEls[b].classList.toggle('go', b === dm.to); dqEls[b].classList.toggle('off', b !== dm.to); }
+  diamondTitle.replaceChildren(h('b', { text: dm.kind === 'steal' ? `🏃 Tap ${BASE_LABEL[dm.to]} to steal!` : dm.title }), dm.sub ? h('span', { text: ' ' + dm.sub }) : null);
+  // runner bubbles: who is where (jersey numbers), and the runner being sent, on his way
+  bubEls.forEach(el => el.classList.add('hidden'));
+  let i = 0;
+  const put = (num, x, y, extra) => { const el = bubEls[i++]; if (!el) return; el.textContent = String(num); el.style.left = x + 'px'; el.style.top = y + 'px'; el.classList.toggle('moving', !!extra); el.classList.remove('hidden'); };
+  if (dm.kind === 'steal') {
+    G.bases.forEach((r, k) => { if (!r) return; const [x, y] = DPOS[k + 1], m = k + 1 === dm.from; put(jersey(r), m ? (x + DPOS[dm.to][0]) / 2 : x, m ? (y + DPOS[dm.to][1]) / 2 : y, m); });
+  } else if (dm.num != null) {
+    const a = DPOS[Math.max(0, dm.to - 1)], b2 = DPOS[dm.to];
+    put(dm.num, (a[0] + b2[0]) / 2, (a[1] + b2[1]) / 2, true);
+  }
+}
+[swingBtnEl, batModesEl, diamondEl].forEach(el => hudEl.appendChild(el));
+
+// ---- aiming: thumb-stick and finger-drag ----
+let batDrag = null;
+function batUpdate(dt) {
+  if (!batOn()) { batDrag = null; return; }
+  if (joy.x || joy.y) G.cursor = clampCursor({ x: G.cursor.x + joy.x * 2.6 * dt, y: G.cursor.y - joy.y * 2.6 * dt });
+  // Rookie helper: once the ball is on its way, the circle drifts toward it (unless you're steering)
+  if (kidMode() && G.phase === 'flight' && G.pitch && !batDrag && !joy.x && !joy.y) {
+    const u = G.pitch.t / G.pitch.T;
+    if (u > 0.35) { const a = Math.min(1, dt * 2.2); G.cursor = clampCursor({ x: lerp(G.cursor.x, G.pitch.actual.x, a), y: lerp(G.cursor.y, G.pitch.actual.y, a) }); }
+  }
+}
+// returns true if the touch was used for aiming (so it doesn't also swing)
+function batPointerDown(e, p) {
+  if (!batOn() || e.pointerType === 'mouse') return false;
+  batDrag = { id: e.pointerId, x: p.x, y: p.y };
+  return true;
+}
+function batPointerMove(e, p) {
+  if (!batDrag || batDrag.id !== e.pointerId || !batOn()) return;
+  const k = CAM.f / (0 - CAM.z);
+  G.cursor = clampCursor({ x: G.cursor.x + (p.x - batDrag.x) / k * 1.15, y: G.cursor.y - (p.y - batDrag.y) / k * 1.15 });
+  batDrag.x = p.x; batDrag.y = p.y;
+}
+function batPointerUp(e) { if (batDrag && batDrag.id === e.pointerId) batDrag = null; }
+
 // ================= Main loop =================
 let last = performance.now();
 function frame(now) {
@@ -4174,6 +4371,7 @@ if (testMode) {
       G = null; return hr / cnt;
     },
     toScreen: (vx, vy) => ({ x: offX + vx * scale, y: offY + vy * scale }),
+    inPlay(bb) { G.phase = 'inplay'; startInPlay(bb); },
     forcePlay(bb) { G = newGame({ mode: 'cpu', innings: 3, diff: 'medium', userHome: true, stadium: 'harbor' }); G.teams[0].human = false; G.half = 0; hud(true); hideScreen(); startInPlay(bb); },
     seasonSimAll: () => { const s = save.season; while (s && s.phase !== 'done') { if (!seasonNextGame(s)) break; simulateMyGame(); } return save.season; },
     spots: () => (G && G.play && G.play.prompt && G.play.prompt.kind === 'throwChoice') ? throwChoiceSpots(G.play.prompt) : null
