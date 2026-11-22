@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-hJ7ZxBRwPhlNb1IdzJMUGmUcRg4TzpBqO3fWw6kZfGU='; style-src 'sha256-HneD4PpAw/TI7YoFRrOZ71t5Esfj6HUIWAImlpEQYWc='; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-2DqUZv5UM0vmiuyCujJNbKpAt+aITUBgNQF2ZheoXGI='; style-src 'sha256-HneD4PpAw/TI7YoFRrOZ71t5Esfj6HUIWAImlpEQYWc='; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>Pocket Slugger</title>
 <meta name="description" content="A small, ad-free baseball game that works offline.">
@@ -4278,7 +4278,11 @@ function syncBattingUI() {
 let batDrag = null;
 function batUpdate(dt) {
   if (!batOn()) { batDrag = null; return; }
-  if (joy.x || joy.y) G.cursor = clampCursor({ x: G.cursor.x + joy.x * 2.6 * dt, y: G.cursor.y - joy.y * 2.6 * dt });
+  if (joy.x || joy.y) {
+    // quick response: a small push = fine control, a full push = fast (the whole zone in about 0.2 s)
+    const m = Math.min(1, Math.hypot(joy.x, joy.y)), sp = 8 * Math.pow(m, 1.5) / (m || 1);
+    G.cursor = clampCursor({ x: G.cursor.x + joy.x * sp * dt, y: G.cursor.y - joy.y * sp * dt });
+  }
   // Rookie helper: once the ball is on its way, the circle drifts toward it (unless you're steering)
   if (kidMode() && G.phase === 'flight' && G.pitch && !batDrag && !joy.x && !joy.y) {
     const u = G.pitch.t / G.pitch.T;
